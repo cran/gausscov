@@ -34,6 +34,7 @@ pv The selected covariates in order together with P-values, sum of squared resid
 Stepwise selection of covariates
 }
 \examples{
-data(gausscov)
+data(leukemiax)
+data(leukemiay)
 fstepwise(ly.original,lx.original,0.01,misclass=TRUE)
 }

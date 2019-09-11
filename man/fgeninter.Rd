@@ -20,7 +20,7 @@ xx  All interactions of order at most ord.
 generation of interactions
 }
 \examples{
-data(gausscov)
+data(boston)
 bostinter<-fgeninter(boston[,1:13],7)[[1]]
 dim(bostinter)
 }

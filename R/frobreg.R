@@ -10,6 +10,7 @@
 #' @return res  Residuals
 #' @return sig  Scale
 #' @examples 
+#' data(boston)
 #' frobreg(boston[,14],boston[,1:13],1)
 frobreg<-function(y,x,cn,cpp=0,sig=0,intercept=TRUE){			
 	n<-length(y)

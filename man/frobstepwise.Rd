@@ -36,7 +36,7 @@ pv pv[[1]] the included covariates, the P-values; pv[[2]] coefficients of robust
 robust stepwise selection of covariates
 }
 \examples{
-data(gausscov)
+data(boston)
 bostonrob<-frobstepwise(boston[,14],boston[,1:13],1,0.01,15,intercept=TRUE)
 bostonrob[[1]]
 bostonrob[[2]]

@@ -18,7 +18,7 @@ ind The selected subsets.
 All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
 }
 \examples{
-data(gausscov)
+data(redwine)
 nv<-flmmdch(redwine[,12],redwine[,1:11])[[1]]
 fselect(nv,13)
 }

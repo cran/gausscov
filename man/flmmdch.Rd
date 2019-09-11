@@ -28,6 +28,6 @@ nv List of subsets with number of covariates and sum of squared residuals
 It select =TRUE it calls fselect which removes all such subsets which are a subset of some other selected subset. The remaining ones are ordered according to the sum of squared residuals
 }
 \examples{
-data(gausscov)
+data(redwine)
 flmmdch(redwine[,12],redwine[,1:11])
 }

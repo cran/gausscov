@@ -1,1 +1,9 @@
-gausscov: boston colon.x colon.y lx.original ly.original prostate.x prostate.y redwine stackloss
+boston
+colonx: colon.x
+colony: colon.y
+leukemiax: lx.original
+leukemiay: ly.original
+prostatex: prostate.x
+prostatey: prostate.y
+redwine
+stackloss

@@ -12,6 +12,7 @@
 #' @param chkintercept Logical to include or exclude intercept dependent on the P-value
 #' @return pv pv[[1]] the included covariates, the P-values; pv[[2]] coefficients of robust linear regression; pv[[3]]  residuals; pv[[4]] scale. 
 #' @examples 
+#' data(boston)
 #'bostrobreg<-frobstepwise(boston[,14],boston[,1:13],1,0.01,15,intercept=TRUE)
 #' bostrobreg[[1]]
 #' bostrobreg[[2]]

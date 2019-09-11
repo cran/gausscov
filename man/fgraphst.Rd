@@ -30,7 +30,7 @@ edg The edges for each node in the graph
 Calculates an independence graph for a set of variables using stepwise selection
 }
 \examples{
-data(gausscov)
+data(colonx)
 colongrph<-fgraphst(colon.x,0.05)
 colongrph[[1]]
 colongrph[[2]][1:10,]

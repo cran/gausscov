@@ -11,6 +11,8 @@
 #' @param misclass Logical The number of misclassifications if appropriate,  eg for binary y 
 #' @return pv The selected covariates in order together with P-values, sum of squared residuals and if appropriate number of misclassifications.
 #' @examples 
+#' data(colonx)
+#' data(colony)
 #' fstepwise(colon.y,colon.x,0.01)
 #' fstepwise(colon.y,colon.x,1,kmax=4) 
 fstepwise<-function(y,x,alpha,nu=1,kmax=0,kexk=0,intercept=TRUE,chkintercept=FALSE,misclass=FALSE){

@@ -5,7 +5,7 @@
 #' @param intercept Logical to include intercept
 #' @return xx  All interactions of order at most ord.
 #' @examples 
-# data(gausscov)
+#' data(boston)
 #' bostinter<-fgeninter(boston[,1:13],7)[[1]]
 #'dim(bostinter)
 fgeninter<-function(x,ord,intercept=TRUE){

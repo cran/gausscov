@@ -1087,12 +1087,12 @@ C
          ks=0
          do 20 i=1,k
             ks=ks+ia(i)
- 20      continue
-         call xsubset1(x,xx,n,k,ks,ia,id)
-         call lsq(xx,y,xxx,y1,n,ks,d,r,beta,xinv,y2,inv)
-         ss(iv)=0d0
+ 20     continue
+        call xsubset1(x,xx,n,k,ks,ia,id)
+        call lsq(xx,y,xxx,y1,n,ks,d,r,beta,xinv,y2,inv)
+         ss(iv+1)=0d0
          do 30 i=1,n
-            ss(iv)=ss(iv)+y2(i)**2
+            ss(iv+1)=ss(iv+1)+y2(i)**2
  30      continue
  40   continue
 C
@@ -1105,16 +1105,16 @@ C
  45      continue
          np=0
          do 70 is=1,k
-            if(ia(is).eq.1) then
+             if(ia(is).eq.1) then
                ia(is)=0
-               ns=0
+               ns=1
                do 50 iu=1,k
                   ns=ns+ia(iu)*2**(iu-1)
  50            continue
                ia(is)=1
-               ns=ns+1
-               ss1=ss(iv)
+               ss1=ss(iv+1)
                ss0=ss(ns)
+
                util1=1d0-ss1/ss0
                if(intercept) then
                   util2=dble(n-ks-1)/2d0
@@ -1129,7 +1129,7 @@ C
            ni=ni+1
            nv(ni,1)=iv
            nv(ni,2)=np
-           ssr(ni)=ss(iv)
+           ssr(ni)=ss(iv+1)
  80      continue
          return
 C

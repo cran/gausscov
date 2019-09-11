@@ -37,6 +37,7 @@ pv In order, the number of linear approximation, the included covariates, the P-
 Repeated stepwise selection of covariates
 }
 \examples{
-data(gausscov)
+data(leukemiax)
+data(leukemiay)
 fstepstepwise(ly.original,lx.original,0.01,lmax=10,misclass=TRUE)
 }

@@ -12,6 +12,8 @@
 #' @param misclass Logical giving the number of misclassifications if appropriate,  eg for binary y 
 #' @return pv In order, the number of linear approximation, the included covariates, the P-values, sum of squared residuals and if appropriate number of misclassifications.
 #' @examples 
+#' data(colonx)
+#' data(colony)
 #' fstepstepwise(colon.y,colon.x,0.01,lmax=10,misclass=TRUE) 
 fstepstepwise<-function(y,x,alpha,nu=1,kmax=0,kexk=0,lmax=10^10,intercept=TRUE,chkintercept=FALSE,misclass=FALSE){
 	xx<-x

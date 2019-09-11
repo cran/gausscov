@@ -30,7 +30,7 @@ sig  Scale
 Robust regression using Huber's psi-function
 }
 \examples{
-data(gausscov)
+data(boston)
 bostrob<-frobreg(boston[,14],boston[,1:13],1)
 bostrob[[1]]
 plot(bostrob[[2]])

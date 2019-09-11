@@ -11,6 +11,7 @@
 #' @param chkintercept Include intercept depending on p-value
 #' @return nv List of subsets with number of covariates and sum of squared residuals
 #' @examples 
+#' data(redwine)
 #' flmmdch(redwine[,12],redwine[,1:11])
 #' decode(1874,11)
 #' b<-lm(redwine[,12]~redwine[,c(2,5,7,9:11)])

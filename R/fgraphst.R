@@ -9,6 +9,7 @@
 #' @return ned Number of edges
 #' @return edg The edges for each node in the graph
 #' @examples 
+#' data(colonx)
 #' colgrph<-fgraphst(colon.x,0.05)
 #'colgrph[[1]]
 #'colgrph[[2]][1:10,]

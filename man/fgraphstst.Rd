@@ -32,7 +32,7 @@ edg The edges for each node in the graph
 Calculates an independence graph for a set of variables using  repeated stepwise selection
 }
 \examples{
-data(gausscov)
+data(redwine)
 redwgrph<-fgraphstst(redwine[,1:11],0.01)
 redwgrph[[1]]
 redwgrph[[2]]
