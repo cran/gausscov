@@ -1,16 +1,15 @@
-#' generation of interactions 
+#' Generates interactions of a given order from the covariates
 #'
 #' @param x Covariates
 #' @param ord     Order of interactions
-#' @param intercept Logical to include intercept
+#' @param inter Logical to include intercept
 #' @return xx  All interactions of order at most ord.
 #' @examples 
 #' data(boston)
-#' bostinter<-fgeninter(boston[,1:13],7)[[1]]
-#'dim(bostinter)
-fgeninter<-function(x,ord,intercept=TRUE){
+#' bosint<-fgeninter(boston[,1:13],2)[[1]]
+fgeninter<-function(x,ord,inr=TRUE){
 	n<-length(x[,1])
-	if(intercept){
+	if(inr){
 		tmpx<-double(n)+1
 		x<-cbind(tmpx,x)
 	}
@@ -28,5 +27,9 @@ fgeninter<-function(x,ord,intercept=TRUE){
 		)
 	xx<-tmp[[2]]
 	dim(xx)<-c(n,kk)
+	xx<-xx[,2:kk]
+	tmp<-double(n)+1
+	xx<-cbind(xx,tmp)
+	xx<-matrix(xx,ncol=kk)
 	list(xx)
 }

@@ -4,7 +4,7 @@
 \alias{frobreg}
 \title{Robust regression using Huber's psi-function}
 \usage{
-frobreg(y, x, cn, cpp = 0, sig = 0, intercept = TRUE)
+frobreg(y,x,cn=1,sg=0,scale=T,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -13,25 +13,25 @@ frobreg(y, x, cn, cpp = 0, sig = 0, intercept = TRUE)
 
 \item{cn}{Tuning parameter for Huber's psi-function}
 
-\item{cpp}{Fisher consistency parameter}
+\item{sg}{Scale}
 
-\item{sig}{Scale}
+\item{scale}{ Logical, if TRUE calculates sg simultaneously, otherwise keeps initial sg}
 
-\item{intercept}{Logical to include intercept}
+\item{inr}{Logical if TRUE to include intercept}
+
+\item{xinr}{Logical if TRUE intercept already included}
 }
 \value{
 beta Regression coefficients
 
 res  Residuals
 
-sig  Scale
+sg  Scale
 }
 \description{
 Robust regression using Huber's psi-function
 }
 \examples{
 data(boston)
-bostrob<-frobreg(boston[,14],boston[,1:13],1)
-bostrob[[1]]
-plot(bostrob[[2]])
+a<-frobreg(boston[,14],boston[,1:13])
 }

@@ -3,7 +3,7 @@
 \alias{redwine}
 \title{Redwine data}
 \description{
-  The the subjective quality of wine on an integer scale from 1-10 (variable 12) together with 11 physicochemical properties
+  The subjective quality of wine on an integer scale from 1-10 (variable 12) together with 11 physicochemical properties
 }
 \usage{redwine}
 \format{A matrix of size  1599 x 12}

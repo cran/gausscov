@@ -1,47 +1,53 @@
-#' Simulates the number of false positives for given dimensions (n,k) and given order statistic nu
+#' Simulates the number of false positives for given dimensions (n,k) and given order statistics nu
 #'
 #' @param n  The dimension of dependent variable
 #' @param k  The number of covariates
-#' @param alpha Cut-off p-value
-#' @param nu Order statistic
-#' @param kmax Maximum number of false positives
+#' @param p0 Cut-off p-value
+#' @param nu Order statistics
+#' @param km Maximum number of selected covariates.
 #' @param nsim Number of simulations
-#' @return res Histogram of number of false positives.
+#' @return p   Histogram of number of false positives.
 #' @return mn Mean number of false positives.
 #' @return ss Standard deviation of number of false positives
 #' @examples 
-#' fsimords(100,1000,0.05,3,6,nsim=100)
-fsimords<-function(n,k,alpha,nu,kmax,nsim=100){
-	set.seed(11051944)
+#' a<-fsimords(100,100,0.01,c(5,10),15,nsim=100)
+fsimords<-function(n,k,p0,nu,km,nsim=500){
 	y<-double(n)
 	y[1]<-1
-	ss<-0
-	res<-double(2*kmax)
-	dim(res)<-c(kmax,2)
-	res[1:kmax,1]<-0:(kmax-1)
-	mn<-0
-	ss<-0
+	y[2]<--1
+	lnu<-length(nu)
+	res<-double(lnu*nsim)
+	res<-matrix(res,nrow=lnu)
 	for(isim in 1:nsim){
 		tmpx<-rnorm(n*k)
 		dim(tmpx)<-c(n,k)
-		tmp<-fstepwise(y,tmpx,alpha,kmax,nu=nu)[[1]]
-		if(tmp[1,1]==0){res[1,2]<-res[1,2]+1}
-		if(tmp[1,1]>0){
-			kl<-length(tmp[,1])
-			mn<-mn+kl
-			ss<-ss+kl**2
-			if(kl<=kmax-1){
-				res[kl+1,2]<-res[kl+1,2]+1
-			}
-			else{
-				res[kmax,2]<-res[kmax,2]+1
+		tmp<-f1st(y,tmpx,p0=2,km=km,inr=FALSE)
+		tmp<-tmp[[1]][,3]
+		for(j  in 1:lnu){
+			res[j,isim]<-0
+			i<-1
+			while(i <=km){
+				pp<-qbeta(1-tmp[i],k+1-i,1)
+				pp<-1-pbeta(pp,k+2-i-nu[j],nu[j])
+				if(pp<p0){
+					res[j,isim]<-res[j,isim]+1
+				}
+				else{i<-km}
+				i<-i+1
 			}
 		}
 	}
-	mn<-mn/nsim
-	ss<-ss/nsim
-	ss<-sqrt(ss-mn**2)	
-	res[,2]<-res[,2]/nsim
-	ss<-sqrt(sum((res[,1]-mn)**2*res[,2]))
-	list(res,mn,ss)
+	p<-double(lnu*(km+1))
+	p<-matrix(p,nrow=lnu)
+	mn<-double(lnu)
+	ss<-double(lnu)
+	ind<-0:km
+	for(j in 1:lnu){
+		for( i in 0:km){
+			p[j,i+1]<-length((1:nsim)[res[j,]==i])/nsim
+		}
+		mn[j]<-sum(ind*p[j,1:(km+1)])
+		ss[j]<-sqrt(sum(ind^2*p[j,1:(km+1)])-mn[j]^2)
+	}
+	list(p,mn,ss)
 }

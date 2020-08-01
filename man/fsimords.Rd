@@ -2,33 +2,34 @@
 % Please edit documentation in R/fsimords.R
 \name{fsimords}
 \alias{fsimords}
-\title{Simulates the number of false positives for given dimensions (n,k) and given order statistic nu}
+\title{Simulates the number of false positives for given dimensions (n,k) and given order statistics nu}
 \usage{
-fsimords(n, k, alpha, nu, kmax, nsim = 100)
+fsimords(n, k, p0 , nu, km, nsim = 500)
 }
 \arguments{
 \item{n}{The dimension of dependent variable}
 
 \item{k}{The number of covariates}
 
-\item{alpha}{Cut-off p-value}
+\item{p0}{Cut-off p-value}
 
-\item{nu}{Order statistic}
+\item{nu}{The order statistics}
+
+\item{km}{Maximum number of selected covariates}
+
 
 \item{nsim}{Number of simulations}
-
-\item{kmax}{Maximum number of false positives}
 }
 \value{
-res Histogram of number of false positives.
+p Histogram of number of false positives.
 
 mn Mean number of false positives.
 
 ss Standard deviation of number of false positives
 }
 \description{
-Simulates the number of false positives for given dimensions (n,k) and given order statistic nu
+Simulates the number of false positives for given dimensions (n,k) and given order statistics nu
 }
 \examples{
-fsimords(100,1000,0.05,3,6)
+a<-fsimords(100,100,0.01,c(5,10),15,nsim=100)
 }

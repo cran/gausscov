@@ -2,7 +2,7 @@
 % Please edit documentation in R/decode.R
 \name{decode}
 \alias{decode}
-\title{Decodes the number of a subset selected by flmmdch to give the  covariates}
+\title{Decodes the number of a subset selected by flmmdch to give the  covariates} 
 \usage{
 decode(j, k)
 }
@@ -18,5 +18,5 @@ set A binary vector giving the covariates
 Decodes the number of a subset selected by flmmdch to give the  covariates
 }
 \examples{
-decode(19,8)
+a<-decode(19,8)
 }

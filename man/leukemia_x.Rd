@@ -9,6 +9,6 @@
 \format{A 72 x 3571 matrix}
 \source{http://stat.ethz.ch/~dettling/bagboost.html}
 \references{Boosting for tumor classification with gene expression
-data. Dettling, M. and B\"uhlmann, P. Bioinformatics, 2003,19(9):1061--1069.
+data. Dettling, M. and Buehlmann, P. Bioinformatics, 2003,19(9):1061--1069.
 }
 \keyword{datasets}

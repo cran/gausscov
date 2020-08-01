@@ -2,12 +2,12 @@
 % Please edit documentation in R/fselect.R
 \name{fselect}
 \alias{fselect}
-\title{Selects the subsets specified by flmmdch. It is called by flmmdch}
+\title{Selects the subsets specified by fmch.}
 \usage{
 fselect(nv, k)
 }
 \arguments{
-\item{nv}{The subsets specified by flmmdch}
+\item{nv}{The subsets specified by fmch}
 
 \item{k}{The variables}
 }
@@ -18,7 +18,6 @@ ind The selected subsets.
 All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
 }
 \examples{
-data(redwine)
-nv<-flmmdch(redwine[,12],redwine[,1:11])[[1]]
-fselect(nv,13)
+nv<-c(650,1962,160,1033,394,1730,577,1839,334,895)
+fselect(nv,11)
 }

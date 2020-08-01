@@ -4,23 +4,22 @@
 \alias{fgeninter}
 \title{generation of interactions}
 \usage{
-fgeninter(x, ord, intercept = TRUE)
+fgeninter(x, ord, inr = TRUE)
 }
 \arguments{
 \item{x}{Covariates}
 
 \item{ord}{Order of interactions}
 
-\item{intercept}{Logical to include intercept}
+\item{inr}{Logical to include intercept}
 }
 \value{
 xx  All interactions of order at most ord.
 }
 \description{
-generation of interactions
+Generates all interactions of degree at most ord
 }
 \examples{
 data(boston)
 bostinter<-fgeninter(boston[,1:13],7)[[1]]
-dim(bostinter)
 }

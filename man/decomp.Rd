@@ -9,7 +9,7 @@ decomp(ic, k, ord)
 \arguments{
 \item{ic}{The number of the interaction}
 
-\item{k}{The number of covariates of x if intercept=F in fgeninter, this number plus 1 if intercept=T}
+\item{k}{The number of covariates of x if intercept=FALSE in fgeninter, this number plus 1 if intercept=TRUE} 
 
 \item{ord}{The order of the interactions}
 }
@@ -20,5 +20,5 @@ decom The component parts of the interaction.
 decompose a given interaction ic into its component parts
 }
 \examples{
-decomp(7783,14,8)
+a<-decomp(7783,14,8)
 }
