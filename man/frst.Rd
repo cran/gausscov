@@ -4,7 +4,7 @@
 \alias{frst}
 \title{Robust stepwise selection of covariates}
 \usage{
-frst(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sb=F,of=T,xof=F)
+frst(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -25,11 +25,11 @@ frst(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sb=F,of=T,xof=F)
 
 \item{kx}{The excluded covariates}
 
-\item{sb}{Logical, if TRUE best subset selected}
+\item{sub}{Logical, if TRUE best subset selected}
 
-\item{of}{Logical TRUE to include intercept}
+\item{inr}{Logical TRUE to include intercept}
 
-\item{xof}{Logical TRUE if intercept already included}
+\item{xinr}{Logical TRUE if intercept already included}
 }
 \value{
 pv In order the subset ind, the regression coefficients, the P-values, the standard P-values.

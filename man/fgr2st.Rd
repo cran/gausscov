@@ -4,7 +4,7 @@
 \alias{fgr2st}
 \title{Calculates an independence graph using  repeated stepwise selection}
 \usage{
-fgr2st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T)
+fgr2st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F)
 }
 \arguments{
 \item{x}{The variables}
@@ -18,6 +18,8 @@ fgr2st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T)
 \item{nedge}{Maximum number of edges}
 
 \item{inr}{Logical, if TRUE include an intercept}
+
+\item{dr}{Logical, if TRUE (a,b) and (b,a), a not equal b,  are different edges}
 
 }
 \value{

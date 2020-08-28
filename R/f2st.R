@@ -5,9 +5,9 @@
 #' @param p0  The P-value cut-off
 #' @param nu The order statistic of Gaussian covariates used for comparison
 #' @param km The maximum specified number of included covariates at each stage
-#' @param lm  The maximum number of linear approximations 
 #' @param mx  The maximum number covariates for an all subset search.
 #' @param kx The excluded covariates
+#' @param lm  The maximum number of linear approximations 
 #' @param sub Logical, if TRUE best subset selected.
 #' @param inr Logical if TRUE to include an intercept 
 #' @param xinr Logical if TRUE intercept already included
@@ -19,13 +19,12 @@
 f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
 	kk<-length(x[1,])+1
 	n<-length(y)
-	q<-length(x[1,])
+	qq<-length(x[1,])
 	kx<-0
 	kv<-1
 	mn<-0
 	while(kv>0.5){
 		tmp<-f1st(y,x,p0,nu,km,mx,kx,sub,inr,xinr)[[1]]
-		if((!xinr)&inr){xinr<-T}
 		if(tmp[1,1]<=0){kv<-0}
 		if(kv>0.5){
 			lv<-length(tmp[,1])
@@ -45,7 +44,7 @@ f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
 			}
 			kv<-1
 			if(mn>=lm){kv<-0}
-			if(length(kx)>=q){kv<-0}
+			if(length(kx)>=qq){kv<-0}
 		}
 	}
 	list(pvv)

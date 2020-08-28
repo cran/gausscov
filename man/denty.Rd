@@ -1,12 +1,12 @@
-\name{dent}
+\name{denty}
 \docType{data}
-\alias{dent}
-\title{Dental data}
+\alias{denty}
+\title{Dental data, hardness}
 \description{
-This is a 8x3x5 ANOVA table with the dependent variable being the hardness of a dental gold filling. There were eight different gold alloys, three different methods of preparation and five different dentists who  prepared the filling .
+This is  the dependent variable, the hardness of a dental gold filling in a 8x3x5 ANOVA table with. There were eight different gold alloys, three different methods of preparation and five different dentists who  prepared the filling .
 }
-\usage{dent}
-\format{A matrix of size  120 x 4}
+\usage{denty}
+\format{A vector of length  120 }
 \source{Towards robust analysis of variance, Seheult, A.H. and Tukey, J.W. (2001)
 }
 \references{Towards robust analysis of variance. Seheult, A.H. and

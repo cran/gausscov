@@ -7,7 +7,7 @@
 #' @examples 
 #' data(boston)
 #' bosint<-fgeninter(boston[,1:13],2)[[1]]
-fgeninter<-function(x,ord,inr=TRUE){
+fgeninter<-function(x,ord,inr=T){
 	n<-length(x[,1])
 	if(inr){
 		tmpx<-double(n)+1

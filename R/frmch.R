@@ -13,7 +13,7 @@
 #' @examples 
 #' data(boston)
 #' a<-frmch(boston[,14],boston[,1:8]) 
-frmch<-function(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F){
+frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 	if(mad(y)==0){stop('mad(y) is zero')}
 	if(sg==0){sg<-mad(y)}
 	tmpx<-cn*(1:1000)/1000
@@ -22,23 +22,21 @@ frmch<-function(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F){
 	n<-length(y)
 	x<-matrix(x,nrow=n)
 	k<-length(x)/n
-	if(!xof){q<-k}
-	else{q<-k-1}
-	if((!xof)&of){
+	if((!xinr)&inr){
 		tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		x<-matrix(x,nrow=n)
-		xof<-TRUE
+		xinr<-TRUE
 		k<-k+1
 	}
 	ind<-matrix(ind,nrow=1)
-        if(ind[1]>0){
-                x<-x[,ind]
-                x<-matrix(x,nrow=n)
-                k<-length(x)/n
-        }
+	if(ind[1]>0){
+        	x<-x[,ind]
+        	x<-matrix(x,nrow=n)
+        	k<-length(x)/n
+    	}
         else{ind<-1:k}
-
+	q<-max(q,k)
 	tmp<-.Fortran(
 		"roblmmdch",
 		as.double(y),
@@ -63,7 +61,7 @@ frmch<-function(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F){
 		integer(k),
 		integer(k),
 		double(2*k),
-		as.logical(xof),
+		as.logical(xinr),
 		integer(2^(k+2)),
 		double(2^k),
 		as.integer(q)
@@ -97,8 +95,12 @@ frmch<-function(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F){
 #
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
-		if(sl&(llv>1)){
-			indd<-fselect(nv1,k)[[1]]
+		if(sel&(llv>1)){
+			nv2<-nvv[,2]
+			ind<-rank(nv2,ties.method="first")	
+			inv<-1:llv		
+			inv[ind]<-inv
+			indd<-fselect(nvv,k)[[1]]
 			nv1<-nv1[indd]
 			nv2<-nv2[indd]
 			ss<-ss[indd]

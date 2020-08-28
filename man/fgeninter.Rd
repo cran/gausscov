@@ -4,7 +4,7 @@
 \alias{fgeninter}
 \title{generation of interactions}
 \usage{
-fgeninter(x, ord, inr = TRUE)
+fgeninter(x, ord, inr = T)
 }
 \arguments{
 \item{x}{Covariates}

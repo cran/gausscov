@@ -19,18 +19,15 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	n<-length(y)
 	x<-matrix(x,nrow=n)
 	k<-length(x)/n
-	if(q==-1){
-		if(!xinr){q<-k}
-		else{q<-k-1}
-	}
+	    ind<-matrix(ind,nrow=1)
 	if((!xinr)&inr){
 		tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		x<-matrix(x,nrow=n)
 		xinr<-TRUE
 		k<-k+1
+        if(ind[1]>0){ind<-c(ind,k)}
 	}
-	ind<-matrix(ind,nrow=1)
 	if(ind[1]>0){
 		x<-x[,ind]
 		x<-matrix(x,nrow=n)
@@ -38,6 +35,7 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	}
 	else{ind<-1:k}
 	ss<-double(2^k+2)
+	q<-max(q,k)
 	tmp<-.Fortran(
 		"lmmdch",
 		as.double(y),
@@ -71,21 +69,25 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	if(llv>0){
 		nv<-tmp[[16]]
 		nv<-matrix(nv,ncol=2)
-		ind<-rank(ss)
+		ind<-rank(ss,ties.method="first")
 		inv<-1:llv
 		inv[ind]<-inv
+		ss<-ss[inv]
 		nv<-nv[inv,]
 		nv<-matrix(nv,ncol=2)
 		nv1<-nv[,1]
 		nv2<-nv[,2]
-		ss<-ss[inv]
 #
 #	select approximations 
 #
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
 		if(sel&(llv>1)){
-			indd<-fselect(nv1,k)[[1]]
+			nv2<-nvv[,2]
+			ind<-rank(nv2,ties.method="first")	
+			inv<-1:llv		
+			inv[ind]<-inv
+			indd<-fselect(nvv,k)[[1]]
 			nv1<-nv1[indd]
 			nv2<-nv2[indd]
 			ss<-ss[indd]

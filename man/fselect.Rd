@@ -18,6 +18,7 @@ ind The selected subsets.
 All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
 }
 \examples{
-nv<-c(650,1962,160,1033,394,1730,577,1839,334,895)
-fselect(nv,11)
+nv<-c(650,1962,160,1033,394,1730,577,1839,334)
+nv<-matrix(nv,ncol=3)
+a<-fselect(nv,11)
 }

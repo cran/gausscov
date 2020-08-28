@@ -12,25 +12,24 @@
 #' @param xinr Logical, if T intercept already present 
 #' @return pv The in order selected covariates, the regression coefficients, the P-values, the standard P-values.
 #' @return res The residuals.
-#' @return stpv The stepwise P-values and the sum of squared residuals
+#' @return stpv The in order stepwise P-values, sum of squared residuals and the percentage sum of squared residuals explained.
 #' @examples 
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
-#' a<-f1st(boston[,14],bostint,km=10,sub=TRUE,inr=FALSE,xinr=TRUE)
+#' a<-f1st(boston[,14],bostint,km=10,sub=T,inr=F,xinr=T)
 f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 	if(xinr&(km==1)){stop("only intersect left")}
 	n<-length(y)
 	x<-matrix(x,nrow=n)
 	y<-matrix(y,ncol=1)
 	k<-length(x[1,])
-	q<-k
-	if(xinr){q<-q-1}
 	if((!xinr)&inr){tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		x<-matrix(x,nrow=n)
 		xinr<-TRUE
 	}
 	kk<-length(x[1,])
+	q<-kk
 	kex<-integer(kk+1)
 	lke<-length(kx)
 	if(lke==1){
@@ -65,23 +64,21 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		as.logical(xinr),
 		as.double(nu),
 		double(km1),
-		double(k)
+		double(k+1)
 	)
 	kmax<-tmp[[9]]
 	if(kmax==0){
 		pv<-matrix(c(-2,0,0,0),nrow=1)
 		res<-0
-		sig<-0
 		stpv<-0
 	}
 	else if((kmax==1)&xinr){
 		pv<-matrix(c(-1,0,0,0),nrow=1)
 		res<-0
-		sig<-0
 		stpv<-0
 	}
 	else{
-		ss01<-tmp[[16]][1:kmax]
+		ss01<-1-tmp[[16]][1:kmax]
 		stpv<-tmp[[10]]
 		stpv<-matrix(stpv,ncol=2)
 		stpv<-stpv[1:kmax,]
@@ -90,8 +87,11 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		stpv<-cbind(stpv,minss,ss01)
 		stpv<-matrix(stpv,ncol=4)
 		ind<-stpv[1:kmax,1]
-		ind<-sort(ind)
-		pv<-fpval(y,x,ind,q,xinr)
+		if(xinr){ints<-ind[1]
+			ind[1:(kmax-1)]<-ind[2:kmax]
+			ind[kmax]<-ints
+		}
+		pv<-fpval(y,x,ind,q,inr=inr,xinr=xinr)
 		res<-pv[[2]]
 		pv<-pv[[1]]
 		li<-length(ind)
@@ -103,13 +103,21 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 				tmv<-decode(sbsts[1,1],k)[[1]]
 				ind<-ind[tmv]
 				if(xinr){ind<-c(ind,kk)}
-				pv<-fpval(y,x,ind,q,xinr=xinr)
+				pv<-fpval(y,x,ind,q,inr,xinr)
 				li<-length(ind)
 				res<-pv[[2]]
 				pv<-pv[[1]]
 				if(xinr){pv[li,1]<-0}
 			}
+			else{
+				pv<-matrix(c(-1,0,0,0),nrow=1)
+				res<-0
+				stpv<-0
+			}
 		}
+	}
+	if(length(res)==n){
+		if(xinr){stpv[1,1]<-0}
 	}
 	list(pv,res,stpv)
 }

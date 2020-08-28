@@ -4,7 +4,7 @@
 \alias{frmch}
 \title{Robust selection of covariates based on all subsets}
 \usage{
-frmch(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F)
+frmch(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -15,15 +15,17 @@ frmch(y,x,cn=1,p0=0.01,sg=0,ind=0,sl=T,of=T,xof=F)
 
 \item{p0}{The P-value cut-off}
 
+\item{q}{The numer of covariates available}
+
 \item{sg}{The scale parameter}
 
 \item{ind}{The subset for which the results are required}
 
-\item{sl}{Logical, if TRUE remove all subsets of chosen sets}
+\item{sel}{Logical, if TRUE remove all subsets of chosen sets}
 
-\item{of}{Logical if TRUE include intercept}
+\item{inr}{Logical if TRUE include intercept}
 
-\item{xof}{ Logical If TRUE intercept already included}
+\item{xinr}{ Logical If TRUE intercept already included}
 }
 \value{
 nv  List of subsets with number of covariates and scale.

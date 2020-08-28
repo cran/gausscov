@@ -4,7 +4,7 @@
 \alias{fpval}
 \title{ Calculates the regression coefficients, the P-values and the standard P-values for the chosen subset ind}
 \usage{
-fpval(y,x,ind,q,xinr=F)
+fpval(y,x,ind,q,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{The dependent variable}
@@ -15,7 +15,10 @@ fpval(y,x,ind,q,xinr=F)
 
 \item{q}{The total number of covariates from which ind was chosen}
 
-\item{xinr}{If TRUE intercept included}
+\item{inr}{Logical If TRUE intercept to be included}
+
+\item{xinr}{If TRUE intercept already included, overrides inr}
+
 
 }
 \value{

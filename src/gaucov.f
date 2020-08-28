@@ -1,4 +1,3 @@
-
 C
 C
 C
@@ -6,7 +5,7 @@ C
      $     ,intercept,nu,minss,ss01)
       integer n,k,kmax,kmax1
       double precision y(n),x(n,k),x2(n),res(n) ,pp(kmax1,2),minss(kmax1
-     $     ),ss01(k)
+     $     ),ss01(k+1)
       integer ia(k+1),kexc(k+1)
       logical intercept
       double precision alpha,nu
@@ -43,7 +42,6 @@ C
          pval=1d0-betai(util1,0.5d0,0.5d0*dble(n-1))
          pp(1,1)=dble(k)
          pp(1,2)=pval
-         ss01(1)=ss1/ss0
          minss(1)=ss1
          ss01(1)=ss1/ss0
          do 520 ik=1,k-1
@@ -179,7 +177,7 @@ C
       integer n,k,kmax,kmax1
       double precision y(n),x(n,k),xx(n,kmax1),x1(n),x2(n) ,beta(kmax1)
      $     ,pp(kmax1,2) ,beta0(kmax1),res(n),res1(n),yy(n),ssg(kmax1)
-      integer ia(k),kexc(k)
+      integer ia(k+1),kexc(k)
       double precision alpha,cn,sig,cpp,nu
       logical offset
 C
@@ -343,6 +341,7 @@ C
 C
       integer id
       double precision ss0,ss1,sd10,sd20,pval,pval1,util1,sig0
+      double precision betat(1000)
       double precision betai,rhoh,psih,psih1
       logical scale
 C
@@ -355,9 +354,9 @@ C
       ks=k
       call xsubset1(x,xx,n,k,ks,ia,id)
       scale=.true.
-      sig=sig0
-      call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,beta,res,beta0,cn,sig ,ssrho
-     $     ,cpp,scale)
+      sig=sig0  
+      call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,betat,res,beta0,cn,sig ,
+     $     ssrho,cpp,scale)
       ss1=ssrho(1)
       if(k.eq.1) then
          ssrho(1)=0d0
@@ -378,8 +377,8 @@ C
             pval1=1d0-betai(util1/(4d2+util1),0.5d0,2d2) 
          endif
          if(intercept.and.kk.eq.k) then
-            pval=pval1
-         else
+             pval=pval1
+         else 
             pval=betai(pval1,1d0,dble(q+1-k))
          endif
           pp(1,1)=pval
@@ -388,10 +387,10 @@ C
        endif
        ks=k-1
        scale=.false.
-       do 30 kk=1,k
-          ia(kk)=0
+       do 30 ik=1,k
+          ia(ik)=0
           call xsubset1(x,xx,n,k,ks,ia,id)
-          ia(kk)=1
+          ia(ik)=1
           call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,beta,res,beta0,cn,sig
      $        ,ssrho,cpp,scale)
           sd10=ssrho(2)
@@ -402,16 +401,19 @@ C
              pval1=0d0
           else
              util1=2d0*sd20*(ss0-ss1)/sd10
-             pval1=1d0-betai(util1/(4d2+util1),0.5d0,2d2) 
-             if(intercept.and.kk.eq.k) then
+             pval1=1d0-betai(util1/(4d2+util1),0.5d0,2d2)
+             if(intercept.and.ik.eq.k) then
                 pval=pval1
              else
               pval=betai(pval1,1d0,dble(q+1-k))
             endif
           endif
-          pp(kk,1)=pval
-          pp(kk,2)=pval1
+          pp(ik,1)=pval
+          pp(ik,2)=pval1
    30   continue
+        do 400 i=1,k
+           beta(i)=betat(i)
+ 400    continue
       end
 C
 C
@@ -470,7 +472,6 @@ C
          res(i)=y(i)-ss
          sr2=sr2+rhoh(res(i)/sig0,cn0)
  50   continue
-c      if(ic.gt.10) goto 200
       if(sr1-sr2.gt.1d-3*sr2) then
          sr1=sr2
          goto 100
@@ -481,9 +482,9 @@ c      if(ic.gt.10) goto 200
          sig=sig+psih(res(i)/sig0,cn0)**2
  55   continue
        sig=dsqrt(sig/(cpp*dble(n-k)))*sig0
-      if(dabs(sig/sig0-1d0).gt.1d-2) then
+       if(dabs(sig/sig0-1d0).gt.1d-3) then
          sig0=sig
-         goto100
+         goto 100
       endif
  200  continue
       ssrho(1)=0d0
@@ -1286,9 +1287,9 @@ C
  45      continue
 C
          np=0
-         if(intercept) then
-            ks=ks-1
-         endif
+c         if(intercept) then
+c            ks=ks-1
+c         endif
          k1=k
          if(intercept)  k1=k-1
 C
@@ -1304,6 +1305,7 @@ C
                util1=1d0-ss1/ss0
                if(intercept) then
                   util2=dble(n-ks-1)/2d0
+c                  util2=dble(n-ks)/2d0
                else
                   util2=dble(n-ks)/2d0
                endif
@@ -1327,7 +1329,7 @@ C
 C
 C
         subroutine roblmmdch(y,x,n,k,alpha,x1,x2,x3,y1,d,r,beta,xinv
-     $       ,res,beta0,cn,sig,ssrho,cpp,ia,ib,pp,intercept ,nv,ssr,q)
+     $       ,res,beta0,cn,sig,ssrho,cpp,ia,ib,pp,intercept,nv,ssr,q)
       integer n,k,q
       double precision y(n),x(n,k),x1(n,k),x2(n*k),x3(n*k),y1(n),d(k)
      $     ,r(k),beta(k),xinv(k**2),res(n),beta0(k),pp(k,2),ssr(2**k)
@@ -1341,8 +1343,6 @@ C
 C
       sig0=sig
       id=1
-C
-C
       ni=0
       if(intercept) then
          kk=2**(k-1)
@@ -1355,9 +1355,6 @@ C
          ssr(iv)=0d0
        if(intercept) then
             call decode(iv,k-1,ia)
-            do 10 iu=k,2,-1
-               ia(iu)=ia(iu-1)
- 10         continue
             ia(k)=1
          else
             call decode(iv,k,ia)
@@ -1371,9 +1368,12 @@ C
         sig=sig0
         call robregp(y,x1,y1,x2,x3,xinv,n,ks,d,r,beta,res,beta0,cn,sig
      $       ,ssrho,cpp,ib,pp,q+1,intercept)
+c        call robregp(y,x1,y1,x2,x3,xinv,n,ks,d,r,beta,res,beta0,cn,sig
+c     $       ,ssrho,cpp,ib,pp,q,intercept)
         kss=ks
         if(intercept) kss=ks-1
        do 30 j=1,kss
+c          if(iv.eq.8191) write(*,*) pp(j,1)
            if(pp(j,1).gt.alpha) goto 40
  30     continue
         ni=ni+1

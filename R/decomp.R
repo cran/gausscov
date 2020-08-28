@@ -7,6 +7,7 @@
 #' @examples 
 #' a<-decomp(7783,14,8)
 decomp<-function(ic,k,ord){
+    ic<-ic+1
 	m<-length(ic)
 	tmp<-.Fortran(
 		"degenint",

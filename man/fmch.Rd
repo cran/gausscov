@@ -17,7 +17,7 @@ fmch(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
 
 \item{ind}{Indices of subset for which all subsets are to be considered}
 
-\item{sel}{If TRUE use fselect to removes all subsets of chosen sets}
+\item{sel}{If TRUE calls fselect to removes all subsets of chosen sets}
 
 \item{inr}{If TRUE to include intercept}
 

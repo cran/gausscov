@@ -6,11 +6,12 @@
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param nedge The maximum number of edges.
 #' @param inr Logical, if TRUE  to include intercept.
+#' @param dr  Logical, if TRUE (a,b) and (b,a), a not equal b,  are different edges
 #' @return ned Number of edges
 #' @return edg List of edges
 #' data(redwine)
 #' a<-fgr2st(redwine[,1:11]) 
-fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T){
+fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	p0<-p0/k
@@ -57,10 +58,24 @@ fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T){
 		as.integer(kk)
 		)
 	ned<-tmp[[14]]
+	print(ned)
 	if(ned>0){
 		edg<-tmp[[13]]
 		edg<-matrix(edg,ncol=3)
 		edg<-edg[1:ned,]
+			if(!dr){
+                tmp<-.Fortran(
+                    "edge",
+                    as.integer(edg),
+                    as.integer(ned),
+                    as.integer(ned),
+                    integer(ned),
+                    integer(1)
+                    )
+                    ned<-tmp[[5]]
+                    edg<-tmp[[1]]
+                    edg<-matrix(edg,ncol=2)
+        }   
 	}
 	else{
 		edg<-NaN

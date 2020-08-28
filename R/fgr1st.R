@@ -6,11 +6,12 @@
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param nedge The maximum number of edges.
 #' @param inr Logical if TRUE include an intercept.
+
 #' @return ned Number of edges
 #' @return edg List of edges
 #' data(boston)
 #' a<-fgr1st(boston[,1:13]) 
-fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T){
+fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	p0<-p0/k
@@ -48,9 +49,27 @@ fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T){
 		double(kk),
 		as.integer(kk)
 		)
-	edg<-tmp[[13]]
-	edg<-matrix(edg,ncol=2)
 	ned<-tmp[[14]]
-	edg<-edg[1:ned,]
+	if(ned>0){
+        edg<-tmp[[13]]
+        edg<-matrix(edg,ncol=2)
+        edg<-edg[1:ned,]
+        if(!dr){
+            tmp<-.Fortran(
+                    "edge",
+                    as.integer(edg),
+                    as.integer(ned),
+                    as.integer(ned),
+                    integer(ned),
+                    integer(1)
+                )   
+                ned<-tmp[[5]]
+                edg<-tmp[[1]]
+                edg<-matrix(edg,ncol=2)
+        }
+    }
+    else{
+        edg<-NaN
+	}
 	list(ned,edg)
 }

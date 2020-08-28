@@ -29,11 +29,11 @@ f1st(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 
 }
 \value{
-pv The selected covariates in order together with P-values, sum of squared residuals and if appropriate number of misclassifications.
+pv The in order selected covariates, the regression coefficients, the P-values, the standard P-values.
 
 res The residuals
 
-stpv The stepwise P-values and the sum of squared residuals
+stpv The in order stepwise P-values, sum of squared residuals and the percentage sum of squared residuals explained
 }
 \description{
 Stepwise selection of covariates

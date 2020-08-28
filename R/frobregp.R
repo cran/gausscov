@@ -30,47 +30,48 @@ frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
 		xinr<-T
 		k<-length(x)/n
 	}
-	ind<-matrix(ind,nrow=1)
-	q<-k
+	q<-max(q,k)
+	ind<-matrix(ind,ncol=1)
 	if(ind[1]>0){
 		if(!xinr){x<-x[,ind]}
 		if(xinr){ind<-c(ind,k)
 			x<-x[,ind]
 		}
 	}
-	k<-length(x)/n
+	else{ind<-1:k}
+	kk<-length(x)/n
 	tmp<-.Fortran(	
 		"robregp",
 		as.double(y),
 		as.double(x),
 		double(n),
-		double(n*k),
-		double(n*k),
-		double(k^2),
+		double(n*kk),
+		double(n*kk),
+		double(kk^2),
 		as.integer(n),
-		as.integer(k),
-		double(k),
-		double(k),
-		double(k),	
+		as.integer(kk),
+		double(kk),
+		double(kk),
+		double(kk),	
 		double(n),	
-		double(k),
+		double(kk),
 		as.double(cn),
 		as.double(sg),
 		double(3),
 		as.double(cpp),
-		integer(k),
-		double(2*k),
+		integer(kk),
+		double(2*kk),
 		as.integer(q),
 		as.logical(xinr)
 		)
 	beta<-tmp[[11]]
+	beta<-matrix(beta,ncol=1)
 	pp<-tmp[[19]]
 	pp<-matrix(pp,ncol=2)
 	res<-tmp[[12]]	
 	sg<-tmp[[15]]
-	if(ind[1]==0){ind<-1:k}
-	if(inr){ind<-ind-1}
 	ind<-matrix(ind,ncol=1)
+	if(xinr){ind[kk]<-0}
 	ppi<-cbind(ind,beta,pp)
 	ppi<-matrix(ppi,ncol=4)
 	list(ppi,res,sg)

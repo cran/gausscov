@@ -4,22 +4,25 @@
 #' @param k  The number of covariates
 #' @return ind The selected subsets.
 #' @examples 
-#' nv<-c(650,1962,160,1033,394,1730,577,1839,334,895)
+#' nv<-c(650,1962,160,1033,394,1730,577,1839,334)
+#' nv<-matrix(nv,ncol=3)
 #' a<-fselect(nv,11)
 fselect<-function(nv,k){
-	n<-length(nv)
+	n<-length(nv[,1])
 	ind<-1:n
-	for(i in n:2){
-		tmpi<-decode(nv[i],k)[[2]]
-		j<-i-1
-		while(j>=1){
-			tmpj<-decode(nv[j],k)[[2]]
-			tmpij<-tmpi*tmpj
-			if(sum(abs(tmpij-tmpi))==0){
-				ind[i]<- -i
-				j<-0
+	for(i in 1:(n-1)){
+		tmpi<-decode(nv[i,1],k)[[2]]
+		j<-i+1
+		while(j<=n){
+			if(nv[j,2]==nv[i,2]){j<-j+1}
+			else{tmpj<-decode(nv[j,1],k)[[2]]
+				tmpij<-tmpi*tmpj
+				if(sum(abs(tmpij-tmpi))==0){
+					ind[i]<- -i
+					j<-n
+				}
+				j<-j+1
 			}
-			j<-j-1
 		}
 	}
 	ind<-(1:n)[ind>0]
