@@ -34,15 +34,19 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		xinr<-TRUE
 	}
 	kk<-length(x[1,])
-	q<-kk
+	if(length(kx)==1){
+		if(kx==0){lkx<-0}
+	}
+	else{lkx<-length(kx)}
+	q<-kk-lkx
+	if(xinr){q<-q-1}
 	kex<-integer(kk+1)
-	lke<-length(kx)
-	if(lke==1){
+	if(lkx==1){
 		if(kx>0){
 			kex[1]<-kx
 		}
 	}
-	if(lke>1){kex[1:lke]<-kx}
+	if(lkx>1){kex[1:lkx]<-kx}
 	if((km>0)&inr){km=km+1}
 	p00<-2
 	if(km==0){
@@ -50,7 +54,6 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		km<-min(n,kk)
 	}
 	km1<-km+1
-	pv<-double(3*kk)
 	tmp<-.Fortran(
 		"robstepwise",		
 		as.double(y),
@@ -95,7 +98,7 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		stpv<-matrix(stpv,ncol=2)
 		stpv<-stpv[1:kmax,]
 		sg<-tmp[[16]]
-            	res<-tmp[[17]]
+            		res<-tmp[[17]]
 		stpv<-cbind(stpv,ss01)
 		stpv<-matrix(stpv,ncol=3)
 		ind<-stpv[1:kmax,1]
@@ -111,23 +114,24 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		if(sub&(kmax>=2)){
 			if(kmax>mx){stop("kmax too large (> mx) for all subset search")}
 			if(xinr){
-                		kk<-length(ind)
-                		ind<-ind[1:(kk-1)]
-				sbsts<-frmch(y,x,cn=cn,p0=p0,ind=ind,inr=T,xinr=F)[[1]]
+                			kk<-length(ind)
+                			ind<-ind[1:(kk-1)]
+				sbsts<-frmch(y,x,cn=cn,p0=p0,q=q,ind=ind,inr=T,xinr=F)[[1]]
 			}
 			else{
-				sbsts<-frmch(y,x,cn=cn,p0=p0,ind=ind,inr=F,xinr=F)[[1]]
+				sbsts<-frmch(y,x,cn=cn,p0=p0,q=q,ind=ind,inr=F,xinr=F)[[1]]
 			}
 			if(sbsts[1,1]>1){
 				tmv<-decode(sbsts[1,1],k)[[1]]
 				ind<-ind[tmv]
 				if(xinr){
-                			pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=T,xinr=F)
+					q<-q+1
+                				pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=T,xinr=F)
 					res<-pv[[2]]
 					pv<-pv[[1]]
 				}
 				else{
-                			pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=F,xinr=F)
+                				pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=F,xinr=F)
 					res<-pv[[2]]
 					pv<-pv[[1]]
 				}

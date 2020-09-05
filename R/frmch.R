@@ -28,15 +28,16 @@ frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 		x<-matrix(x,nrow=n)
 		xinr<-TRUE
 		k<-k+1
+       		if(ind[1]>0){ind<-c(ind,k)}
 	}
 	ind<-matrix(ind,nrow=1)
 	if(ind[1]>0){
-        	x<-x[,ind]
-        	x<-matrix(x,nrow=n)
-        	k<-length(x)/n
+        		x<-x[,ind]
+        		x<-matrix(x,nrow=n)
+        		k<-length(x)/n
     	}
-        else{ind<-1:k}
-	q<-max(q,k)
+       	else{ind<-1:k}
+	if(q==-1){q<-k}
 	tmp<-.Fortran(
 		"roblmmdch",
 		as.double(y),
@@ -70,16 +71,16 @@ frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 	inv<-(1:2^k)[ss>0]
 	ss<-ss[inv]
 	llv<-length(inv)
-	if(length(inv)==0){nvv=c(-1,-1,-1)
-			nvv<-matrix(nvv,nrow=1)
+	if(llv==0){nvv=c(-1,-1,-1)
+		nvv<-matrix(nvv,nrow=1)
 	}
-	if(length(inv)==1){
-			tmp<-decode(inv,k)[[2]]
-			nv<-sum(tmp)
-			nvv<-c(inv,nv,ss[inv])
-			nvv<-matrix(nvv,nrow=1)
+	if(llv==1){
+		tmp<-decode(inv,k)[[2]]
+		nv<-sum(tmp)
+		nvv<-c(inv,nv,ss[inv])
+		nvv<-matrix(nvv,nrow=1)
 	}
-	if(length(inv) >1){
+	if(llv>1){
 		nv<-tmp[[24]]
 		dim(nv)<-c(2^(k+1),2)
 		ind<-rank(ss,ties.method="first")
@@ -95,7 +96,7 @@ frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 #
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
-		if(sel&(llv>1)){
+		if(sel){
 			nv2<-nvv[,2]
 			ind<-rank(nv2,ties.method="first")	
 			inv<-1:llv		
@@ -108,7 +109,6 @@ frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 			nvv<-matrix(nvv,ncol=3)
 		}
 	}
-	else{nvv<-matrix(c(-1,0),nrow=1)}
 	list(nvv)
 }
 

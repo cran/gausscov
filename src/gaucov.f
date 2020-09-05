@@ -117,6 +117,7 @@ C
       util2=dble(n-icount-1)/2d0   
       pval1=betai(util1,0.5d0,util2)
       pval=1d0-betai(pval1,dble(kr+2-icount)-nu,nu)
+c      write(*,*) ic,kr,pval,alpha
       if(pval.lt.alpha) then
          icount=icount+1
          minss(icount)=amss1
@@ -405,7 +406,11 @@ C
              if(intercept.and.ik.eq.k) then
                 pval=pval1
              else
-              pval=betai(pval1,1d0,dble(q+1-k))
+              if(intercept) then
+                 pval=betai(pval1,1d0,dble(q+2-k))
+              else
+                 pval=betai(pval1,1d0,dble(q+1-k))
+              endif
             endif
           endif
           pp(ik,1)=pval
@@ -1221,7 +1226,7 @@ C
 C
       double precision ss0,ss1,pval,util1,util2,pv1,pval1
       double precision betai,mn
-      integer id,ks,ns,np,ni
+      integer id,ks,ns,np,ni,qks
       logical inv
 C
       inv=.false.
@@ -1310,7 +1315,10 @@ c                  util2=dble(n-ks)/2d0
                   util2=dble(n-ks)/2d0
                endif
                pval1=betai(util1,0.5d0,util2)
-               pval=1d0-betai(pval1,dble(q-ks)+1d0,1d0)
+               qks=q-ks
+               if(intercept) qks=q-ks+1
+               pval=1d0-betai(pval1,dble(qks)+1d0,1d0)
+c               write(*,*) qks,pval1,pval,alpha
                if(pval.gt.alpha) goto 80
                np=np+1
             endif

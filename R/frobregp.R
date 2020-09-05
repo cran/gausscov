@@ -30,7 +30,6 @@ frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
 		xinr<-T
 		k<-length(x)/n
 	}
-	q<-max(q,k)
 	ind<-matrix(ind,ncol=1)
 	if(ind[1]>0){
 		if(!xinr){x<-x[,ind]}
@@ -40,6 +39,9 @@ frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
 	}
 	else{ind<-1:k}
 	kk<-length(x)/n
+	if(q==-1){q<-kk
+		if(xinr){q<-q-1}
+	}
 	tmp<-.Fortran(	
 		"robregp",
 		as.double(y),

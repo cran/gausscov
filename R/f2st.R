@@ -17,7 +17,6 @@
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
 #' a<-f2st(boston[,14],bostint,lm=3,sub=T)
 f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
-	kk<-length(x[1,])+1
 	n<-length(y)
 	qq<-length(x[1,])
 	kx<-0

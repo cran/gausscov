@@ -26,7 +26,7 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		x<-matrix(x,nrow=n)
 		xinr<-TRUE
 		k<-k+1
-        if(ind[1]>0){ind<-c(ind,k)}
+        		if(ind[1]>0){ind<-c(ind,k)}
 	}
 	if(ind[1]>0){
 		x<-x[,ind]
@@ -34,8 +34,8 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		k<-length(x)/n
 	}
 	else{ind<-1:k}
+	if(q==-1){q<-k}
 	ss<-double(2^k+2)
-	q<-max(q,k)
 	tmp<-.Fortran(
 		"lmmdch",
 		as.double(y),
@@ -94,8 +94,11 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 			nvv<-cbind(nv1,nv2,ss)
 			nvv<-matrix(nvv,ncol=3)
 		}
+		if(llv==1){nvv<-cbind(nv1[1],nv2[1],ss[1])
+			nvv<-matrix(nvv,nrow=1)
+		}
 	}
-	else{nvv<-matrix(c(-1,0),nrow=1)}
+	else{nvv<-matrix(c(-1,-1,-1),nrow=1)}
 	list(nvv)
 }
 

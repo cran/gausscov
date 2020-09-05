@@ -29,15 +29,19 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		xinr<-TRUE
 	}
 	kk<-length(x[1,])
-	q<-kk
+	if(length(kx)==1){
+		if(kx==0){lkx<-0}
+	}
+	else{lkx<-length(kx)}
+	q<-kk-lkx
+	if(xinr){q<-q-1}
 	kex<-integer(kk+1)
-	lke<-length(kx)
-	if(lke==1){
+	if(lkx==1){
 		if(kx>0){
 			kex[1]<-kx
 		}
 	}
-	if(lke>1){kex[1:lke]<-kx}
+	if(lkx>1){kex[1:lkx]<-kx}
 	if((km>0)&inr){km=km+1}
 	p00<-2
 	if(km==0){
@@ -45,8 +49,6 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		km<-min(n,kk)
 	}
 	km1<-km+1
-	pv<-double(3*kk)
-	dim(pv)<-c(kk,3)
 	tmp<-.Fortran(
 		"fstepwise",
 		as.double(y),
