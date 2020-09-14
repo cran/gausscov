@@ -3,6 +3,7 @@
 #' @param y         Dependent variable
 #' @param x         Covariates
 #' @param cn        Parameter for Huber's psi-function
+#' @param cnr The constants for Hampel's three part redescending psi function
 #' @param p0       The P-value cut-off
 #' @param sg       Scale value of residuals
 #' @param nu       The order for calculating the P-value
@@ -12,13 +13,14 @@
 #' @param sb     Logical If TRUE best subset selected 
 #' @param of Logical if TRUE to include intercept 
 #' @param xof Logical if TRUE intercept already included 
+#' @param red  Logical It true Hampel's three part redescending psi function
 #' @return pv    In order the subset ind, the regression coefficients, the P-values, the standard P-values.
 #' @return res   The residuals
 #' @return stpv  The stepwise regression results: covariate, P-value and scale. 
 #' @examples 
 #' data(boston)
 #' a<-frst(boston[,14],boston[,1:13],km=10,sub=T)
-frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
+frst<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	if(sg==0){sg<-mad(y)}
 	tmpx<-cn*(1:1000)/1000
@@ -79,7 +81,9 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		as.integer(kex),
 		as.logical(xinr),
 		as.double(nu),
-		double(km1)
+		double(km1),
+		as.logical(red),
+		as.double(cnr)
 	)
 	kmax<-tmp[[11]]
 	if(kmax==0){
@@ -98,7 +102,7 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		stpv<-matrix(stpv,ncol=2)
 		stpv<-stpv[1:kmax,]
 		sg<-tmp[[16]]
-            		res<-tmp[[17]]
+       		res<-tmp[[17]]
 		stpv<-cbind(stpv,ss01)
 		stpv<-matrix(stpv,ncol=3)
 		ind<-stpv[1:kmax,1]
@@ -106,7 +110,7 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 			ind[1:(kmax-1)]<-ind[2:kmax]
 			ind[kmax]<-ints
 		}
-		pv<-frobregp(y,x[,ind],cn=cn,q=q,inr=F,xinr=xinr)
+		pv<-frrgp(y,x[,ind],cn=cn,q=q,inr=F,xinr=xinr)
 		pv<-pv[[1]]
 		pv[,1]<-ind
 		li<-length(ind)
@@ -116,22 +120,22 @@ frst<-function(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 			if(xinr){
                 			kk<-length(ind)
                 			ind<-ind[1:(kk-1)]
-				sbsts<-frmch(y,x,cn=cn,p0=p0,q=q,ind=ind,inr=T,xinr=F)[[1]]
+				sbsts<-frmch(y,x,cn=cn,cnr=cnr,p0=p0,q=q,ind=ind,inr=T,xinr=F,red=red)[[1]]
 			}
 			else{
-				sbsts<-frmch(y,x,cn=cn,p0=p0,q=q,ind=ind,inr=F,xinr=F)[[1]]
+				sbsts<-frmch(y,x,cn=cn,cnr=cnr,p0=p0,q=q,ind=ind,inr=F,xinr=F,red=red)[[1]]
 			}
 			if(sbsts[1,1]>1){
 				tmv<-decode(sbsts[1,1],k)[[1]]
 				ind<-ind[tmv]
 				if(xinr){
 					q<-q+1
-                				pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=T,xinr=F)
+                				pv<-frrgp(y,x,cn=cn,cnr=cnr,q=q,ind=ind,inr=T,xinr=F,red=red)
 					res<-pv[[2]]
 					pv<-pv[[1]]
 				}
 				else{
-                				pv<-frobregp(y,x,cn=cn,q=q,ind=ind,inr=F,xinr=F)
+                				pv<-frrgp(y,x,cn=cn,cnr=cnr,q=q,ind=ind,inr=F,xinr=F,red=red)
 					res<-pv[[2]]
 					pv<-pv[[1]]
 				}

@@ -4,14 +4,16 @@
 \alias{frst}
 \title{Robust stepwise selection of covariates}
 \usage{
-frst(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
+frst(y,x,cn=1,cnr=c(2,4,8),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}
 
 \item{x}{Covariates}
 
-\item{cn}{Parameter for Huber's psi-function}
+\item{cn}{The constnat for Huber's psi-function}
+
+\item{cnr}{The constants for Hampel's three part redescending psi function}
 
 \item{p0}{The P-value cut-off}
 
@@ -30,7 +32,11 @@ frst(y,x,cn=1,p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 \item{inr}{Logical TRUE to include intercept}
 
 \item{xinr}{Logical TRUE if intercept already included}
+
+\item{red}{Logical If true Hampel's three part redescending psi function}
 }
+
+
 \value{
 pv In order the subset ind, the regression coefficients, the P-values, the standard P-values.
 

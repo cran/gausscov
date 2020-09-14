@@ -1,19 +1,21 @@
-#' Calculates all possible subsets and selects those where each included covariate is significant using a robustified version of fmch.R . 
+#' Calculates all possible subsets and selects those where each included covariate is significant using a robustified version of fmch.R based on Huber's psi-function or Hampel's redescending three  psi-function . 
 #'
 #' @param y The dependent variable.
 #' @param x  The covariates.
 #' @param cn The constant for Huber's psi function.
+#' @param cnr The constants for Hampel's three part redescending psi-function
 #' @param p0 Cut-off p-value.
 #' @param sg The scale parameter.
 #' @param ind The subset for which the results are required.
 #' @param sl Logical. If TRUE remove all subsets of chosen sets.
-#' @param of Logical If TRUE to inlude intercept. 
-#' @param xof Logical If TRUE x already has intercept.
-#' @return nv List of subsets with number of covariates and scale.
+#' @param inr  Logical If TRUE to inlude intercept. 
+#' @param xinr Logical If TRUE x already has intercept.
+#' @param red  Logical If true Hampel's three part redescending psi function
+#' @return nvv List of subsets with number of covariates and scale.
 #' @examples 
 #' data(boston)
 #' a<-frmch(boston[,14],boston[,1:8]) 
-frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
+frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop('mad(y) is zero')}
 	if(sg==0){sg<-mad(y)}
 	tmpx<-cn*(1:1000)/1000
@@ -65,14 +67,16 @@ frmch<-function(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F){
 		as.logical(xinr),
 		integer(2^(k+2)),
 		double(2^k),
-		as.integer(q)
+		as.integer(q),
+		double(n),
+		as.logical(red),
+		as.double(cnr)
 	)
 	ss<-tmp[[25]]
 	inv<-(1:2^k)[ss>0]
 	ss<-ss[inv]
 	llv<-length(inv)
-	if(llv==0){nvv=c(-1,-1,-1)
-		nvv<-matrix(nvv,nrow=1)
+	if(llv==0){	nvv<-matrix(c(0,0,0),nrow=1)
 	}
 	if(llv==1){
 		tmp<-decode(inv,k)[[2]]

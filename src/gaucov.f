@@ -117,7 +117,6 @@ C
       util2=dble(n-icount-1)/2d0   
       pval1=betai(util1,0.5d0,util2)
       pval=1d0-betai(pval1,dble(kr+2-icount)-nu,nu)
-c      write(*,*) ic,kr,pval,alpha
       if(pval.lt.alpha) then
          icount=icount+1
          minss(icount)=amss1
@@ -174,19 +173,21 @@ C
 C
 C
       subroutine robstepwise(y,x,n,k,xx,x1,x2,beta,ia,alpha,kmax,pp
-     $     ,beta0,cn,cpp,sig,res,res1,yy,kmax1,kexc,offset,nu,ssg)
+     $     ,beta0,cn,cpp,sig,res,res1,yy,kmax1,kexc,offset,nu,ssg,red,
+     $     cnr)
       integer n,k,kmax,kmax1
       double precision y(n),x(n,k),xx(n,kmax1),x1(n),x2(n) ,beta(kmax1)
-     $     ,pp(kmax1,2) ,beta0(kmax1),res(n),res1(n),yy(n),ssg(kmax1)
+     $     ,pp(kmax1,2) ,beta0(kmax1),res(n),res1(n),yy(n),ssg(kmax1),
+     $     cnr(3)
       integer ia(k+1),kexc(k)
       double precision alpha,cn,sig,cpp,nu
-      logical offset
+      logical offset,red
 C
       integer icount,ks,ic,nex,id
       double precision ss0,ss1,amss1,pval,sd10,sd20,b
      $     ,util1,sx,fc
       double precision ssrho(3)
-      double precision betai,sig0,rhoh
+      double precision betai,sig0,rhoh,rrhoh
       logical scale
 C
 C
@@ -201,13 +202,17 @@ C
          ss0=0d0
          do 3 i=1,n
             xx(i,1)=1d0
-            ss0=ss0+rhoh(y(i)/sig,cn)
+            if(red) then
+               ss0=ss0+rrhoh(y(i)/sig,cnr)
+            else
+               ss0=ss0+rhoh(y(i)/sig,cn)
+            endif
  3       continue
          ia(k)=1
          ks=1
          scale=.true.
          call  orthrobreg(y,xx,yy,res,n,ks,beta,beta0,cn,cpp,sig,ssrho
-     $        ,scale)
+     $        ,scale,red,cnr)
          ss1=ssrho(1)
          sd10=ssrho(2)
          sd20=ssrho(3)
@@ -223,7 +228,11 @@ C
       else
          ss0=0d0
          do 6 i=1,n
-            ss0=ss0+rhoh(y(i)/sig,cn)
+            if(red) then
+               ss0=ss0+rrhoh(y(i)/sig,cnr)
+            else
+               ss0=ss0+rhoh(y(i)/sig,cn)
+            endif
  6       continue
          ks=0
          icount=0
@@ -281,7 +290,7 @@ C
 c         sig=ssg(kk+1)
          scale=.false.
          call orthrobreg(y,xx,yy,res,n,ks,beta,beta0,cn,cpp,sig,ssrho
-     $        ,scale)
+     $        ,scale,red,cnr)
          ss1=ssrho(1)
          if(ss1.lt.amss1) then
             ic=kk
@@ -310,7 +319,7 @@ c         if(offset) pp(icount,1)=dble(ic)-1d0
          ks=icount
          scale=.true.
          call orthrobreg(y,xx,yy,res,n,ks,beta,beta0,cn,cpp,sig,ssrho
-     $        ,scale)
+     $        ,scale,red,cnr)
         ssg(icount)=sig
         if(icount.eq.kmax) return
         if(icount+nex.eq.k) then
@@ -332,19 +341,18 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
       subroutine  robregp(y,x,yy,xx,xxx,xinv,n,k,d,r,beta,res,beta0,cn
-     $     ,sig,ssrho,cpp,ia,pp,q,intercept)
+     $     ,sig,ssrho,cpp,ia,pp,q,intercept,res1,scale,red,cnr)
       integer n,k,q
       double precision y(n),x(n,k),yy(n),xx(n,k),xxx(n*k),xinv(k**2),d(k
-     $     ),r(k),beta(k),res(n),beta0(k),pp(k,2)
-      double precision cn,sig,ssrho(3),cpp
+     $     ),r(k),beta(k),res(n),beta0(k),pp(k,2),res1(n)
+      double precision cn,sig,ssrho(3),cpp,cnr(3)
       integer ia(k)
-      logical intercept
+      logical intercept,scale,red
 C
       integer id
-      double precision ss0,ss1,sd10,sd20,pval,pval1,util1,sig0
-      double precision betat(1000)
-      double precision betai,rhoh,psih,psih1
-      logical scale
+      double precision ss0,ss11,ss1,sd10,sd20,pval,pval1,util1,sig0
+      double precision betat(1000),ssrho1(3)
+      double precision betai,rhoh,psih,psih1,rrhoh,rpsih,rpsih1
 C
       sig0=sig
       kk=k
@@ -356,25 +364,35 @@ C
       call xsubset1(x,xx,n,k,ks,ia,id)
       scale=.true.
       sig=sig0  
-      call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,betat,res,beta0,cn,sig ,
-     $     ssrho,cpp,scale)
+      call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,betat,res1,beta0,cn,sig ,
+     $     ssrho,cpp,scale,red,cnr)
       ss1=ssrho(1)
       if(k.eq.1) then
-         ssrho(1)=0d0
-         ssrho(2)=0d0
-         ssrho(3)=0d0
+         ss11=0d0
+         ssrho1(1)=0d0
+         ssrho1(2)=0d0
+         ssrho1(3)=0d0
          do 100 i=1,n
-            ssrho(1)=ssrho(1)+rhoh(y(i)/sig,cn)
-            ssrho(2)=ssrho(2)+psih(y(i)/sig,cn)**2
-            ssrho(3)=ssrho(3)+psih1(y(i)/sig,cn)
+            if(red) then
+               ss11=ss11+rrhoh(res1(i)/sig0,cnr)
+               ssrho1(1)=ssrho1(1)+rrhoh(y(i)/sig0,cnr)
+               ssrho1(2)=ssrho1(2)+rpsih(y(i)/sig0,cnr)**2
+               ssrho1(3)=ssrho1(3)+rpsih1(y(i)/sig0,cnr)
+            else
+               ss11=ss11+rhoh(res1(i)/sig0,cn)
+               ssrho1(1)=ssrho1(1)+rhoh(y(i)/sig0,cn)
+               ssrho1(2)=ssrho1(2)+psih(y(i)/sig0,cn)**2
+               ssrho1(3)=ssrho1(3)+psih1(y(i)/sig0,cn)
+            endif
  100     continue
-         sd10=ssrho(2)
-         sd20=ssrho(3)
-         ss0=ssrho(1)
-         if(ss0.lt.ss1+1d-6) then
-            pval=0d0
+         sd10=ssrho1(2)
+         sd20=ssrho1(3)
+         ss0=ssrho1(1)
+         if(ss0.lt.ss11+1d-6) then
+            pval=1d0
+            pval1=1d0
          else
-            util1=2d0*sd20*(ss0-ss1)/sd10
+            util1=2d0*sd20*(ss0-ss11)/sd10
             pval1=1d0-betai(util1/(4d2+util1),0.5d0,2d2) 
          endif
          if(intercept.and.kk.eq.k) then
@@ -384,33 +402,32 @@ C
          endif
           pp(1,1)=pval
           pp(1,2)=pval
-         return
+          beta(1)=betat(1)
+          return
        endif
        ks=k-1
        scale=.false.
+c
        do 30 ik=1,k
           ia(ik)=0
           call xsubset1(x,xx,n,k,ks,ia,id)
           ia(ik)=1
           call robreg(y,xx,yy,xxx,xinv,n,ks,d,r,beta,res,beta0,cn,sig
-     $        ,ssrho,cpp,scale)
-          sd10=ssrho(2)
-          sd20=ssrho(3)
-          ss0=ssrho(1)
+     $        ,ssrho1,cpp,scale,red,cnr)
+          sd10=ssrho1(2)
+          sd20=ssrho1(3)
+          ss0=ssrho1(1)
+
           if(ss0.lt.ss1+1d-6) then
-             pval=0d0
-             pval1=0d0
+             pval=1d0
+             pval1=1d0
           else
              util1=2d0*sd20*(ss0-ss1)/sd10
              pval1=1d0-betai(util1/(4d2+util1),0.5d0,2d2)
              if(intercept.and.ik.eq.k) then
                 pval=pval1
              else
-              if(intercept) then
-                 pval=betai(pval1,1d0,dble(q+2-k))
-              else
-                 pval=betai(pval1,1d0,dble(q+1-k))
-              endif
+              pval=betai(pval1,1d0,dble(q+1-k))
             endif
           endif
           pp(ik,1)=pval
@@ -428,15 +445,15 @@ C
 C
 C
       subroutine robreg(y,x,yy,xx,xinv,n,k,d,r,beta,res,beta0,cn,sig
-     $     ,ssrho,cpp,scale)
+     $     ,ssrho,cpp,scale,red,cnr)
       integer n,k
       double precision y(n),x(n,k),yy(n),xx(n,k),xinv(k,k),d(k),r(k)
      $     ,beta(k),res(n),beta0(k)
-      double precision cn,sig,ssrho(3),cpp
-      double precision sr1,sr2,ss,cn0,sig0
-      double precision rhoh,psih,psih1
+      double precision cn,sig,ssrho(3),cpp,cnr(3)
+      double precision sr1,sr2,ss,sig0
+      double precision rhoh,psih,psih1,rrhoh,rpsih,rpsih1
       integer ic
-      logical scale
+      logical scale,red
 C
       logical inv
       inv=.false.
@@ -458,11 +475,14 @@ C
       sig0=sig
       sr1=1d10
       ic=0
-      cn0=cn
  100  continue
       ic=ic+1
       do 2 i=1,n
-         yy(i)=psih(res(i)/sig0,cn0)*sig0
+         if(red) then
+            yy(i)=rpsih(res(i)/sig0,cnr)*sig0
+         else
+            yy(i)=psih(res(i)/sig0,cn)*sig0
+         endif
  2    continue
       call lsqqr(xx,yy,n,k,d,r,beta0,xinv,inv)
       do 35 j=1,k
@@ -475,16 +495,24 @@ C
             ss=ss+x(i,j)*beta(j)
  40      continue
          res(i)=y(i)-ss
-         sr2=sr2+rhoh(res(i)/sig0,cn0)
+         if(red) then
+            sr2=sr2+rrhoh(res(i)/sig0,cnr)
+         else
+            sr2=sr2+rhoh(res(i)/sig0,cn)
+         endif
  50   continue
-      if(sr1-sr2.gt.1d-3*sr2) then
+      if(sr1-sr2.gt.1d-5*sr2) then
          sr1=sr2
          goto 100
       endif
       if(.not.scale) goto 200
       sig=0d0
       do 55 i=1,n
-         sig=sig+psih(res(i)/sig0,cn0)**2
+         if(red) then
+            sig=sig+rpsih(res(i)/sig0,cnr)**2
+         else
+            sig=sig+psih(res(i)/sig0,cn)**2
+         endif
  55   continue
        sig=dsqrt(sig/(cpp*dble(n-k)))*sig0
        if(dabs(sig/sig0-1d0).gt.1d-3) then
@@ -496,12 +524,22 @@ C
       ssrho(2)=0d0
       ssrho(3)=0d0
       do 60 i=1,n
-         ssrho(1)=ssrho(1)+rhoh(res(i)/sig,cn)
-         ssrho(2)=ssrho(2)+psih(res(i)/sig,cn)**2
-         ssrho(3)=ssrho(3)+psih1(res(i)/sig,cn)
+         if(red) then
+            ssrho(1)=ssrho(1)+rrhoh(res(i)/sig,cnr)
+            ssrho(2)=ssrho(2)+rpsih(res(i)/sig,cnr)**2
+            ssrho(3)=ssrho(3)+rpsih1(res(i)/sig,cnr)
+         else
+            ssrho(1)=ssrho(1)+rhoh(res(i)/sig,cn)
+            ssrho(2)=ssrho(2)+psih(res(i)/sig,cn)**2
+            ssrho(3)=ssrho(3)+psih1(res(i)/sig,cn)
+         endif
  60   continue
       return
       end
+C
+C
+C
+C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
@@ -1095,6 +1133,30 @@ c      return
 C
 C
 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      double precision function rpsih1(x,cn)
+      double precision x,cn(3),ax
+C
+      double precision dsign
+C
+      ax=dabs(x)
+      if(ax.le.cn(1)) then
+         rpsih1=1d0
+      elseif(ax.ge.cn(1).and.ax.le.cn(2)) then
+         rpsih1=0d0      
+      elseif(cn(2).le.ax.and.ax.le.cn(3)) then
+         rpsih1=dsign(1d0,x)*cn(1)/(cn(3)-cn(2))              
+      else
+         rpsih1=0d0
+      endif
+      return
+      end
+C
+C
+C
 C
       double precision function psih(x,cn)
       double precision x,cn
@@ -1113,6 +1175,27 @@ c      return
          psih=x
       else
          psih=cn*dsign(1d0,x)
+      endif
+      return
+      end
+C
+C
+C
+      double precision function rpsih(x,cn)
+      double precision x,cn(3),ax
+C
+      double precision dsign
+c      double precision u
+C
+      ax=dabs(x)
+      if(ax.le.cn(1)) then
+         rpsih=x
+      elseif(ax.ge.cn(1).and.ax.le .cn(2)) then
+         rpsih=cn(1)*dsign(1d0,x)
+      elseif(ax.ge.cn(2).and.ax.le.cn(3)) Then
+         rpsih=dsign(1d0,x)*cn(1)*(cn(3)-ax)/(cn(3)-cn(2))
+      else
+         rpsih=0d0
       endif
       return
       end
@@ -1139,18 +1222,42 @@ c      return
       return
       end
 C
+C
+C
+C
+      double precision function rrhoh(x,cn)
+      double precision x,cn(3),ax
+C
+C
+      rrhoh=0d0
+      ax=dabs(x)
+      if(ax.le.cn(1)) then
+         rrhoh=0.5d0*ax**2
+      elseif(ax.ge.cn(1).and.ax.le.cn(2)) then
+         rrhoh=cn(1)*ax-0.5d0*cn(1)**2
+
+      elseif(ax.ge.cn(2).and.ax.le.cn(3)) then
+         rrhoh=cn(1)*cn(2)-0.5d0*cn(1)**2+0.5d0*cn(1)*((cn(3)-cn(2))**2-
+     $  (cn(3)-ax)**2)/(cn(3)-cn(2))
+      elseif(ax.ge.cn(3)) then
+         rrhoh=cn(1)*cn(2)-0.5d0*cn(1)**2+0.5d0*cn(1)*(cn(3)-cn(2))**2/
+     $  (cn(3)-cn(2))
+      endif
+      return
+      end
+C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
       subroutine orthrobreg(y,x,yy,res,n,ks,beta,beta0,cn,cpp,sig,ssrho
-     $     ,scale)
+     $     ,scale,red,cnr)
       integer n,ks
       double precision y(n),x(n,ks),yy(n),res(n),beta(ks),beta0(ks)
-      double precision cn,sig,ssrho(3),cpp
+      double precision cn,sig,ssrho(3),cpp,cnr(3)
       double precision sr1,sr2,ss,syx,sig0
-      double precision rhoh,psih,psih1
+      double precision rhoh,psih,psih1,rrhoh,rpsih,rpsih1
       integer ic
-      logical scale
+      logical scale,red
 C
 C
 C
@@ -1182,7 +1289,11 @@ C
             ss=ss+x(i,j)*beta(j)
  40      continue
          res(i)=y(i)-ss
-         sr2=sr2+rhoh(res(i)/sig,cn)
+         if(red) then
+            sr2=sr2+rrhoh(res(i)/sig,cnr)
+         else
+            sr2=sr2+rhoh(res(i)/sig,cn)
+         endif
  50   continue
       if(sr1-sr2.gt.1d-3*sr2) then
          sr1=sr2
@@ -1191,7 +1302,11 @@ C
       if(.not.scale) goto 200
       sig=0d0
       do 55 i=1,n
-         sig=sig+psih(res(i)/sig0,cn)**2
+         if(red) then
+            sig=sig+rpsih(res(i)/sig0,cnr)**2
+         else
+            sig=sig+psih(res(i)/sig0,cn)**2
+         endif
  55   continue
        sig=dsqrt(sig/(cpp*dble(n-ks)))*sig0
        if(dabs(sig/sig0-1d0).gt.1d-2) then
@@ -1204,9 +1319,15 @@ C
       ssrho(2)=0d0
       ssrho(3)=0d0
       do 60 i=1,n
-         ssrho(1)=ssrho(1)+rhoh(res(i)/sig,cn)
-         ssrho(2)=ssrho(2)+psih(res(i)/sig,cn)**2
-         ssrho(3)=ssrho(3)+psih1(res(i)/sig,cn)
+         if(red) then
+            ssrho(1)=ssrho(1)+rrhoh(res(i)/sig,cnr)
+            ssrho(2)=ssrho(2)+rpsih(res(i)/sig,cnr)**2
+            ssrho(3)=ssrho(3)+rpsih1(res(i)/sig,cnr)
+         else
+            ssrho(1)=ssrho(1)+rhoh(res(i)/sig,cn)
+            ssrho(2)=ssrho(2)+psih(res(i)/sig,cn)**2
+            ssrho(3)=ssrho(3)+psih1(res(i)/sig,cn)
+         endif
  60   continue
       return
       end
@@ -1318,7 +1439,6 @@ c                  util2=dble(n-ks)/2d0
                qks=q-ks
                if(intercept) qks=q-ks+1
                pval=1d0-betai(pval1,dble(qks)+1d0,1d0)
-c               write(*,*) qks,pval1,pval,alpha
                if(pval.gt.alpha) goto 80
                np=np+1
             endif
@@ -1337,13 +1457,15 @@ C
 C
 C
         subroutine roblmmdch(y,x,n,k,alpha,x1,x2,x3,y1,d,r,beta,xinv
-     $       ,res,beta0,cn,sig,ssrho,cpp,ia,ib,pp,intercept,nv,ssr,q)
+     $       ,res,beta0,cn,sig,ssrho,cpp,ia,ib,pp,intercept,nv,ssr,q,
+     $       res1,red,cnr)
       integer n,k,q
       double precision y(n),x(n,k),x1(n,k),x2(n*k),x3(n*k),y1(n),d(k)
-     $     ,r(k),beta(k),xinv(k**2),res(n),beta0(k),pp(k,2),ssr(2**k)
+     $     ,r(k),beta(k),xinv(k**2),res(n),beta0(k),pp(k,2),ssr(2**k),
+     $     res1(n),cnr(3)
       double precision alpha,cn,cpp,sig,ssrho(3)
       integer ia(k),ib(k),nv(2**(k+1),2)
-      logical intercept
+      logical intercept,scale,red
 C
       integer id,ks,ni,ivv,np
       double precision sig0
@@ -1374,14 +1496,12 @@ C
         if(k.eq.2..and.ks.eq.1) goto 40
         call xsubset1(x,x1,n,k,ks,ia,id)
         sig=sig0
+        scale=.true.
         call robregp(y,x1,y1,x2,x3,xinv,n,ks,d,r,beta,res,beta0,cn,sig
-     $       ,ssrho,cpp,ib,pp,q+1,intercept)
-c        call robregp(y,x1,y1,x2,x3,xinv,n,ks,d,r,beta,res,beta0,cn,sig
-c     $       ,ssrho,cpp,ib,pp,q,intercept)
+     $       ,ssrho,cpp,ib,pp,q+1,intercept,res1,scale,red,cnr)
         kss=ks
         if(intercept) kss=ks-1
        do 30 j=1,kss
-c          if(iv.eq.8191) write(*,*) pp(j,1)
            if(pp(j,1).gt.alpha) goto 40
  30     continue
         ni=ni+1

@@ -98,7 +98,7 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 			nvv<-matrix(nvv,nrow=1)
 		}
 	}
-	else{nvv<-matrix(c(-1,-1,-1),nrow=1)}
+	else{nvv<-matrix(c(0,0,0),nrow=1)}
 	list(nvv)
 }
 

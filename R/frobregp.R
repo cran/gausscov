@@ -1,22 +1,24 @@
-#' Robust regression using Huber's psi-function which calculates P-values
+#' Robust regression using Huber's psi-function or Hampel's three part redescending psi function which calculates P-values
 #'
 #' @param y Dependent variable
 #' @param x Covariates
 #' @param cn  Tuning parameter for Huber's psi-function
+#' @param cnr The constants for Hampel's three part redescending psi function
 #' @param sg  Scale
-#' @param q  the numer of covariates available
+#' @param q   The numer of covariates available the number of covariates available
+#' @param scale Logical TRUE to recalculate scale sg
 #' @param ind The subset of covariates for which the results are required.
 #' @param inr Logical TRUE to include intercept 
 #' @param xinr Logical TRUE if x already has intercept.
+#' @param red  Logical It true Hampel's three part redescending psi function
 #' @return ppi In order the subset ind, the regression coefficients, the P-values, the standard P-values.
 #' @return res  Residuals
 #' @return sg  Scale
+#' @return rho Sums of rho, psi and psi1 functions.
 #' @examples 
 #' data(boston)
-#' a<-frobregp(boston[,14],boston[,1:13])
-frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
-	if(mad(y)==0){stop("MAD=0")}
-	if(sg==0){sg<-mad(y)}
+#' a<-frrgp(boston[,14],boston[,1:13])
+frrgp<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F){
 	tmpx<-cn*(1:1000)/1000
 	cpp<-sum(tmpx^2*dnorm(tmpx))*cn/1000+cn**2*(1-pnorm(cn))
 	cpp<-2*cpp
@@ -39,9 +41,12 @@ frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
 	}
 	else{ind<-1:k}
 	kk<-length(x)/n
-	if(q==-1){q<-kk
-		if(xinr){q<-q-1}
+	if(inr){
+		if(mad(y)==0){stop("MAD=0")}
+		if(sg==0){sg<-mad(y)}
 	}
+	else{sg<-median(abs(y))}
+	if(q==-1){q<-kk}
 	tmp<-.Fortran(	
 		"robregp",
 		as.double(y),
@@ -64,17 +69,22 @@ frobregp<-function(y,x,cn=1,sg=0,q=-1,ind=0,inr=T,xinr=F){
 		integer(kk),
 		double(2*kk),
 		as.integer(q),
-		as.logical(xinr)
+		as.logical(xinr),
+		double(n),
+		as.logical(scale),
+		as.logical(red),
+		as.double(cnr)
 		)
 	beta<-tmp[[11]]
 	beta<-matrix(beta,ncol=1)
 	pp<-tmp[[19]]
 	pp<-matrix(pp,ncol=2)
-	res<-tmp[[12]]	
+	res<-tmp[[22]]	
 	sg<-tmp[[15]]
 	ind<-matrix(ind,ncol=1)
 	if(xinr){ind[kk]<-0}
 	ppi<-cbind(ind,beta,pp)
 	ppi<-matrix(ppi,ncol=4)
-	list(ppi,res,sg)
+	rho<-tmp[[16]]
+	list(ppi,res,sg,rho)
 }

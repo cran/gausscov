@@ -1,19 +1,22 @@
-#' Robust regression using Huber's psi-function
+#' Robust regression using Huber's psi-function or Hampel's redescending psi-function without P-values
 #'
 #' @param y Dependent variable
 #' @param x Covariates
 #' @param cn  Tuning parameter for Huber's psi-function
+#' @param cnr The constants for Hampel's three part redescending psi function
 #' @param sg  Scale
 #' @param scale Logical, if TRUE calculate sg simultaneously, otherwise keeps initial sg
 #' @param inr Logical if TRUE to include intercept 
 #' @param xinr Logical if TRUE intercept already included
+#' @param red  Logical If true Hampel's three part redescending psi function
 #' @return beta Regression coefficients
 #' @return res  Residuals
 #' @return sg  Scale
+#' @return rho Sums of rho, psi and psi1 functions.
 #' @examples 
 #' data(boston)
-#' a<-frobreg(boston[,14],boston[,1:13])
-frobreg<-function(y,x,cn=1,sg=0,scale=T,inr=T,xinr=F){
+#' a<-frrg(boston[,14],boston[,1:13])
+frrg<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,scale=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	if(sg==0){sg<-mad(y)}
 	tmpx<-cn*(1:1000)/1000
@@ -46,11 +49,14 @@ frobreg<-function(y,x,cn=1,sg=0,scale=T,inr=T,xinr=F){
 		as.double(sg),
 		double(3),
 		as.double(cpp),
-		as.logical(scale)
+		as.logical(scale),
+		as.logical(red),
+		as.double(cnr)
 		)
 	beta<-tmp[[10]]
 	res<-tmp[[11]]	
 	sg<-tmp[[14]]
-	list(beta,res,sg)
+	rho<-tmp[[15]]
+	list(beta,res,sg,rho)
 }
 

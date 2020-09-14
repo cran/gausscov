@@ -22,6 +22,7 @@ f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
 	kx<-0
 	kv<-1
 	mn<-0
+	pvv<- matrix(c(0,0,0,0,0),nrow=1)
 	while(kv>0.5){
 		tmp<-f1st(y,x,p0,nu,km,mx,kx,sub,inr,xinr)[[1]]
 		if(tmp[1,1]<=0){kv<-0}

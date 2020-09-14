@@ -2,9 +2,9 @@
 % Please edit documentation in R/froblmmdch.R
 \name{frmch}
 \alias{frmch}
-\title{Robust selection of covariates based on all subsets}
+\title{Robust selection of covariates using Huber's psi-funtion or Hampel's redescending psi-function  based on all subsets}
 \usage{
-frmch(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F)
+frmch(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -12,6 +12,8 @@ frmch(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F)
 \item{x}{Covariates}
 
 \item{cn}{Constant  for Huber's psi-function}
+
+\item{cnr}{Constants for for Hampel's three part redescending  psi-function}
 
 \item{p0}{The P-value cut-off}
 
@@ -26,6 +28,8 @@ frmch(y,x,cn=1,p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F)
 \item{inr}{Logical if TRUE include intercept}
 
 \item{xinr}{ Logical If TRUE intercept already included}
+
+\item{red}{Logical If true Hampel's three part redescending psi function}
 }
 \value{
 nv  List of subsets with number of covariates and scale.
@@ -35,6 +39,6 @@ Calculates all possible subsets and selects those where each included covariate 
 }
 \examples{
 data(boston)
-a<-frmch(boston[,14],boston[,1:10])
-ind<-decode(235,10)
+a<-frmch(boston[,14],boston[,1:6])
+ind<-decode(57,6)
 }

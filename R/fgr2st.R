@@ -58,7 +58,6 @@ fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 		as.integer(kk)
 		)
 	ned<-tmp[[14]]
-	print(ned)
 	if(ned>0){
 		edg<-tmp[[13]]
 		edg<-matrix(edg,ncol=3)
