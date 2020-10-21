@@ -17,9 +17,10 @@
 #' a<-frmch(boston[,14],boston[,1:8]) 
 frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop('mad(y) is zero')}
-	if(sg==0){sg<-mad(y)}
-	tmpx<-cn*(1:1000)/1000
-	cpp<-sum(tmpx^2*dnorm(tmpx))*cn/1000+cn**2*(1-pnorm(cn))
+	cnn<-cn
+	if(red){cnn<-cnr[1]}
+	tmpx<-cnn*(1:1000)/1000
+	cpp<-sum(tmpx^2*dnorm(tmpx))*cnn/1000+cnn**2*(1-pnorm(cnn))
 	cpp<-2*cpp
 	n<-length(y)
 	x<-matrix(x,nrow=n)
@@ -39,6 +40,10 @@ frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F
         		k<-length(x)/n
     	}
        	else{ind<-1:k}
+	if(xinr){mny<-median(y)
+		y<-y-mny
+	}
+	if(sg==0){sg<-median(abs(y))}
 	if(q==-1){q<-k}
 	tmp<-.Fortran(
 		"roblmmdch",

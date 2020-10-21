@@ -1,4 +1,4 @@
-ad57b0572f6c763d84647a405483a9f0 *DESCRIPTION
+93b404f964ab088cc9919b2cae094f86 *DESCRIPTION
 c2aa97265b2a65ea138c898abf4080ef *NAMESPACE
 1c66fb761123e88ff0407425e80d5ea6 *R/decode.R
 942830eb9713bdc24768706cdc9e01f7 *R/decomp.R
@@ -10,9 +10,9 @@ b04ad9ae4b474b84108d5e0a47ce12bb *R/fgr1st.R
 2d9ed46cc857817feec8e13ef51d7271 *R/fgr2st.R
 0f34b2131b2b5e42a44d3ef3c21cb849 *R/fmch.R
 27079f77b8706aafa41ebe1fd57da8f1 *R/fpval.R
-1f8f4a2f3847e20f3d914dcbefbf765a *R/frmch.R
-93d8f68abc44a5ba0970da600f3b0c0e *R/frobreg.R
-d0e90fd183d90ec8e9d2d77280129e86 *R/frobregp.R
+6f93b6d07b4147d76acf0a53e50d6d93 *R/frmch.R
+cbe1e4e40a2c6df7fc6148bd6f33b225 *R/frobreg.R
+a3c93c0c4b78ac2c933563b07c39a22b *R/frobregp.R
 8ce573d5491124ea0332b07e9a8601cc *R/frst.R
 06edbffca82cc390e756da7e3c449a8a *R/fselect.R
 7c59ef4150d6b8e2788e06b7c346e3ae *R/fsimords.R
@@ -50,4 +50,4 @@ e9a2d773a1eb6750d470e50f7bec4ed3 *man/leukemia_x.Rd
 8bdef7c5913f0cf58057c16ca043753f *man/mel_temp.Rd
 cce45597a5623c840572fe612725de1a *man/redwine.Rd
 740c98e8c2175264f19da9cf1846d0f2 *man/snspt.Rd
-864de94e3ef631c1d0d0711ddc7858af *src/gaucov.f
+a365f9bf2ca669eaf24c38e824222904 *src/gaucov.f

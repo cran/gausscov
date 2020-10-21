@@ -484,11 +484,12 @@ C
             yy(i)=psih(res(i)/sig0,cn)*sig0
          endif
  2    continue
-      call lsqqr(xx,yy,n,k,d,r,beta0,xinv,inv)
+       call lsqqr(xx,yy,n,k,d,r,beta0,xinv,inv)
+ 
       do 35 j=1,k
          beta(j)=beta(j)+1.5d0*beta0(j)
  35   continue
-       sr2=0d0
+        sr2=0d0
       do 50 i=1,n
          ss=0d0
          do 40 j=1,k
@@ -501,7 +502,7 @@ C
             sr2=sr2+rhoh(res(i)/sig0,cn)
          endif
  50   continue
-      if(sr1-sr2.gt.1d-5*sr2) then
+      if(sr1-sr2.gt.1d-3*sr2) then
          sr1=sr2
          goto 100
       endif
@@ -515,7 +516,7 @@ C
          endif
  55   continue
        sig=dsqrt(sig/(cpp*dble(n-k)))*sig0
-       if(dabs(sig/sig0-1d0).gt.1d-3) then
+       if(dabs(sig/sig0-1d0).gt.1d-2) then
          sig0=sig
          goto 100
       endif

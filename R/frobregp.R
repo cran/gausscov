@@ -19,8 +19,11 @@
 #' data(boston)
 #' a<-frrgp(boston[,14],boston[,1:13])
 frrgp<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F){
-	tmpx<-cn*(1:1000)/1000
-	cpp<-sum(tmpx^2*dnorm(tmpx))*cn/1000+cn**2*(1-pnorm(cn))
+	if(mad(y)==0){stop("MAD=0")}
+	cnn<-cn
+	if(red){cnn<-cnr[1]}
+	tmpx<-cnn*(1:1000)/1000
+	cpp<-sum(tmpx^2*dnorm(tmpx))*cnn/1000+cnn**2*(1-pnorm(cnn))
 	cpp<-2*cpp
 	n<-length(y)
 	k<-length(x)/n
@@ -41,11 +44,10 @@ frrgp<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F
 	}
 	else{ind<-1:k}
 	kk<-length(x)/n
-	if(inr){
-		if(mad(y)==0){stop("MAD=0")}
-		if(sg==0){sg<-mad(y)}
+	if(xinr){mny<-median(y)
+		y<-y-mny
 	}
-	else{sg<-median(abs(y))}
+	if(sg==0){sg<-median(abs(y))}
 	if(q==-1){q<-kk}
 	tmp<-.Fortran(	
 		"robregp",
@@ -77,6 +79,7 @@ frrgp<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F
 		)
 	beta<-tmp[[11]]
 	beta<-matrix(beta,ncol=1)
+	if(xinr){beta[kk]<-beta[kk]+mny}
 	pp<-tmp[[19]]
 	pp<-matrix(pp,ncol=2)
 	res<-tmp[[22]]	
