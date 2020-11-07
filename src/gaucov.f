@@ -1436,7 +1436,11 @@ c                  util2=dble(n-ks)/2d0
                else
                   util2=dble(n-ks)/2d0
                endif
-               pval1=betai(util1,0.5d0,util2)
+               if(util1.le.1d-6) then
+                  pval1=0d0
+               else
+                  pval1=betai(util1,0.5d0,util2)
+               endif
                qks=q-ks
                if(intercept) qks=q-ks+1
                pval=1d0-betai(pval1,dble(qks)+1d0,1d0)
