@@ -17,6 +17,7 @@
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
 #' a<-f2st(boston[,14],bostint,lm=3,sub=T)
 f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
+	kxx<-kx
 	n<-length(y)
 	qq<-length(x[1,])
 	kx<-0
@@ -24,7 +25,7 @@ f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
 	mn<-0
 	pvv<- matrix(c(0,0,0,0,0),nrow=1)
 	while(kv>0.5){
-		tmp<-f1st(y,x,p0,nu,km,mx,kx,sub,inr,xinr)[[1]]
+		tmp<-f1st(y,x,p0=p0,nu=nu,km=km,mx=mx,kx=kxx,sub=sub,inr=inr,xinr=xinr)[[1]]
 		if(tmp[1,1]<=0){kv<-0}
 		if(kv>0.5){
 			lv<-length(tmp[,1])
@@ -34,17 +35,22 @@ f2st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,lm=9^9,sub=F,inr=T,xinr=F){
 			mnt<-matrix(mnt,ncol=1)
 			if(mn==1){pv<-tmp
 				pvv<-cbind(mnt,pv)
-				kx<-tmp[llv,1]
+				if(kxx==0){
+					kxx<-tmp[llv,1]
+				}
+				else{
+					kxx<-c(kxx,tmp[llv,1])
+				}
 				mnn<-mnt
 			}
 			else{mnn<-rbind(mnn,mnt)
 				pv<-rbind(pv,tmp)
 				pvv<-cbind(mnn,pv)
-				kx<-c(kx,tmp[llv,1])
+				kxx<-c(kxx,tmp[llv,1])
 			}
 			kv<-1
 			if(mn>=lm){kv<-0}
-			if(length(kx)>=qq){kv<-0}
+			if(length(kxx)>=qq){kv<-0}
 		}
 	}
 	list(pvv)

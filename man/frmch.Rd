@@ -4,7 +4,7 @@
 \alias{frmch}
 \title{Robust selection of covariates using Huber's psi-funtion or Hampel's redescending psi-function  based on all subsets}
 \usage{
-frmch(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F)
+frmch(y,x,cn=1,cnr=c(1,2,4),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}

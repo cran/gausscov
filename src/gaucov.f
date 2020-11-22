@@ -38,8 +38,8 @@ C
             res(i)=y(i)-b
             ss1=ss1+res(i)**2
  6       continue
-         util1=1d0-ss1/ss0
-         pval=1d0-betai(util1,0.5d0,0.5d0*dble(n-1))
+         util1=ss1/ss0
+         pval=betai(util1,0.5d0*dble(n-1),0.5d0)
          pp(1,1)=dble(k)
          pp(1,2)=pval
          minss(1)=ss1
@@ -113,10 +113,10 @@ C
          endif
  40   continue
       ks=icount+1
-      util1=1d0-amss1/ss0
+      util1=amss1/ss0
       util2=dble(n-icount-1)/2d0   
-      pval1=betai(util1,0.5d0,util2)
-      pval=1d0-betai(pval1,dble(kr+2-icount)-nu,nu)
+      pval1=betai(util1,util2,0.5d0)
+      pval=betai(pval1,nu,dble(kr+2-icount)-nu)
       if(pval.lt.alpha) then
          icount=icount+1
          minss(icount)=amss1
@@ -216,7 +216,7 @@ C
          ss1=ssrho(1)
          sd10=ssrho(2)
          sd20=ssrho(3)
-          util1=2d0*sd20*(ss0-ss1)/sd10
+         util1=2d0*sd20*(ss0-ss1)/sd10
          pval=betai(util1/(4d2+util1),0.5d0,2d2)
          pp(1,1)=dble(k)
          pp(1,2)=1d0-pval
@@ -722,7 +722,7 @@ C
 C
       double precision eps,fpmin
       integer maxit
-      parameter(maxit=100,eps=4d-10,fpmin=1d-20)
+      parameter(maxit=200,eps=4d-20,fpmin=1d-20)
 C
       double precision aa,c,d,del,h,qab,qam,qap
       integer m2,m
@@ -1429,21 +1429,21 @@ C
  50            continue
                ia(is)=1
                ss0=ss(ns+1)
-               util1=1d0-ss1/ss0
+               util1=ss1/ss0
                if(intercept) then
                   util2=dble(n-ks-1)/2d0
 c                  util2=dble(n-ks)/2d0
                else
                   util2=dble(n-ks)/2d0
                endif
-               if(util1.le.1d-6) then
+               if(util1.le.1d-20) then
                   pval1=0d0
                else
-                  pval1=betai(util1,0.5d0,util2)
+                  pval1=betai(util1,util2,0.5d0)
                endif
                qks=q-ks
                if(intercept) qks=q-ks+1
-               pval=1d0-betai(pval1,dble(qks)+1d0,1d0)
+               pval=betai(pval1,1d0,dble(qks)+1d0)
                if(pval.gt.alpha) goto 80
                np=np+1
             endif

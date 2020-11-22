@@ -4,7 +4,7 @@
 \alias{frrg}
 \title{Robust regression using Huber's psi-function or Hampel's redescending psi-function without P-values}
 \usage{
-frrg(y,x,cn=1,cnr=c(2,4,8),sg=0,scale=T,inr=T,xinr=F,red=F)
+frrg(y,x,cn=1,cnr=c(1,2,4),sg=0,scale=T,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}

@@ -15,7 +15,7 @@
 #' @examples 
 #' data(boston)
 #' a<-frmch(boston[,14],boston[,1:8]) 
-frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F){
+frmch<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop('mad(y) is zero')}
 	cnn<-cn
 	if(red){cnn<-cnr[1]}
@@ -91,7 +91,7 @@ frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F
 	}
 	if(llv>1){
 		nv<-tmp[[24]]
-		dim(nv)<-c(2^(k+1),2)
+		nv<-matrix(nv,ncol=2)
 		ind<-rank(ss,ties.method="first")
 		inv<-1:llv
 		inv[ind]<-inv
@@ -106,7 +106,6 @@ frmch<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,q=-1,sg=0,ind=0,sel=T,inr=T,xinr=F
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
 		if(sel){
-			nv2<-nvv[,2]
 			ind<-rank(nv2,ties.method="first")	
 			inv<-1:llv		
 			inv[ind]<-inv

@@ -4,9 +4,9 @@
 #' @param k  The number of covariates
 #' @return ind The selected subsets.
 #' @examples 
-#' nv<-c(650,1962,160,1033,394,1730,577,1839,334)
+#' nv<-c(650,1962,160,5,3,4,577,1839,734)
 #' nv<-matrix(nv,ncol=3)
-#' a<-fselect(nv,11)
+#' a<-fselect(nv,6)
 fselect<-function(nv,k){
 	n<-length(nv[,1])
 	ind<-1:n

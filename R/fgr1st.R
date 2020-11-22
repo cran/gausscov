@@ -51,25 +51,26 @@ fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 		)
 	ned<-tmp[[14]]
 	if(ned>0){
-        edg<-tmp[[13]]
-        edg<-matrix(edg,ncol=2)
-        edg<-edg[1:ned,]
-        if(!dr){
-            tmp<-.Fortran(
-                    "edge",
-                    as.integer(edg),
-                    as.integer(ned),
-                    as.integer(ned),
-                    integer(ned),
-                    integer(1)
-                )   
-                ned<-tmp[[5]]
-                edg<-tmp[[1]]
-                edg<-matrix(edg,ncol=2)
-        }
-    }
-    else{
-        edg<-NaN
+        		edg<-tmp[[13]]
+        		edg<-matrix(edg,ncol=2)
+        		edg<-edg[1:ned,]
+        		edg<-matrix(edg,ncol=2)
+        		if(!dr){
+            			tmp<-.Fortran(
+                    		"edge",
+                    		as.integer(edg),
+                    		as.integer(ned),
+                    		as.integer(ned),
+                    		integer(ned),
+                   	 	integer(1)
+                		)   
+                		ned<-tmp[[5]]
+                		edg<-tmp[[1]]
+                		edg<-matrix(edg,ncol=2)
+        		}
+    	}
+    	else{
+        		edg<-NaN
 	}
 	list(ned,edg)
 }

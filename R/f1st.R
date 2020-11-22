@@ -30,6 +30,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 	}
 	kk<-length(x[1,])
 	if(length(kx)==1){
+		lkx<-1
 		if(kx==0){lkx<-0}
 	}
 	else{lkx<-length(kx)}
@@ -84,6 +85,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		stpv<-tmp[[10]]
 		stpv<-matrix(stpv,ncol=2)
 		stpv<-stpv[1:kmax,]
+		stpv<-matrix(stpv,ncol=2)
 		minss<-tmp[[15]]
 		minss<-minss[1:kmax]
 		stpv<-cbind(stpv,minss,ss01)

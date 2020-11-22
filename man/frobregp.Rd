@@ -4,7 +4,7 @@
 \alias{frrgp}
 \title{Robust regression using Huber's psi-function or Hampel's three part redescending psi-function providing P-values}
 \usage{
-frrgp(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F)
+frrgp(y,x,cn=1,cnr=c(1,2,4),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}

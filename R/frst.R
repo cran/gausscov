@@ -20,11 +20,13 @@
 #' @examples 
 #' data(boston)
 #' a<-frst(boston[,14],boston[,1:13],km=10,sub=T)
-frst<-function(y,x,cn=1,cnr=c(2,4,8),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F){
+frst<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	if(sg==0){sg<-mad(y)}
-	tmpx<-cn*(1:1000)/1000
-	cpp<-sum(tmpx^2*dnorm(tmpx))*cn/1000+cn**2*(1-pnorm(cn))
+	cnn<-cn
+	if(red){cnn<-cnr[1]}
+	tmpx<-cnn*(1:1000)/1000
+	cpp<-sum(tmpx^2*dnorm(tmpx))*cnn/1000+cnn**2*(1-pnorm(cnn))
 	cpp<-2*cpp
     	n<-length(y)
 	x<-matrix(x,nrow=n)

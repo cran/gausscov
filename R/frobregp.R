@@ -18,7 +18,7 @@
 #' @examples 
 #' data(boston)
 #' a<-frrgp(boston[,14],boston[,1:13])
-frrgp<-function(y,x,cn=1,cnr=c(2,4,8),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F){
+frrgp<-function(y,x,cn=1,cnr=c(1,2,4),sg=0,q=-1,ind=0,scale=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	cnn<-cn
 	if(red){cnn<-cnr[1]}

@@ -65,6 +65,7 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	dim(nv)<-c(2^(k+1),2)
 	nv<-matrix(nv,ncol=2)
 	nv<-nv[inv,]
+	nv<-matrix(nv,ncol=2)
 	llv<-length(inv)
 	if(llv>0){
 		nv<-tmp[[16]]
@@ -83,7 +84,6 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
 		if(sel&(llv>1)){
-			nv2<-nvv[,2]
 			ind<-rank(nv2,ties.method="first")	
 			inv<-1:llv		
 			inv[ind]<-inv

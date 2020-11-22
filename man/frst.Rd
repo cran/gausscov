@@ -4,7 +4,7 @@
 \alias{frst}
 \title{Robust stepwise selection of covariates}
 \usage{
-frst(y,x,cn=1,cnr=c(2,4,8),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F)
+frst(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}
