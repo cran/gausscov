@@ -1,4 +1,4 @@
-5f49a4d2a98f951badc216967b099cc4 *DESCRIPTION
+a6328de3e7b18479f8b9eb0bf795e5cb *DESCRIPTION
 c2aa97265b2a65ea138c898abf4080ef *NAMESPACE
 1c66fb761123e88ff0407425e80d5ea6 *R/decode.R
 942830eb9713bdc24768706cdc9e01f7 *R/decomp.R
@@ -14,7 +14,7 @@ d7500d20db5955e12d118e65cebb5d36 *R/frmch.R
 9cb028cbb140aebebb9bdf7833874592 *R/frobreg.R
 78a62c6363527d1b42023852e58956c2 *R/frobregp.R
 065f4e45f2688fe71930378b7e183284 *R/frst.R
-3eba0665e096c02e153745475afc0f74 *R/fselect.R
+d46bd73eb79ac150d2ebdc7addc2f85d *R/fselect.R
 7c59ef4150d6b8e2788e06b7c346e3ae *R/fsimords.R
 da41672f82e8ec48d568116e7cb4fa2b *data/abcql.rda
 844af9f4e4279be39a2ae8fa64af1fa2 *data/boston.rda
@@ -31,7 +31,7 @@ a40e73e9389724fb7af9628b0b60d375 *data/leukemia_y.rda
 b8bc66b5642b773f12e7579770832ed8 *man/decomp.Rd
 5e39c37ecab24ca5350bf897a4ad616d *man/dentx.Rd
 48dcc19fb0f6652fda493fe522a58ed4 *man/denty.Rd
-4a53f053155b03ae14f38d0981968b58 *man/f1st.Rd
+6bd1a11a7a1da5e15f59cd6054c93093 *man/f1st.Rd
 ce49f6f2955bfecd60bb53d9a0aa6b32 *man/f2st.Rd
 ebb50296c197b73949b6479d0095838b *man/fgeninter.Rd
 88f2cb0b585b6e433b396e2f0d93e261 *man/fgentrig.Rd

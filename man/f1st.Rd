@@ -25,7 +25,7 @@ f1st(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 
 \item{inr}{Logical if TRUE include intercept if not present}
 
-\item{xinr}{Logical if TRUE intercept already presentt}
+\item{xinr}{Logical if TRUE intercept already present}
 
 }
 \value{

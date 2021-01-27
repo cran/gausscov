@@ -9,22 +9,36 @@
 #' a<-fselect(nv,6)
 fselect<-function(nv,k){
 	n<-length(nv[,1])
+	ir<-rank(-nv[,2],ties.method="first")
 	ind<-1:n
+	ind[ir]<-ind
+	ind<-1:n
+	rmv<-integer(n)
 	for(i in 1:(n-1)){
-		tmpi<-decode(nv[i,1],k)[[2]]
+		ii<-ind[i]
+		tmpi<-decode(nv[ii,1],k)[[2]]
+		ii2<-nv[ii,2]
 		j<-i+1
 		while(j<=n){
-			if(nv[j,2]==nv[i,2]){j<-j+1}
-			else{tmpj<-decode(nv[j,1],k)[[2]]
-				tmpij<-tmpi*tmpj
-				if(sum(abs(tmpij-tmpi))==0){
-					ind[i]<- -i
-					j<-n
+			jj<-ind[j]
+			if(rmv[jj]==0){
+				jj2<-nv[jj,2]
+				if(jj2<ii2){
+					tmpj<-decode(nv[jj,1],k)[[2]]
+					ik<-1
+					sbst<-1
+					while(ik<=k){
+						if(tmpj[ik]>tmpi[ik]){sbst<-0
+							ik<-k+1
+						}
+						ik<-ik+1
+					}
+					if(sbst==1){rmv[jj]<-1}
 				}
-				j<-j+1
 			}
+			j<-j+1
 		}
 	}
-	ind<-(1:n)[ind>0]
+	ind<-(1:n)[rmv==0]
 	list(ind)
 }
