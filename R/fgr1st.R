@@ -1,17 +1,17 @@
 #'  Calculation of dependency graph using Gaussian stepwise selection.
 #'
-#' @param x The variables
-#' @param p0  Cut-off P-value 
-#' @param km The maximum number of selected covariates for each node.
+#' @param x Covariates.
+#' @param p0  Cut-off P-value. 
+#' @param km The maximum number of selected covariates for each node irrespective of cut-off P-value.
+#' @param kmx The maximum number of selected covariates for each node for given cut-off P-value.
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param nedge The maximum number of edges.
 #' @param inr Logical if TRUE include an intercept.
-
 #' @return ned Number of edges
 #' @return edg List of edges
 #' data(boston)
 #' a<-fgr1st(boston[,1:13]) 
-fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
+fgr1st<-function(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	p0<-p0/k
@@ -47,7 +47,8 @@ fgr1st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 		double(km1),
 		as.integer(nedge),
 		double(kk),
-		as.integer(kk)
+		as.integer(kk),
+		as.integer(kmx)
 		)
 	ned<-tmp[[14]]
 	if(ned>0){

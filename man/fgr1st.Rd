@@ -4,14 +4,16 @@
 \alias{fgr1st}
 \title{Calculates an independence graph using stepwise selection}
 \usage{
-fgr1st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F)
+fgr1st(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F)
 }
 \arguments{
 \item{x}{The variables}
 
 \item{p0}{Cut-off p-value}
 
-\item{km}{Maximum number selected variables for each node}
+\item{km}{Maximum number selected variables for each node irrespective of cut-off P-value}
+
+\item{kmx}{The maximum number of selected covariates for each node for given cut-off P-value}
 
 \item{nu}{Order statistic}
 

@@ -1,12 +1,12 @@
-#' Selects the subsets specified by fmch. It is called by fmch. All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
+#' It is called by fmch and fmch1. All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
 #'
 #' @param nv The subsets specified by fmch
 #' @param k  The number of covariates
 #' @return ind The selected subsets.
-#' @examples 
-#' nv<-c(650,1962,160,5,3,4,577,1839,734)
-#' nv<-matrix(nv,ncol=3)
-#' a<-fselect(nv,6)
+#' @example
+#' b<-fmch(redwine[,12],redwine[,1:11],sel=FALSE)[[1]]
+#' a<-fselect(b,11)[[1]]
+#' print(b[a,])
 fselect<-function(nv,k){
 	n<-length(nv[,1])
 	ir<-rank(-nv[,2],ties.method="first")

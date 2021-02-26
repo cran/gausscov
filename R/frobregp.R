@@ -1,19 +1,20 @@
 #' Robust regression using Huber's psi-function or Hampel's three part redescending psi function which calculates P-values
 #'
-#' @param y Dependent variable
-#' @param x Covariates
-#' @param cn  Tuning parameter for Huber's psi-function
-#' @param cnr The constants for Hampel's three part redescending psi function
-#' @param sg  Scale
-#' @param q   The numer of covariates available the number of covariates available
-#' @param scale Logical TRUE to recalculate scale sg
+#' @param y Dependent variable.
+#' @param x Covariates.
+#' @param cn  Tuning parameter for Huber's psi-function.
+#' @param cnr The constants for Hampel's three part redescending psi function.
+#' @param sg  Scale.
+#' @param q   The numer of covariates available.
+#' @param ind  The subset of covariates for which the regression is required.
+#' @param scale Logical TRUE to recalculate scale sg.
 #' @param ind The subset of covariates for which the results are required.
-#' @param inr Logical TRUE to include intercept 
+#' @param inr Logical TRUE to include intercept.
 #' @param xinr Logical TRUE if x already has intercept.
-#' @param red  Logical It true Hampel's three part redescending psi function
+#' @param red  Logical It true Hampel's three part redescending psi function.
 #' @return ppi In order the subset ind, the regression coefficients, the P-values, the standard P-values.
-#' @return res  Residuals
-#' @return sg  Scale
+#' @return res  Residuals.
+#' @return sg  Scale.
 #' @return rho Sums of rho, psi and psi1 functions.
 #' @examples 
 #' data(boston)

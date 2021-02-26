@@ -1,14 +1,14 @@
 #' Simulates the number of false positives for given dimensions (n,k) and given order statistics nu
 #'
-#' @param n  The dimension of dependent variable
-#' @param k  The number of covariates
-#' @param p0 Cut-off p-value
-#' @param nu Order statistics
+#' @param n  The dimension of dependent variable.
+#' @param k  The number of covariates.
+#' @param p0 Cut-off p-value.
+#' @param nu Order statistics.
 #' @param km Maximum number of selected covariates.
-#' @param nsim Number of simulations
+#' @param nsim Number of simulations.
 #' @return p   Histogram of number of false positives.
 #' @return mn Mean number of false positives.
-#' @return ss Standard deviation of number of false positives
+#' @return ss Standard deviation of number of false positives.
 #' @examples 
 #' a<-fsimords(100,100,0.01,c(5,10),15,nsim=100)
 fsimords<-function(n,k,p0,nu,km,nsim=500){

@@ -2,8 +2,8 @@ C
 C
 C
       subroutine fstepwise(y,x,n,k,x2,res,ia,alpha,kmax,pp,kmax1,kexc
-     $     ,intercept,nu,minss,ss01)
-      integer n,k,kmax,kmax1
+     $     ,intercept,nu,minss,ss01,kmx)
+      integer n,k,kmax,kmax1,kmx
       double precision y(n),x(n,k),x2(n),res(n) ,pp(kmax1,2),minss(kmax1
      $     ),ss01(k+1)
       integer ia(k+1),kexc(k+1)
@@ -25,6 +25,7 @@ C
          ssy=ssy+y(i)**2
  3    continue
        if(intercept) then
+          kmx=kmx+1
          ia(k)=1
          b=0d0
          do 5 i=1,n
@@ -117,8 +118,9 @@ C
       util2=dble(n-icount-1)/2d0   
       pval1=betai(util1,util2,0.5d0)
       pval=betai(pval1,nu,dble(kr+2-icount)-nu)
+c      write(*,*) pval,alpha
       if(pval.lt.alpha) then
-         icount=icount+1
+          icount=icount+1
          minss(icount)=amss1
          ss01(icount)=amss1/ss0
          b=0d0
@@ -141,6 +143,10 @@ C
 c         if(intercept) pp(icount,1)=dble(ic)-1d0
          pp(icount,2)=pval
          if(icount.eq.kmax)  goto 600
+         if(icount.eq.kmx) then
+            kmax=icount
+            goto 600
+         endif
          if(icount+nex.eq.k) then
             kmax=icount
             goto 600
@@ -853,8 +859,8 @@ C
 C
 C
       subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmax,pp,kmax1,grph
-     $     ,ne,kexc,offset,nu,minss,nedge,ss01,kk)
-      integer n,k,kmax,kmax1,ne,nedge,kk
+     $     ,ne,kexc,offset,nu,minss,nedge,ss01,kk,kmmx)
+      integer n,k,kmax,kmax1,ne,nedge,kk,kmmx
       double precision xxx(n,k),x(n,kk),y(n),x2(n),res(n),pp(kmax1,2)
      $     ,minss(kmax1),ss01(kk)
       integer ia(kk+1),grph(k*kmax1,2),kexc(kk+1)
@@ -877,7 +883,7 @@ C
          kmx=kmax
          kexc(1)=j
          call fstepwise(y,x,n,kk,x2,res,ia,alpha,kmx,pp,kmax1,kexc
-     $        ,offset,nu,minss,ss01)
+     $        ,offset,nu,minss,ss01,kmmx)
          if(kmx.eq.0) goto 6
          if(kmx.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
          if(idnint(pp(1,1)).eq.0) then
@@ -900,8 +906,8 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       
       subroutine graphstst(xxx,x,n,k,y,x2,res,ia,alpha,kmax,pp,kmax1
-     $     ,grph,ne,kexc,nedge,offset,nu,minss,ss01,kk)
-      integer n,k,kmax,kmax1,ne,nedge
+     $     ,grph,ne,kexc,nedge,offset,nu,minss,ss01,kk,kmmx)
+      integer n,k,kmax,kmax1,ne,nedge,kmmx
       double precision x(n,kk),y(n),x2(n),res(n),pp(kmax1,2),xxx(n,k)
      $     ,minss(kmax1),ss01(kk)
       integer ia(kk+1),grph(k*kmax1,3),kexc(kk+1)
@@ -934,7 +940,7 @@ c               endif
  5       continue
          kmx=kmax-ek
          call fstepwise(y,x,n,kk,x2,res,ia,alpha,kmx,pp,kmax1,kexc
-     $        ,offset,nu,minss,ss01)
+     $        ,offset,nu,minss,ss01,kmmx)
          if(kmx.le.1) goto 100
          la=la+1
          do 15, ij=2,kmx
@@ -1343,7 +1349,7 @@ C
       double precision y(n),x(n,k),xx(n*k),xxx(n*k),y1(n),y2(n) ,d(k)
      $     ,r(k),beta(k),xinv(k**2),ss(2**k+2),ssr(2**k+2)
       double precision alpha
-      integer ia(k),nv(2**(k+1),2)
+      integer ia(k),nv(2**k,2)
       logical intercept
 C
       double precision ss0,ss1,pval,util1,util2,pv1,pval1
@@ -1370,7 +1376,6 @@ C
       ni=0
       if(intercept) ia(k)=1
 C
-C
       ni=0
       do 40 iv=1,kk-1
          if(intercept) then
@@ -1379,44 +1384,44 @@ C
          else
            call decode(iv,k,ia)
         endif
+         ss(iv+1)=0d0       
          ks=0
          do 20 i=1,k
             ks=ks+ia(i)
  20     continue
         call xsubset1(x,xx,n,k,ks,ia,id)
         call lsq(xx,y,xxx,y1,n,ks,d,r,beta,xinv,y2,inv)
-        ss(iv+1)=0d0
         do 31 i=1,n
            ss(iv+1)=ss(iv+1)+y2(i)**2
  31     continue
  40   continue
 C
+
       do 80 iv=1,kk-1
-         ss1=ss(iv+1)
+         ns=0
+         np=0
          if(intercept) then
-            call decode(iv,k,ia)
-            ia(k)=1
-            ns=0
-            do 500 iu=1,k-1
+            call decode(iv,k-1,ia)
+c            ia(k)=1
+             do 500 iu=1,k-1
                ns=ns+ia(iu)*2**(iu-1)
+               np=np+ia(iu)
  500        continue
-         else
+          else
             call decode(iv,k,ia)
-            ns=0
-            do 600 iu=1,k
+             do 600 iu=1,k
                ns=ns+ia(iu)*2**(iu-1)
+               np=np+ia(iu)
  600        continue
          endif
+         ss1=ss(ns+1)
+         nst=ns
          ks=0
          pv1=0d0
          do 45 i=1,k
             ks=ks+ia(i)
  45      continue
 C
-         np=0
-c         if(intercept) then
-c            ks=ks-1
-c         endif
          k1=k
          if(intercept)  k1=k-1
 C
@@ -1427,33 +1432,26 @@ C
                do 50 iu=1,k1
                   ns=ns+ia(iu)*2**(iu-1)
  50            continue
-               ia(is)=1
                ss0=ss(ns+1)
+               ia(is)=1
                util1=ss1/ss0
-               if(intercept) then
-                  util2=dble(n-ks-1)/2d0
-c                  util2=dble(n-ks)/2d0
-               else
-                  util2=dble(n-ks)/2d0
-               endif
+               util2=dble(n-ks)/2d0
                if(util1.le.1d-20) then
                   pval1=0d0
                else
                   pval1=betai(util1,util2,0.5d0)
                endif
                qks=q-ks
-               if(intercept) qks=q-ks+1
                pval=betai(pval1,1d0,dble(qks)+1d0)
                if(pval.gt.alpha) goto 80
-               np=np+1
             endif
  70      continue
-           ni=ni+1
-           nv(ni,1)=iv
-           nv(ni,2)=np
-           ssr(ni)=ss(iv+1)
- 80      continue
-         return
+         ni=ni+1
+         nv(ni,1)=nst
+         nv(ni,2)=np
+         ssr(ni)=ss(nst+1)
+ 80   continue
+      return
 C
       end
 C
@@ -1758,4 +1756,277 @@ C
       goto 20
       return
       end
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+C
+C
+      subroutine add2(a,k)
+      integer k
+      integer a(k)
+C
+      integer i,is,j,jj,ns
+C
+C
+      is=0
+      do 10 i=1,k
+         is=is+a(i)
+ 10   continue
+      if(is.eq.k)  then
+         do 20 i=1,k
+            a(i)=0
+ 20      continue
+         return
+      endif
+C
+      if(a(k).eq.0) then
+         j=k-1
+         jj=0
+ 1       continue
+         if(a(j).eq.1) then
+            jj=j
+         elseif(j.ge.2) then
+            j=j-1
+            goto 1
+         endif
+         a(jj)=0
+         a(jj+1)=1
+         return
+      endif
+C
+      j=0
+      ns=0
+      is=0
+      i=k
+ 2    continue
+      if(is.eq.0.and.a(i).eq.1) then
+         ns=ns+1
+      else
+         is=1
+      endif
+      if(a(i).eq.1.and.is.eq.1) then
+         j=i
+         goto 3
+      elseif(i.ge.2) then
+         i=i-1
+         goto 2
+      endif
+C
+ 3    continue
+      if(j.ge.1) then
+         do 4 ii=j,k
+            a(ii)=0
+ 4       continue
+         do 5 ii=j+1,j+1+ns
+            a(ii)=1
+ 5       continue
+      else
+         do 6 ii=1,k
+            a(ii)=0
+ 6       continue
+         do 7 ii=1,ns+1
+            a(ii)=1
+ 7       continue
+         return
+      endif
+      end
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      subroutine allprx(y,x,n,k,xx,xxx,y1,y2,d,r,beta,xinv,ia,intercept,
+     $     ss,nv,ssr,alpha,q,kmxx,kmx,ib)
+      integer n,k,q,kmx,kmxx
+      double precision y(n),x(n,k),xx(n*k),xxx(n*k),y1(n),y2(n) ,d(k)
+     $     ,r(k),beta(k),xinv(k**2),ss(kmxx+2),ssr(kmxx+2)
+      double precision alpha
+      integer ia(k),ib(k),nv(kmxx,2)
+      logical intercept
+C
+      double precision ss0,ss1,pval,util1,util2,pval1
+      double precision betai,mn
+      integer id,ks,np,ni,nst,kk
+      logical inv
+C
 
+      inv=.false.
+      id=1
+      mn=0d0
+      ss(1)=0d0
+      do 300 i=1,n
+         ss(1)=ss(1)+y(i)**2
+         mn=mn+y(i)
+ 300  continue
+      mn=mn/dble(n)
+      if(intercept) ss(1)=ss(1)-dble(n)*mn**2
+C
+C
+      kk=k
+      if(intercept) kk=k-1
+C
+      do 1 i=1,kk
+         ia(i)=0
+ 1    continue
+      if(intercept) ia(k)=1
+C
+C
+      ns=1
+ 10   continue
+      call add2(ia,kk)
+      ks=0
+      do 20 i=1,kk
+         ks=ks+ia(i)
+ 20   continue
+      ks0=ks
+      if(ks.eq.0) goto 45
+      if(kmx.gt.0.and.ks.gt.kmx) goto 45
+      if(intercept) ks=ks+1
+      call xsubset1(x,xx,n,k,ks,ia,id)
+      call lsq(xx,y,xxx,y1,n,ks,d,r,beta,xinv,y2,inv)
+      ns=ns+1
+      ss(ns)=0d0
+      do 40 i=1,n
+         ss(ns)=ss(ns)+y2(i)**2
+ 40   continue
+      goto 10
+C
+ 45   continue
+C
+      do 2 i=1,kk
+         ia(i)=0
+ 2    continue
+      if(intercept) ia(k)=1
+C
+      ni=0
+ 50   continue
+         call add2(ia,kk)
+         ks=0
+      do 60 i=1,kk
+         ks=ks+ia(i)
+ 60   continue
+      if(ks.eq.0) goto 500
+      if(kmx.gt.0.and.ks.gt.kmx) goto 500
+      np=ks
+      if(intercept) ks=ks+1
+      call retn(ia,ib,kk,nst)
+      ss1=ss(nst)
+C
+      do 100 is=1,kk
+         if(ia(is).eq.0) goto 100
+         ia(is)=0
+         call  retn(ia,ib,kk,ns)  
+         ss0=ss(ns)
+         ia(is)=1
+         util1=ss1/ss0
+         util1=dmin1(util1,1d0-1d-12)
+         util2=dble(n-ks)/2d0
+         if(util1.le.1d-20) then
+            pval1=0d0
+         else
+            pval1=betai(util1,util2,0.5d0)
+            pval=betai(pval1,1d0,dble(q-ks)+1d0)
+            if(pval.gt.alpha)  goto 50
+         endif
+ 100  continue
+      ni=ni+1
+      nv(ni,1)=nst
+      nv(ni,2)=np
+      ssr(ni)=ss1
+      goto 50
+ 500  continue
+      return
+      end
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      subroutine retn(ia,ib,k,ns)
+      integer k,ns
+      integer ia(k),ib(k)
+C
+      integer id, kj,ns1
+C
+C
+      kj=0
+      do 10 i=1,k
+         kj=kj+ia(i)
+ 10   continue
+      if(kj.eq.0) then
+         ns=1
+         return
+      endif
+C
+C
+      ns=1
+      ns1=1
+      do 30 i=1,kj-1
+         ns1=(ns1*(k-i+1))/i
+         ns=ns+ns1
+ 30   continue
+      ns=ns+1
+      do 20 i=1,k
+         if(i.le.kj) then
+            ib(i)=1
+         else
+            ib(i)=0
+         endif
+ 20   continue
+C
+ 40   continue
+      id=0
+      do 50 j=1,k
+         if(ia(j).ne.ib(j)) id=id+1
+ 50   continue
+      if(id.gt.0) then
+         call add2(ib,k)
+         ns=ns+1
+         goto 40
+      endif
+      return
+      end
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      subroutine retia(ns,ia,k)
+      integer ns,k
+      integer ia(k)
+C
+      integer ii,ns1,ns2,ns3
+      if(ns.gt.2**k) ns=2**k
+      do 10 i=1,k
+         ia(i)=0
+ 10   continue
+C
+      if(ns.eq.1) return      
+      ns2=1
+      ns1=1
+      ns3=1
+      ii=1
+ 20   continue
+      ns2=(ns2*(k-ii+1))/ii
+      ns1=ns1+ns2
+      if(ns1.le.ns-1) then
+         ns3=ns1+1
+         ii=ii+1
+         goto 20
+      endif
+C
+      do 30 i=1,k
+         if(i.le.ii) then
+            ia(i)=1
+         else
+            ia(i)=0
+         endif
+ 30   continue
+      if(ns.eq.ns3+1) return
+       do 40 i=ns3+2,ns+1
+         call add2(ia,k)
+ 40   continue
+      return
+      end

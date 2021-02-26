@@ -9,7 +9,7 @@ decomp(ic, k, ord)
 \arguments{
 \item{ic}{The number of the interaction}
 
-\item{k}{The number of covariates of x if intercept=FALSE in fgeninter, this number plus 1 if intercept=TRUE} 
+\item{k}{The number of covariates of x without intercept} 
 
 \item{ord}{The order of the interactions}
 }

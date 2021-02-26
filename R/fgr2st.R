@@ -1,8 +1,9 @@
 #'  Calculation of dependency graph using repeated Gaussian stepwise procedure.
 #'
-#' @param x Matrix of covariates
-#' @param p0  The P-value cut-off
-#' @param km The maximum number of included covariates for each covariate.
+#' @param x Matrix of covariates.
+#' @param p0  The cut-off P-value.
+#' @param km The maximum number of included covariates for each node irrespective of cut-off P-value.
+#' @param kmx The maximum number of included covariates for each node for given cut-off P-value.
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param nedge The maximum number of edges.
 #' @param inr Logical, if TRUE  to include intercept.
@@ -11,7 +12,7 @@
 #' @return edg List of edges
 #' data(redwine)
 #' a<-fgr2st(redwine[,1:11]) 
-fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
+fgr2st<-function(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	p0<-p0/k
@@ -55,7 +56,8 @@ fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 		as.double(nu),
 		double(km1),
 		double(kk),
-		as.integer(kk)
+		as.integer(kk),
+		as.integer(kmx)
 		)
 	ned<-tmp[[14]]
 	if(ned>0){

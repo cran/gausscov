@@ -4,7 +4,7 @@
 \alias{f1st}
 \title{Stepwise selection of covariates}
 \usage{
-f1st(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
+f1st(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -17,6 +17,8 @@ f1st(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 
 \item{km}{The maximum number of included covariates}
 
+\item{kmx}{The maximum number of included covariates for the given  P-value}
+
 \item{mx}{The maximum number covariates for an all subset search}
 
 \item{kx}{The excluded covariates}
@@ -26,7 +28,6 @@ f1st(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F)
 \item{inr}{Logical if TRUE include intercept if not present}
 
 \item{xinr}{Logical if TRUE intercept already present}
-
 }
 \value{
 pv The in order selected covariates, the regression coefficients, the P-values, the standard P-values.
@@ -41,5 +42,5 @@ Stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f1st(boston[,14],bostint,km=10,sub=TRUE,inr=FALSE,xinr=TRUE)
+a<-f1st(boston[,14],bostint,km=10,sub=TRUE)
 }

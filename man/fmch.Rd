@@ -3,8 +3,9 @@
 \name{fmch}
 \alias{fmch}
 \title{Calculates all subsets  where each included covariate is significant.}
+
 \usage{
-fmch(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
+fmch(y,x,p0=0.01,q=-1,ind=0,kmx=0,sel=T,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{The dependent variable}
@@ -17,6 +18,8 @@ fmch(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
 
 \item{ind}{Indices of subset for which all subsets are to be considered}
 
+\item{kmx}{If kmx > 0 the maximum number of included covariates}
+
 \item{sel}{If TRUE calls fselect to removes all subsets of chosen sets}
 
 \item{inr}{If TRUE to include intercept}
@@ -27,7 +30,7 @@ fmch(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
 nv List of subsets with number of covariates and sum of squared residuals
 }
 \description{
-It sel =TRUE it calls fselect and  removes all such subsets which are a subset of some other selected subset. The remaining ones are ordered according to the sum of squared residuals
+It sel =TRUE it calls fselect and  removes all such subsets which are a subset of some other selected subset. The remaining ones are ordered according to the sum of squared residuals. Subsets must be decoded with decode, NOT decode1.
 }
 \examples{
 data(redwine)

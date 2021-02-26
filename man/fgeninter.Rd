@@ -4,14 +4,12 @@
 \alias{fgeninter}
 \title{generation of interactions}
 \usage{
-fgeninter(x, ord, inr = T)
+fgeninter(x, ord)
 }
 \arguments{
 \item{x}{Covariates}
 
 \item{ord}{Order of interactions}
-
-\item{inr}{Logical to include intercept}
 }
 \value{
 xx  All interactions of order at most ord.

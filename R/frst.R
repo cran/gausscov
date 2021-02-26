@@ -1,26 +1,26 @@
 #' Robust stepwise selection of covariates 
 #'
-#' @param y         Dependent variable
-#' @param x         Covariates
-#' @param cn        Parameter for Huber's psi-function
-#' @param cnr The constants for Hampel's three part redescending psi function
-#' @param p0       The P-value cut-off
-#' @param sg       Scale value of residuals
-#' @param nu       The order for calculating the P-value
-#' @param km      The maximum number of included covariates
-#' @param mx      The maximum number of included covariates if the option subset =TRUE is used.
-#' @param kx       The excluded covariates
-#' @param sb     Logical If TRUE best subset selected 
-#' @param of Logical if TRUE to include intercept 
-#' @param xof Logical if TRUE intercept already included 
-#' @param red  Logical It true Hampel's three part redescending psi function
-#' @return pv    In order the subset ind, the regression coefficients, the P-values, the standard P-values.
+#' @param y         Dependent variable.
+#' @param x         Covariates.
+#' @param cn        Parameter for Huber's psi-function.
+#' @param cnr      The constants for Hampel's three part redescending psi function.
+#' @param p0       The P-value cut-off.
+#' @param sg       Scale value of residuals.
+#' @param nu       The order for calculating the P-value.
+#' @param km      The maximum number of included covariates.
+#' @param mx      The maximum number of included covariates if the option sub=TRUE is used.
+#' @param kx       The excluded covariates.
+#' @param sub     Logical If TRUE best subset selected. 
+#' @param inr       Logical if TRUE to include intercept 
+#' @param xinr     Logical if TRUE intercept already included 
+#' @param red     Logical It true Hampel's three part redescending psi function
+#' @return pv        In order the subset ind, the regression coefficients, the Gaussian P-values, the standard P-values.
 #' @return res   The residuals
 #' @return stpv  The stepwise regression results: covariate, P-value and scale. 
 #' @examples 
 #' data(boston)
 #' a<-frst(boston[,14],boston[,1:13],km=10,sub=T)
-frst<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F,red=F){
+frst<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	if(sg==0){sg<-mad(y)}
 	cnn<-cn

@@ -1,11 +1,11 @@
 #' Robust regression using Huber's psi-function or Hampel's redescending psi-function without P-values
 #'
-#' @param y Dependent variable
-#' @param x Covariates
-#' @param cn  Tuning parameter for Huber's psi-function
-#' @param cnr The constants for Hampel's three part redescending psi function
-#' @param sg  Scale
-#' @param scale Logical, if TRUE calculate sg simultaneously, otherwise keeps initial sg
+#' @param y Dependent variable.
+#' @param x Covariates.
+#' @param cn  Tuning parameter for Huber's psi-function.
+#' @param cnr The constants for Hampel's three part redescending psi function.
+#' @param sg  Scale.
+#' @param scale Logical, if TRUE also calculates sg, otherwise keeps initial sg.
 #' @param inr Logical if TRUE to include intercept 
 #' @param xinr Logical if TRUE intercept already included
 #' @param red  Logical If true Hampel's three part redescending psi function

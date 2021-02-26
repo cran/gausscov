@@ -2,21 +2,23 @@
 % Please edit documentation in R/decode.R
 \name{decode}
 \alias{decode}
-\title{Decodes the number of a subset selected by flmmdch to give the  covariates} 
+\title{Decodes the number of a subset selected by fmch to give the  covariates} 
 \usage{
-decode(j, k)
+decode(ns, k)
 }
 \arguments{
-\item{j}{The number of the subset}
+\item{ns}{The number of the subset}
 
 \item{k}{The number of covariates}
 }
 \value{
+ind The list of covariates
+
 set A binary vector giving the covariates
 }
 \description{
-Decodes the number of a subset selected by flmmdch to give the  covariates
+Decodes the number of a subset selected by fmch to give the  covariates
 }
 \examples{
-a<-decode(19,8)
+a<- decode(100,10)
 }

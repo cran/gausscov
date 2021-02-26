@@ -1,13 +1,13 @@
 #' Decompose a given coded interaction ic into its component parts
 #'
-#' @param ic The number of the interaction
-#' @param k  The number of covariates of x if intercept=FALSE  in fgeninter, the number of covariates plus 1 if intercept=TRUE in fgeninter
-#' @param ord The order of the interactions
+#' @param ic The number of the interaction.
+#' @param k  The number of covariates of x in fgeninter with no intercept.
+#' @param ord The order of the interactions.
 #' @return decom The component parts of the interaction.
 #' @examples 
 #' a<-decomp(7783,14,8)
 decomp<-function(ic,k,ord){
-    ic<-ic+1
+    	ic<-ic+1
 	m<-length(ic)
 	tmp<-.Fortran(
 		"degenint",

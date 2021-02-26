@@ -5,9 +5,10 @@
 #' @param cn The constant for Huber's psi function.
 #' @param cnr The constants for Hampel's three part redescending psi-function
 #' @param p0 Cut-off p-value.
+#' @param q  If q>0 the number of covariates from which ind was chosen.
 #' @param sg The scale parameter.
 #' @param ind The subset for which the results are required.
-#' @param sl Logical. If TRUE remove all subsets of chosen sets.
+#' @param sel Logical. If TRUE remove all subsets of chosen sets.
 #' @param inr  Logical If TRUE to inlude intercept. 
 #' @param xinr Logical If TRUE x already has intercept.
 #' @param red  Logical If true Hampel's three part redescending psi function

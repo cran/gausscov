@@ -1,23 +1,24 @@
 #' Stepwise selection of covariates 
 #'
-#' @param y Dependent variable
-#' @param x Covariates
-#' @param p0 The P-value cut-off
-#' @param nu The order statistic of Gaussian covariates used for comparison
-#' @param km The maximum number of included covariates
+#' @param y Dependent variable.
+#' @param x Covariates.
+#' @param p0 The cut-off P-value.
+#' @param nu The order statistic of Gaussian covariates used for comparison.
+#' @param km The maximum number of included covariates irrespective of cut-off P-value.
+#' @param kmx The maximum number of included covariates for the given  cut-off P-value.
 #' @param mx  The maximum number covariates for an all subset search.
-#' @param kx The excluded covariates
+#' @param kx The excluded covariates.
 #' @param sub Logical, if T best subset selected.
-#' @param inr Logical, if T include intercept if not present
-#' @param xinr Logical, if T intercept already present 
-#' @return pv The in order selected covariates, the regression coefficients, the P-values, the standard P-values.
+#' @param inr Logical, if T include intercept if not present.
+#' @param xinr Logical, if T intercept present 
+#' @return pv The in order selected covariates, the regression coefficients, the Gaussian P-values, the standard P-values.
 #' @return res The residuals.
 #' @return stpv The in order stepwise P-values, sum of squared residuals and the percentage sum of squared residuals explained.
 #' @examples 
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
-#' a<-f1st(boston[,14],bostint,km=10,sub=T,inr=F,xinr=T)
-f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
+#' a<-f1st(boston[,14],bostint,km=10,sub=T)
+f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 	if(xinr&(km==1)){stop("only intersect left")}
 	n<-length(y)
 	x<-matrix(x,nrow=n)
@@ -34,7 +35,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		if(kx==0){lkx<-0}
 	}
 	else{lkx<-length(kx)}
-	q<-kk-lkx
+	q<-kk
 	if(xinr){q<-q-1}
 	kex<-integer(kk+1)
 	if(lkx==1){
@@ -49,6 +50,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		p00<-p0
 		km<-min(n,kk)
 	}
+	if(kmx>0){p00<-p0}
 	km1<-km+1
 	tmp<-.Fortran(
 		"fstepwise",
@@ -67,7 +69,8 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		as.logical(xinr),
 		as.double(nu),
 		double(km1),
-		double(k+1)
+		double(k+1),
+		as.integer(kmx)
 	)
 	kmax<-tmp[[9]]
 	if(kmax==0){
@@ -100,11 +103,23 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=20,kx=0,sub=F,inr=T,xinr=F){
 		pv<-pv[[1]]
 		li<-length(ind)
 		if(xinr){pv[li,1]<-0}
+		ssb<--1
 		if(sub&(kmax>=2)){
+			ssb<-1
 			if(kmax>mx){stop("kmax too large (> mx) for all subset search")}
-			sbsts<-fmch(y,x,p0=p0,q=q,ind=ind,inr=inr,xinr=xinr)[[1]]
-			if(sbsts[1,1]>1){
-				tmv<-decode(sbsts[1,1],k)[[1]]
+			if(xinr){ind<-ind[ind<kk]}
+			sbsts<-fmch(y,x,p0=p0,q=q,ind=ind)[[1]]
+			if(length(sbsts)==3){
+				sbsts<-matrix(sbsts,nrow=1)
+				ns<-sbsts[1,1]
+				kmm<-length(ind)
+				tmv<-decode(ns,kmm)[[1]]
+				ind<-ind[tmv]
+			}
+			if(sbsts[1,1]>0){
+				kmm<-length(ind)
+				nss<-sbsts[1,1]
+				tmv<-decode(nss,kmm)[[1]]
 				ind<-ind[tmv]
 				if(xinr){ind<-c(ind,kk)}
 				pv<-fpval(y,x,ind,q,inr,xinr)
