@@ -21,14 +21,14 @@ fsimords<-function(n,k,p0,nu,km,nsim=500){
 	for(isim in 1:nsim){
 		tmpx<-rnorm(n*k)
 		dim(tmpx)<-c(n,k)
-		tmp<-f1st(y,tmpx,p0=2,km=km,inr=FALSE)
-		tmp<-tmp[[1]][,3]
+		tmp<-f1st(y,tmpx,km=km,inr=FALSE)[[3]]
+		pv<-tmp[,2]
 		for(j  in 1:lnu){
 			res[j,isim]<-0
 			i<-1
 			while(i <=km){
-				pp<-qbeta(1-tmp[i],k+1-i,1)
-				pp<-1-pbeta(pp,k+2-i-nu[j],nu[j])
+				pp<-qbeta(1-pv[i],k+2-i,1)
+				pp<-1-pbeta(pp,k+3-i-nu[j],nu[j])
 				if(pp<p0){
 					res[j,isim]<-res[j,isim]+1
 				}

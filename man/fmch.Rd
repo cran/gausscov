@@ -5,7 +5,7 @@
 \title{Calculates all subsets  where each included covariate is significant.}
 
 \usage{
-fmch(y,x,p0=0.01,q=-1,ind=0,kmx=0,sel=T,inr=T,xinr=F)
+fmch(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{The dependent variable}
@@ -17,8 +17,6 @@ fmch(y,x,p0=0.01,q=-1,ind=0,kmx=0,sel=T,inr=T,xinr=F)
 \item{q}{The number of covarites from which to choose}
 
 \item{ind}{Indices of subset for which all subsets are to be considered}
-
-\item{kmx}{If kmx > 0 the maximum number of included covariates}
 
 \item{sel}{If TRUE calls fselect to removes all subsets of chosen sets}
 

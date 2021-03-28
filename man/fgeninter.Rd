@@ -2,14 +2,16 @@
 % Please edit documentation in R/fgeninter.R
 \name{fgeninter}
 \alias{fgeninter}
-\title{generation of interactions}
+\title{Generation of interactions}
 \usage{
-fgeninter(x, ord)
+fgeninter(x,ord,inr=T)
 }
 \arguments{
 \item{x}{Covariates}
 
 \item{ord}{Order of interactions}
+
+\item{inr}{Logical to include intercept}
 }
 \value{
 xx  All interactions of order at most ord.

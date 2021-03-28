@@ -4,7 +4,7 @@
 \alias{fpval}
 \title{ Calculates the regression coefficients, the P-values and the standard P-values for the chosen subset ind}
 \usage{
-fpval(y,x,ind,q,inr=T,xinr=F)
+fpval(y,x,ind,q,nu=1,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{The dependent variable}
@@ -14,6 +14,8 @@ fpval(y,x,ind,q,inr=T,xinr=F)
 \item{ind}{The subset of the covariates x for which the P-values are required}
 
 \item{q}{The total number of covariates from which ind was chosen}
+
+\item{nu}{The order statistic used to compute the P-values}
 
 \item{inr}{Logical If TRUE intercept to be included}
 
@@ -31,5 +33,5 @@ Calculates the regression coefficients, the P-values and the standard P-values f
 }
 \examples{
 data(boston)
-a<-fpval(boston[,14],boston[,1:13],c(1,2,4:6,8:13),13)
+a<-fpval(boston[,14],boston[,1:13],c(1,2,4:6,8:13),q=13)
 }

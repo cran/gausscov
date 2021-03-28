@@ -4,7 +4,7 @@
 \alias{f2st}
 \title{Repeated stepwise selection of covariates}
 \usage{
-f2st(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,lm=9^9,sub=F,inr=T,xinr=F)
+f2st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,lm=9^9,sub=F,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -16,8 +16,6 @@ f2st(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,lm=9^9,sub=F,inr=T,xinr=F)
 \item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{km}{The maximum number of included covariates at each stage irrespective of P-value}
-
-\item{kmx}{The maximum number of included covariates at each stage for the given  P-value}
 
 \item{mx}{The maximum number of covariates for an all subset search}
 

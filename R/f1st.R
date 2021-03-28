@@ -5,7 +5,6 @@
 #' @param p0 The cut-off P-value.
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param km The maximum number of included covariates irrespective of cut-off P-value.
-#' @param kmx The maximum number of included covariates for the given  cut-off P-value.
 #' @param mx  The maximum number covariates for an all subset search.
 #' @param kx The excluded covariates.
 #' @param sub Logical, if T best subset selected.
@@ -18,7 +17,7 @@
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
 #' a<-f1st(boston[,14],bostint,km=10,sub=T)
-f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
+f1st<-function(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 	if(xinr&(km==1)){stop("only intersect left")}
 	n<-length(y)
 	x<-matrix(x,nrow=n)
@@ -50,7 +49,6 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 		p00<-p0
 		km<-min(n,kk)
 	}
-	if(kmx>0){p00<-p0}
 	km1<-km+1
 	tmp<-.Fortran(
 		"fstepwise",
@@ -69,8 +67,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 		as.logical(xinr),
 		as.double(nu),
 		double(km1),
-		double(k+1),
-		as.integer(kmx)
+		double(k+1)
 	)
 	kmax<-tmp[[9]]
 	if(kmax==0){
@@ -98,7 +95,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 			ind[1:(kmax-1)]<-ind[2:kmax]
 			ind[kmax]<-ints
 		}
-		pv<-fpval(y,x,ind,q,inr=inr,xinr=xinr)
+		pv<-fpval(y,x,ind,q=q,nu=nu,inr=inr,xinr=xinr)
 		res<-pv[[2]]
 		pv<-pv[[1]]
 		li<-length(ind)
@@ -122,7 +119,7 @@ f1st<-function(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F){
 				tmv<-decode(nss,kmm)[[1]]
 				ind<-ind[tmv]
 				if(xinr){ind<-c(ind,kk)}
-				pv<-fpval(y,x,ind,q,inr,xinr)
+				pv<-fpval(y,x,ind,q=q,nu=nu,inr=inr,xinr=xinr)
 				li<-length(ind)
 				res<-pv[[2]]
 				pv<-pv[[1]]

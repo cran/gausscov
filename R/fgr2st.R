@@ -3,7 +3,6 @@
 #' @param x Matrix of covariates.
 #' @param p0  The cut-off P-value.
 #' @param km The maximum number of included covariates for each node irrespective of cut-off P-value.
-#' @param kmx The maximum number of included covariates for each node for given cut-off P-value.
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param nedge The maximum number of edges.
 #' @param inr Logical, if TRUE  to include intercept.
@@ -12,7 +11,7 @@
 #' @return edg List of edges
 #' data(redwine)
 #' a<-fgr2st(redwine[,1:11]) 
-fgr2st<-function(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F){
+fgr2st<-function(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	p0<-p0/k
@@ -31,9 +30,9 @@ fgr2st<-function(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F){
 	km1<-km+1
 	kexc<-integer(kk)+1
 	km1<-km+1
-	nee<-k*km1*3
+	nee<-k*km1*2
 	grph<-integer(nee)
-	grph<-matrix(grph,ncol=3)
+	grph<-matrix(grph,ncol=2)
 	tmp<-.Fortran(
 		"graphstst",
 		as.double(xx),
@@ -56,27 +55,26 @@ fgr2st<-function(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F){
 		as.double(nu),
 		double(km1),
 		double(kk),
-		as.integer(kk),
-		as.integer(kmx)
+		as.integer(kk)
 		)
 	ned<-tmp[[14]]
 	if(ned>0){
 		edg<-tmp[[13]]
-		edg<-matrix(edg,ncol=3)
+		edg<-matrix(edg,ncol=2)
 		edg<-edg[1:ned,]
-		edg<-matrix(edg,ncol=3)
 		if(!dr){
                 		tmp<-.Fortran(
                     			"edge",
-                    		as.integer(edg),
-                    		as.integer(ned),
-                    		as.integer(ned),
-                    		integer(ned),
-                    		integer(1)
-                    		)
-                   		 ned<-tmp[[5]]
+                    			as.integer(edg),
+                    			as.integer(ned),
+                    			as.integer(ned),
+                    			integer(ned),
+                    			integer(1)
+                    			)
+                   		ned<-tmp[[5]]
                     		edg<-tmp[[1]]
                     		edg<-matrix(edg,ncol=2)
+				edg<-edg[1:ned,]
         		}   
 	}
 	else{

@@ -7,7 +7,6 @@
 #' @param p0 Cut-off p-value for significance.
 #' @param q The number of covariates from which to choose. 
 #' @param ind   The indices of subset of covariates for which all subsets are to be considered.
-#' @param kmx If kmx > 0 the maximum number of included covariates for the given cut-off P-value.
 #' @param select Logical. If TRUE remove all subsets of chosen sets.
 #' @param inr Logical If TRUE include intercept.
 #' @param xinr Logical If TRUE intercept already included.
@@ -16,7 +15,7 @@
 #' @examples 
 #' data(redwine)
 #' a<-fmch(redwine[,12],redwine[,1:11])
-fmch<-function(y,x,p0=0.01,q=-1,ind=0,kmx=0,sel=T,inr=T,xinr=F){
+fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	n<-length(y)
 	x<-matrix(x,nrow=n)
 	k<-length(x)/n

@@ -4,7 +4,7 @@
 \alias{f1st}
 \title{Stepwise selection of covariates}
 \usage{
-f1st(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
+f1st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -16,8 +16,6 @@ f1st(y,x,p0=0.01,nu=1,km=0,kmx=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
 \item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{km}{The maximum number of included covariates}
-
-\item{kmx}{The maximum number of included covariates for the given  P-value}
 
 \item{mx}{The maximum number covariates for an all subset search}
 

@@ -2,8 +2,8 @@ C
 C
 C
       subroutine fstepwise(y,x,n,k,x2,res,ia,alpha,kmax,pp,kmax1,kexc
-     $     ,intercept,nu,minss,ss01,kmx)
-      integer n,k,kmax,kmax1,kmx
+     $     ,intercept,nu,minss,ss01)
+      integer n,k,kmax,kmax1
       double precision y(n),x(n,k),x2(n),res(n) ,pp(kmax1,2),minss(kmax1
      $     ),ss01(k+1)
       integer ia(k+1),kexc(k+1)
@@ -25,7 +25,6 @@ C
          ssy=ssy+y(i)**2
  3    continue
        if(intercept) then
-          kmx=kmx+1
          ia(k)=1
          b=0d0
          do 5 i=1,n
@@ -143,10 +142,6 @@ c      write(*,*) pval,alpha
 c         if(intercept) pp(icount,1)=dble(ic)-1d0
          pp(icount,2)=pval
          if(icount.eq.kmax)  goto 600
-         if(icount.eq.kmx) then
-            kmax=icount
-            goto 600
-         endif
          if(icount+nex.eq.k) then
             kmax=icount
             goto 600
@@ -859,8 +854,8 @@ C
 C
 C
       subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmax,pp,kmax1,grph
-     $     ,ne,kexc,offset,nu,minss,nedge,ss01,kk,kmmx)
-      integer n,k,kmax,kmax1,ne,nedge,kk,kmmx
+     $     ,ne,kexc,offset,nu,minss,nedge,ss01,kk)
+      integer n,k,kmax,kmax1,ne,nedge,kk
       double precision xxx(n,k),x(n,kk),y(n),x2(n),res(n),pp(kmax1,2)
      $     ,minss(kmax1),ss01(kk)
       integer ia(kk+1),grph(k*kmax1,2),kexc(kk+1)
@@ -883,7 +878,7 @@ C
          kmx=kmax
          kexc(1)=j
          call fstepwise(y,x,n,kk,x2,res,ia,alpha,kmx,pp,kmax1,kexc
-     $        ,offset,nu,minss,ss01,kmmx)
+     $        ,offset,nu,minss,ss01)
          if(kmx.eq.0) goto 6
          if(kmx.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
          if(idnint(pp(1,1)).eq.0) then
@@ -906,11 +901,11 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       
       subroutine graphstst(xxx,x,n,k,y,x2,res,ia,alpha,kmax,pp,kmax1
-     $     ,grph,ne,kexc,nedge,offset,nu,minss,ss01,kk,kmmx)
-      integer n,k,kmax,kmax1,ne,nedge,kmmx
+     $     ,grph,ne,kexc,nedge,offset,nu,minss,ss01,kk)
+      integer n,k,kmax,kmax1,ne,nedge
       double precision x(n,kk),y(n),x2(n),res(n),pp(kmax1,2),xxx(n,k)
      $     ,minss(kmax1),ss01(kk)
-      integer ia(kk+1),grph(k*kmax1,3),kexc(kk+1)
+      integer ia(kk+1),grph(k*kmax1,2),kexc(kk+1)
       double precision alpha,nu
       logical offset
 C
@@ -940,7 +935,7 @@ c               endif
  5       continue
          kmx=kmax-ek
          call fstepwise(y,x,n,kk,x2,res,ia,alpha,kmx,pp,kmax1,kexc
-     $        ,offset,nu,minss,ss01,kmmx)
+     $        ,offset,nu,minss,ss01)
          if(kmx.le.1) goto 100
          la=la+1
          do 15, ij=2,kmx
@@ -953,7 +948,6 @@ c               endif
                if(offset) then
                   if(grph(ne,2).eq.kk) grph(ne,2)=0
                endif
-               grph(ne,3)=la
                if(ne.ge.nedge) return
             endif
  15      continue

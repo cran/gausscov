@@ -4,7 +4,7 @@
 \alias{fgr2st}
 \title{Calculates an independence graph using  repeated stepwise selection}
 \usage{
-fgr2st(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F)
+fgr2st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F)
 }
 \arguments{
 \item{x}{The variables}
@@ -12,8 +12,6 @@ fgr2st(x,p0=0.01,km=0,kmx=0,nu=1,nedge=10^6,inr=T,dr=F)
 \item{p0}{Cut-off P-value}
 
 \item{km}{Maximum number selected variables for each node irrespective of cut-off P-value}
-
-\item{kmx}{The maximum number of selected covariates for each node for given cut-off P-value}
 
 \item{nu}{The order statistic of Gaussian covariates used for comparison.}
 
