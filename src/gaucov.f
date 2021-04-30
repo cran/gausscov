@@ -180,7 +180,7 @@ C
       double precision y(n),x(n,k),xx(n,kmax1),x1(n),x2(n) ,beta(kmax1)
      $     ,pp(kmax1,2) ,beta0(kmax1),res(n),res1(n),yy(n),ssg(kmax1),
      $     cnr(3)
-      integer ia(k+1),kexc(k)
+      integer ia(k+1),kexc(k+1)
       double precision alpha,cn,sig,cpp,nu
       logical offset,red
 C
@@ -240,14 +240,6 @@ C
       endif
       nex=0
       do 9 ik=1,k
-         if(offset.and.kexc(ik).ge.1)then
-            kexc(ik)=kexc(ik)+1
-         endif
-c            nex=nex+1
-c         elseif(kexc(ik).ge.1)then
-c            ia(kexc(ik))=1
-c            nex=nex+1
-c         endif
          if(kexc(ik).gt.0) then
             ia(kexc(ik))=1
             nex=nex+1
@@ -1081,31 +1073,36 @@ C
 C      
 C
       DO 5 K=1,SPALTE
-5     HA(K)=A(NU,K)
+         HA(K)=A(NU,K)
+ 5    CONTINUE
       H=A(NU,INDEX)
       NUH=NU+1
       NOH=NO
 10    DO 20 K=NOH,NUH,-1
       IF (A(K,INDEX).LT.H) THEN
         DO 15 J=1,SPALTE
-15      A(NUH-1,J)=A(K,J)
+           A(NUH-1,J)=A(K,J)
+ 15     CONTINUE
         NOH=K-1
         GOTO 30
       ENDIF
 20    CONTINUE
       DO 25 I=1,SPALTE
-25    A(K,I)=HA(I)
+         A(K,I)=HA(I)
+ 25   CONTINUE
       RETURN
 30    DO 40 K=NUH,NOH
       IF (A(K,INDEX).GT.H) THEN
         DO 35 J=1,SPALTE
-35      A(NOH+1,J)=A(K,J)
+           A(NOH+1,J)=A(K,J)
+ 35     CONTINUE
         NUH=K+1
         GOTO 10
       ENDIF
 40    CONTINUE
       DO 45 I=1,SPALTE
-45    A(K,I)=HA(I)
+         A(K,I)=HA(I)
+ 45   CONTINUE
       END
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -2021,6 +2018,29 @@ C
       if(ns.eq.ns3+1) return
        do 40 i=ns3+2,ns+1
          call add2(ia,k)
+ 40   continue
+      return
+      end
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      subroutine lagg(x,n,k,lag,xl,y)
+      integer n,k,lag
+      double precision x(n,k),xl(n-lag,k*lag),y(n-lag)
+C
+C
+      do 10 i=1,n-lag
+         y(i)=x(lag+i,1)
+ 10   continue
+C
+      do 40 j=1,k
+         do 30 lg=1,lag
+            do 20 i=1,n-lag
+               xl(i,(j-1)*lag+lg)=x(lag-lg+i,j)
+ 20         continue
+ 30      continue
  40   continue
       return
       end

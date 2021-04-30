@@ -22,6 +22,7 @@
 #' a<-frst(boston[,14],boston[,1:13],km=10,sub=T)
 frst<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
+	y<-y-median(y)
 	if(sg==0){sg<-mad(y)}
 	cnn<-cn
 	if(red){cnn<-cnr[1]}
@@ -40,6 +41,7 @@ frst<-function(y,x,cn=1,cnr=c(1,2,4),p0=0.01,sg=0,nu=1,km=0,mx=21,kx=0,sub=F,inr
 	kk<-length(x[1,])
 	if(length(kx)==1){
 		if(kx==0){lkx<-0}
+		else{lkx<-1}
 	}
 	else{lkx<-length(kx)}
 	q<-kk-lkx
