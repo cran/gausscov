@@ -1,4 +1,4 @@
-#' Decodes the number of a subset selected by fmch to give the  covariates 
+#' Decodes the number of a subset selected by fasb.R to give the  covariates 
 #'
 #'
 #' @param ns The number of the subset.

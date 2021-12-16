@@ -2,21 +2,21 @@
 % Please edit documentation in R/fgentrig.R
 \name{fgentrig}
 \alias{fgentrig}
-\title{generation of sine and cosine functions}
+\title{Generation of sine and cosine functions}
 \usage{
 fgentrig(n,m)
 }
 \arguments{
 \item{n}{Sample size}
-\item{m}{m sine and m cosine functions}
+\item{m}{Maximum order of sine and cosine functions}
 }
 \value{
-x  The functions sin(pi*j*(1:n)/n) and cos(pi*j*(1:n)/n) for j=1,...,m.
+x  The functions sin(pi*j*(1:n)/n) (odd) and cos(pi*j*(1:n)/n) (even) for j=1,...,m.
 }
 \description{
-Generates the sine and cosine functions of order j, j=1,...,m.
+Generates sin(pi*j*(1:n)/n) (odd) and cos(pi*j*(1:n)/n) (even) for j=1,...,m for a given sample size n.
 }
 \examples{
-trig100<-fgentrig(100,50)[[1]]
+trig<-fgentrig(36,36)
 }
 

@@ -4,27 +4,27 @@
 \alias{fpval}
 \title{ Calculates the regression coefficients, the P-values and the standard P-values for the chosen subset ind}
 \usage{
-fpval(y,x,ind,q,nu=1,inr=T,xinr=F)
+fpval(y,x,ind,q=-1,nu=1,inr=T,xinr=F)
 }
 \arguments{
 \item{y}{The dependent variable}
 
 \item{x}{The covariates}
 
-\item{ind}{The subset of the covariates x for which the P-values are required}
+\item{ind}{The indices of the subset of the covariates whose P-values are required}
 
-\item{q}{The total number of covariates from which ind was chosen}
+\item{q}{The total number of covariates from which ind was chosen. If q=-1 the number of covariates of x minus length ind plus 1  is taken.}
 
 \item{nu}{The order statistic used to compute the P-values}
 
 \item{inr}{Logical If TRUE intercept to be included}
 
-\item{xinr}{If TRUE intercept already included, overrides inr}
+\item{xinr}{If TRUE intercept already included}
 
 
 }
 \value{
-apv In order the subset ind, the regression coefficients, the P-values, the standard P-values.
+apv In order the subset ind, the regression coefficients, the Gaussian P-values, the standard P-values and the proportion of sum of squares explained.
 
 res The residuals
 }
@@ -33,5 +33,5 @@ Calculates the regression coefficients, the P-values and the standard P-values f
 }
 \examples{
 data(boston)
-a<-fpval(boston[,14],boston[,1:13],c(1,2,4:6,8:13),q=13)
+a<-fpval(boston[,14],boston[,1:13],c(1,2,4:6,8:13))
 }

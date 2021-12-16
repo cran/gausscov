@@ -2,23 +2,26 @@
 % Please edit documentation in R/fdecomp.R
 \name{decomp}
 \alias{decomp}
-\title{decompose a given interaction ic into its component parts}
+\title{Decomposes given coded interactions into their component parts}
 \usage{
-decomp(ic, k, ord)
+decomp(ic, k, ord, inc=0)
 }
 \arguments{
-\item{ic}{The number of the interaction}
+\item{ic}{The numbers of the coded interactions}
 
-\item{k}{The number of covariates of x without intercept} 
+\item{k}{The number of covariates of x without intercept, number plus 1 if inr=T} 
 
 \item{ord}{The order of the interactions}
+
+\item{inc}{The indices of the interaction covariates with no dummy covariates when all powers are calculated including dummy covariates. This is returned by fgeninter.R}
 }
 \value{
 decom The component parts of the interaction.
 }
 \description{
-decompose a given interaction ic into its component parts
+decomposes a given interaction ic into its component parts
 }
 \examples{
-a<-decomp(7783,14,8)
+ bosint<-fgeninter(boston[,1:13],3,4)
+a<-decomp(100,14,3,inc=bosint[[2]])
 }

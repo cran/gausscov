@@ -1,40 +1,54 @@
-#' Calculates all possible subsets and selects those where each included covariate is significant. Decode with decode.
+#' Calculates all possible subsets where each included covariate is significant. Decode with decode.
 #'
 #' 
 #'
 #' @param y The dependent variable.
 #' @param x  The covariates.
 #' @param p0 Cut-off p-value for significance.
-#' @param q The number of covariates from which to choose. 
-#' @param ind   The indices of subset of covariates for which all subsets are to be considered.
-#' @param select Logical. If TRUE remove all subsets of chosen sets.
+#' @param q The number of covariates from which to choose. Equals number of covariates minus length of ind if q=-1. 
+#' @param ind   The indices of a subset of covariates for which all subsets are to be considered.
+#' @param sel  Logical. If TRUE calls fselect.R to remove all subsets of chosen sets.
 #' @param inr Logical If TRUE include intercept.
 #' @param xinr Logical If TRUE intercept already included.
 
 #' @return nvv Coded list of subsets with number of covariates and sum of squared residuals
 #' @examples 
 #' data(redwine)
-#' a<-fmch(redwine[,12],redwine[,1:11])
-fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
+#' a<-fasb(redwine[,12],redwine[,1:11])
+fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	n<-length(y)
 	x<-matrix(x,nrow=n)
 	k<-length(x)/n
-	    ind<-matrix(ind,nrow=1)
-	if((!xinr)&inr){
-		tmpx<-double(n)+1
-		x<-cbind(x,tmpx)
-		x<-matrix(x,nrow=n)
-		xinr<-TRUE
-		k<-k+1
-        		if(ind[1]>0){ind<-c(ind,k)}
+	if(q==-1){
+		q<-k
+		if(xinr){q<-k-1}
 	}
-	if(ind[1]>0){
+	ind<-matrix(ind,nrow=1)
+	if(ind[1]==0){
+		if(!xinr){
+			if(inr){
+				tmpx<-double(n)+1
+				x<-cbind(x,tmpx)
+				x<-matrix(x,nrow=n)
+				k<-k+1
+				xinr<-TRUE
+				inr<-FALSE
+			}
+		}
+	}
+	else{
 		x<-x[,ind]
-		x<-matrix(x,nrow=n)
-		k<-length(x)/n
+		if(!xinr){
+			if(inr){
+				tmpx<-double(n)+1
+				x<-cbind(x,tmpx)
+				x<-matrix(x,nrow=n)
+				xinr<-TRUE
+				inr<-FALSE
+			}
+		}
 	}
-	else{ind<-1:k}
-	if(q==-1){q<-k}
+	k<-length(x)/n
 	kmxx<-2^k
 	if(xinr){kmxx<-2^(k-1)}
 	tmp<-.Fortran(
@@ -70,9 +84,9 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	nv<-matrix(nv,ncol=2)
 	llv<-length(inv)
 	if(llv>0){
-		ind<-rank(ss,ties.method="first")
+		ind1<-rank(ss,ties.method="first")
 		inv<-1:llv
-		inv[ind]<-inv
+		inv[ind1]<-inv
 		ss<-ss[inv]
 		nv<-nv[inv,]
 		nv<-matrix(nv,ncol=2)
@@ -84,9 +98,9 @@ fmch<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		nvv<-cbind(nv1,nv2,ss)
 		nvv<-matrix(nvv,ncol=3)
 		if(sel&(llv>1)){
-			ind<-rank(-nv2,ties.method="first")	
+			ind2<-rank(-nv2,ties.method="first")	
 			inv<-1:llv		
-			inv[ind]<-inv
+			inv[ind2]<-inv
 			nvv<-nvv[inv,]
 			kk<-k
 			if(xinr){kk<-k-1}

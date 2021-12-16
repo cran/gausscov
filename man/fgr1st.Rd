@@ -2,33 +2,35 @@
 % Please edit documentation in R/fgr1st.R
 \name{fgr1st}
 \alias{fgr1st}
-\title{Calculates an independence graph using stepwise selection}
+\title{Calculates a dependence graph using Gaussian stepwise selection}
 \usage{
-fgr1st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F)
+fgr1st(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 }
 \arguments{
-\item{x}{The variables}
+\item{x}{The matrix of covariates}
 
-\item{p0}{Cut-off p-value}
+\item{p0}{Cut-off P-value}
 
-\item{km}{Maximum number selected variables for each node irrespective of cut-off P-value}
+\item{nu}{The order statistic of Gaussian covariates used for comparison.}
 
-\item{nu}{Order statistic}
+\item{kmn,}{The minimum number selected variables for each node irrespective of cut-off P-value}
+
+\item{kmx}{The maximum number selected variables for each node irrespective of cut-off P-value}
 
 \item{nedge}{Maximum number of edges}
 
 \item{inr}{Logical, if TRUE include an intercept}
 
-\item{dr}{Logical, if TRUE (a,b) and (b,a), a not equal b,  are different edges}
+\item{xinr}{Logical, if TRUE intercept already included}
 
 }
 \value{
 ned Number of edges
 
-edg The edges for each node in the graph
+edg List of edges together with P-values for each  edge and proportional reduction of sum of squared residuals.
 }
 \description{
-Calculates an independence graph using stepwise selection
+Calculates an independence graph using Gaussian stepwise selection
 }
 \examples{
 data(boston)

@@ -1,9 +1,9 @@
 #' Calculation of lagged covariates 
-#'
-#' @param x Covariates.
+#' 
+#' @param x The covariates.
 #' @param n The sample size.
 #' @param lag The maximum lag.
-#' @return  y The first covariate without a lag, the dependent covariate.
+#' @return  y The first covariate of x  without a lag, the dependent covariate.
 #' @return xl The lagged covariates with lags of order 1:lag starting with the first covariate.
 #' @examples 
 #' data(abcq)

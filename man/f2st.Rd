@@ -4,8 +4,7 @@
 \alias{f2st}
 \title{Repeated stepwise selection of covariates}
 \usage{
-f2st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,lm=9^9,sub=F,inr=T,xinr=F)
-}
+f2st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=F,qq=0)}
 \arguments{
 \item{y}{Dependent variable}
 
@@ -15,22 +14,26 @@ f2st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,lm=9^9,sub=F,inr=T,xinr=F)
 
 \item{nu}{The order statistic of Gaussian covariates used for comparison}
 
-\item{km}{The maximum number of included covariates at each stage irrespective of P-value}
+\item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
+
+\item{kmx}{The maximum number of included covariates irrespective of cut-off P-value.}
+
+\item{kex}{The excluded covariates}
 
 \item{mx}{The maximum number of covariates for an all subset search}
 
-\item{kx}{The excluded covariates}
-
 \item{lm}{The maximum number of linear approximations}
 
-\item{sub}{Logical if TRUE choose the best subset}
+\item{sub}{Logical if TRUE select the best subset}
 
-\item{inr}{Logical if TRUE include intercept}
+\item{inr}{Logical if TRUE include an intercept}
 
 \item{xinr}{Logical if TRUE intercept already included}
+
+\item{qq}{The number of covariates to choose from. If qq=0 the number of covariates of x is used.}
 }
 \value{
-pv In order, the number of linear approximation, the included covariates, the P-values, sum of squared residuals .
+pv   In order the linear approximation,  the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values  and the proportional reduction in the sum of squared residuals due to this covariate.
 }
 \description{
 Repeated stepwise selection of covariates
@@ -38,5 +41,5 @@ Repeated stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f2st(boston[,14],bostint)
+a<-f2st(boston[,14],bostint,lm=3,sub=TRUE)
 }

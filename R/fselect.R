@@ -1,12 +1,12 @@
-#' It is called by fmch and fmch1. All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
+#' It is called by fasb.R and frasb.R. All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals (fasb) or the scale (frasb)
 #'
-#' @param nv The subsets specified by fmch
+#' @param nv The subsets specified by fasb.R or frasb.R
 #' @param k  The number of covariates
 #' @return ind The selected subsets.
 #' @example
-#' b<-fmch(redwine[,12],redwine[,1:11],sel=FALSE)[[1]]
+#' b<-fasb(redwine[,12],redwine[,1:5],sel=FALSE)[[1]]
 #' a<-fselect(b,11)[[1]]
-#' print(b[a,])
+#' b[a,]
 fselect<-function(nv,k){
 	n<-length(nv[,1])
 	ir<-rank(-nv[,2],ties.method="first")

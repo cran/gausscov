@@ -7,14 +7,14 @@ flag(x,n,lag)
 \arguments{
 \item{x}{The covariates}
 
-\item{n}{Sample size}
+\item{n}{The sample size}
 
-\item{lag}{Themaximum lag}
+\item{lag}{The maximum lag}
 }
 \value{
-y The first covariate without a lag, the dependent covariate.
+y The first covariate of x without a lag, the dependent covariate.
 
-xl The covaraites with lags from 1 :lag starting with the first covariate.
+xl The covariates with lags from 1 :lag starting with the first covariate.
 }
 \description{
 Calculation of lagged covariates

@@ -4,28 +4,30 @@
 \alias{fgr2st}
 \title{Calculates an independence graph using  repeated stepwise selection}
 \usage{
-fgr2st(x,p0=0.01,km=0,nu=1,nedge=10^6,inr=T,dr=F)
+fgr2st(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 }
 \arguments{
-\item{x}{The variables}
+\item{x}{Matrix of covariates}
 
 \item{p0}{Cut-off P-value}
 
-\item{km}{Maximum number selected variables for each node irrespective of cut-off P-value}
-
 \item{nu}{The order statistic of Gaussian covariates used for comparison.}
+
+\item{kmn}{The minimum  number of selected variables for each node irrespective of cut-off P-value}
+
+\item{kmx}{The maximum number of selected variables for each node irrespective of cut-off P-value}
 
 \item{nedge}{Maximum number of edges}
 
 \item{inr}{Logical, if TRUE include an intercept}
 
-\item{dr}{Logical, if TRUE (a,b) and (b,a), a not equal b,  are different edges}
+\item{xinr}{Logical, if TRUE intercept already included}
 
 }
 \value{
 ned Number of edges
 
-edg List of edges
+edg  List of edges giving nodes (covariates), the approximations for each node, the covariates in the approximation and the corresponding P-values.
 }
 \description{
 Calculates a dependency graph using  repeated Gaussian stepwise selection

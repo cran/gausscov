@@ -4,7 +4,7 @@
 \alias{f1st}
 \title{Stepwise selection of covariates}
 \usage{
-f1st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
+f1st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -15,24 +15,29 @@ f1st(y,x,p0=0.01,nu=1,km=0,mx=21,kx=0,sub=F,inr=T,xinr=F)
 
 \item{nu}{The order statistic of Gaussian covariates used for comparison}
 
-\item{km}{The maximum number of included covariates}
+\item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
+
+\item{kmx}{The maximum number of included covariates irrespective of cut-off P-value.}
 
 \item{mx}{The maximum number covariates for an all subset search}
 
-\item{kx}{The excluded covariates}
+\item{kex}{The excluded covariates}
 
-\item{sub}{Logical if TRUE best subset selected.to include intercept}
+\item{sub}{Logical if TRUE best subset selected}
 
 \item{inr}{Logical if TRUE include intercept if not present}
 
 \item{xinr}{Logical if TRUE intercept already present}
+
+\item{qq}{The number of covariates to choose from. If qq=0 the number of covariates of x is used.}
+
 }
 \value{
-pv The in order selected covariates, the regression coefficients, the P-values, the standard P-values.
+pv In order the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values  and the proportional reduction in the sum of squared residuals due to this covariate
 
 res The residuals
 
-stpv The in order stepwise P-values, sum of squared residuals and the percentage sum of squared residuals explained
+stpv The in order stepwise P-values, sum of squared residuals and the proportional  reduction in the sum of squared residuals due to this covariate.
 }
 \description{
 Stepwise selection of covariates
@@ -40,5 +45,5 @@ Stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f1st(boston[,14],bostint,km=10,sub=TRUE)
+a<-f1st(boston[,14],bostint,kmn=10,sub=TRUE)
 }

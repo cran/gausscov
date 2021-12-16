@@ -4,7 +4,7 @@
 \alias{fgeninter}
 \title{Generation of interactions}
 \usage{
-fgeninter(x,ord,inr=T)
+fgeninter(x,ord,inr=T,idv=0)
 }
 \arguments{
 \item{x}{Covariates}
@@ -12,14 +12,16 @@ fgeninter(x,ord,inr=T)
 \item{ord}{Order of interactions}
 
 \item{inr}{Logical to include intercept}
+
+\item{idv}{List of 0-1 dummy covariates}
 }
 \value{
 xx  All interactions of order at most ord.
 }
 \description{
-Generates all interactions of degree at most ord
+Generates all interactions of degree at most ord excluding powers of 0-1 covariates
 }
 \examples{
 data(boston)
-bostinter<-fgeninter(boston[,1:13],7)[[1]]
+bostinter<-fgeninter(boston[,1:13],2)[[1]]
 }

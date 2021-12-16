@@ -2,12 +2,12 @@
 % Please edit documentation in R/fselect.R
 \name{fselect}
 \alias{fselect}
-\title{Selects the subsets specified by fmch and fmch1.}
+\title{Selects the subsets specified by fasb.R and frasb.R.}
 \usage{
 fselect(nv, k)
 }
 \arguments{
-\item{nv}{The subsets specified by fmch}
+\item{nv}{The subsets specified by fasb.R or frasb.R}
 
 \item{k}{The variables}
 }
@@ -15,10 +15,10 @@ fselect(nv, k)
 ind The selected subsets.
 }
 \description{
-All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals
+All subsets which are a subset of a specified  subset are removed. The remaining subsets are ordered by the sum of squares of the residuals (fasb.R) or the scale (frasb.R)
 }
 \examples{
-b<-fmch(redwine[,12],redwine[,1:11],sel=FALSE)[[1]]
+b<-fasb(redwine[,12],redwine[,1:5 ],sel=FALSE)[[1]]
 a<-fselect(b,11)[[1]]
-print(b[a,])
+b[a,]
 }
