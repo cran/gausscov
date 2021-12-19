@@ -4,12 +4,14 @@
 \alias{fgr1st}
 \title{Calculates a dependence graph using Gaussian stepwise selection}
 \usage{
-fgr1st(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
+fgr1st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 }
 \arguments{
 \item{x}{The matrix of covariates}
 
 \item{p0}{Cut-off P-value}
+
+\item{ind}{Restricts the dependent nodes to this subset}
 
 \item{nu}{The order statistic of Gaussian covariates used for comparison.}
 
@@ -34,5 +36,5 @@ Calculates an independence graph using Gaussian stepwise selection
 }
 \examples{
 data(boston)
-a<-fgr1st(boston[,1:13])
+a<-fgr1st(boston[,1:13],ind=3:6)
 }

@@ -2,6 +2,7 @@
 #'
 #' @param x Matrix of covariates.
 #' @param p0  Cut-off P-value. 
+#' @param ind Restricts the dependent nodes to this subset
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param kmn The minimum number of selected covariates for each node irrespective of cut-off P-value.
 #' @param kmx The maximum number of selected covariates for each node irrespective of cut-off P-value.
@@ -11,11 +12,14 @@
 #' @return ned Number of edges
 #' @return edg List of edges together with P-values for each  edge and proportional reduction of sum of squared residuals
 #' data(boston)
-#' a<-fgr1st(boston[,1:13]) 
-fgr1st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
+#' a<-fgr1st(boston[,1:13],ind=3:6) 
+fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
-	p0<-p0/k
+	ind<-matrix(ind,nrow=1)
+	if(ind[1]==0){ind<-1:k}
+	li<-length(ind)
+	p0<-p0/li
 	x<-matrix(x,nrow=n)
 	xx<-x
 	if(inr){tmpx<-double(n)+1
@@ -24,6 +28,7 @@ fgr1st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		xinr<-T
 		inr<-F
 	}
+	if(kmx==0){kmx<-min(n,k)}
 	tmp<-.Fortran(
 		"graphst",
 		as.double(xx),
@@ -35,7 +40,7 @@ fgr1st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		double(n),
 		integer(k),
 		as.double(p0),
-		as.integer(kmn),	
+		as.integer(kmx),	
 		double((k+1)*2),
 		integer(nedge*2),
 		integer(1),
@@ -45,7 +50,9 @@ fgr1st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		double(k),
 		as.integer(nedge),
 		double(k),
-		as.integer(kmx)
+		as.integer(kmn),
+		as.integer(li),
+		as.integer(ind)
 		)
 	ned<-tmp[[13]]
 	if(ned>0){

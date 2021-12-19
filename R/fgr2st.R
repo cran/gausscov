@@ -2,6 +2,7 @@
 #'
 #' @param x Matrix of covariates.
 #' @param p0  The cut-off P-value.
+#' @param ind Restricts the dependent nodes to this subset
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param kmn The minimum number of selected covariates for each node irrespective of cut-off P-value.
 #' @param kmx The maximum number of selected covariates for each node irrespective of cut-off P-value.
@@ -11,11 +12,14 @@
 #' @return ned Number of edges
 #' @return edg List of edges giving nodes (covariates), the approximations for each node, the covariates in the approximation and the corresponding P-values.
 #' data(redwine)
-#' a<-fgr2st(redwine[,1:11]) 
-fgr2st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
+#' a<-fgr2st(redwine[,1:11],ind=4:8) 
+fgr2st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
-	p0<-p0/k
+	ind<-matrix(ind,nrow=1)
+	if(ind[1]==0){ind<-1:k}
+	li<-length(ind)
+	p0<-p0/li
 	if(inr){tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		k<-k+1
@@ -24,6 +28,7 @@ fgr2st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	}
 	x<-matrix(x,nrow=n)
 	xx<-x
+	if(kmx==0){kmx<-min(n,k)}
 	tmp<-.Fortran(
 		"graphstst",
 		as.double(xx),
@@ -35,7 +40,7 @@ fgr2st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		double(n),
 		integer(k),
 		as.double(p0),
-		as.integer(kmn),	
+		as.integer(kmx),	
 		double((k+1)*2),
 		integer(nedge*3),
 		integer(1),
@@ -46,7 +51,9 @@ fgr2st<-function(x,p0=0.01,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		as.integer(nedge),
 		double(k),
 		double(nedge),
-		integer(kmx)
+		as.integer(kmn),
+		as.integer(li),
+		as.integer(ind)
 		)
 	ned<-tmp[[13]]
 	if(ned>0){

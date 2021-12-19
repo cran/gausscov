@@ -120,7 +120,6 @@ C
       util2=dble(n-icount-1)/2d0   
       pval1=betai(util1,util2,0.5d0)
       pval=betai(pval1,nu,dble(kr+2-icount)-nu)
-c      if(pval.lt.alpha) goto 70
       if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          goto 600
@@ -129,7 +128,7 @@ c      if(pval.lt.alpha) goto 70
 c      if(pval.gt.alpha.and.kmn.gt.0) then
 c        if(icount.lt.kmn)  goto 70
 c      endif
- 70   icount=icount+1
+      icount=icount+1
       pp(icount,1)=dble(ic)
       pp(icount,2)=pval
       minss(icount)=amss1
@@ -874,16 +873,16 @@ C
 C
 C
 C
-      subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmn,pp,grph
-     $     ,ne,kexc,xinr,nu,minss,nedge,ss01,kmx)
-      integer n,k,kmn,ne,nedge,kmx
+      subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmx,pp,grph
+     $     ,ne,kexc,xinr,nu,minss,nedge,ss01,kmn,lin,iind)
+      integer n,k,kmn,ne,nedge,kmx,lin
       double precision xxx(n,k),x(n,k),y(n),x2(n),res(n),pp(k+1,2)
      $     ,minss(k),ss01(k)
-      integer ia(k),grph(nedge,2),kexc(k)
+      integer ia(k),grph(nedge,2),kexc(k),iind(lin)
+      logical xinr
       double precision alpha,nu
 C
-      logical xinr
-      integer ij,kmn1,qq,kmx1
+      integer qq,kmx1,jj
 
 C
 C
@@ -891,8 +890,8 @@ C
       ne=0
       kk=k
       if(xinr) kk=k-1
-      do 6 jj=1,kk
-         kmx1=kmx
+      do 6 il=1,lin
+         jj=iind(il)
          do 4 j1=1,k
             do 3 ii=1,n
                   x(ii,j1)=xxx(ii,j1)
@@ -901,17 +900,17 @@ C
          do 10 i=1,n
             y(i)=xxx(i,jj)
  10      continue
-         kmn1=kmn
+         kmx1=kmx
          kexc(1)=jj
-         call fstepwise(y,x,n,k,x2,res,ia,alpha,kmn1,pp,kexc
-     $        ,xinr,nu,minss,ss01,qq,kmx1)
-         if(kmn1.eq.0) goto 6
-         if(kmn1.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
-         do 15, ij=2,kmn1
-            if(idnint(pp(ij,1)).ge.1) then
-               ne=ne+1
-               grph(ne,1)=jj
-               grph(ne,2)=idnint(pp(ij,1))
+         call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
+     $        ,xinr,nu,minss,ss01,qq,kmn)
+         if(kmx1.eq.0) goto 6
+         if(kmx1.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
+         do 15, ij=2,kmx1
+           if(idnint(pp(ij,1)).ge.1) then
+              ne=ne+1
+              grph(ne,1)=jj
+             grph(ne,2)=idnint(pp(ij,1))
                if(ne.ge.nedge) return
             endif
  15      continue
@@ -922,18 +921,17 @@ C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
-      subroutine graphstst(xxx,x,n,k,y,x2,res,ia,alpha,kmn,pp,grph,
-     $     ne,kexc,xinr,nu,minss,nedge,ss01,rgrph,kmx)
-      integer n,k,kmn,ne,nedge,kmx
+      subroutine graphstst(xxx,x,n,k,y,x2,res,ia,alpha,kmx,pp,grph,
+     $     ne,kexc,xinr,nu,minss,nedge,ss01,rgrph,kmn,lin,iind)
+      integer n,k,kmn,ne,nedge,kmx,lin
       double precision xxx(n,k),x(n,k),y(n),x2(n),res(n),pp(k+1,2)
      $     ,minss(k),ss01(k),rgrph(nedge)
-      integer ia(k),grph(nedge,3),kexc(k)
+      integer ia(k),grph(nedge,3),kexc(k),iind(lin)
       double precision alpha,nu
 C
       logical xinr
-      integer ij,kmn1,qq,ek,iq,la,ij0
+      integer ij,kmx1,qq,ek,iq,la,ij0
 
-C
 C
       qq=0
       ne=0
@@ -942,10 +940,8 @@ C
       if(xinr) then
          kk=k-1
       endif
-      do 100 jj=1,kk
-         kmx1=kmx
-c         write(*,*) jj,ek,ne
-c         if(jj.eq.20) return
+      do 100 il=1,lin
+         jj=iind(il)
          ek=0
          do 2 i=1,n
             y(i)=xxx(i,jj)
@@ -955,8 +951,8 @@ c         if(jj.eq.20) return
             kexc(i)=0
  6       continue
          kexc(1)=jj
-       ek=1
-       la=0
+         ek=1
+         la=0
  7       continue
          iq=0
          do 8, i=1,k
@@ -968,17 +964,15 @@ c         if(jj.eq.20) return
                   x(ii,j1)=xxx(ii,j1)
  4          continue
  5       continue
-         kmn1=kmn
-c         write(*,*) 1
-         call fstepwise(y,x,n,k,x2,res,ia,alpha,kmn1,pp,kexc
-     $        ,xinr,nu,minss,ss01,qq,kmx1)
-c         write(*,*) 2
-         if(kmn1.le.0) goto 100
-         if(kmn1.eq.1.and.xinr) goto 90
+         kmx1=kmx
+          call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
+     $        ,xinr,nu,minss,ss01,qq,kmn)
+         if(kmx1.le.0) goto 100
+         if(kmx1.eq.1.and.xinr) goto 90
          la=la+1
          ij0=1
          if(xinr) ij0=2
-         do 15, ij=ij0,kmn1
+         do 15, ij=ij0,kmx1
             if(xinr.and.idnint(pp(ij,1)).eq.k) goto 15
             if(idnint(pp(ij,1)).ge.1) then
                ne=ne+1
@@ -988,17 +982,12 @@ c         write(*,*) 2
                grph(ne,2)=la
                grph(ne,3)=idnint(pp(ij,1))
                rgrph(ne)=pp(ij,2)
-c               if(xinr) then
-c                  if(grph(ne,2).eq.kk) grph(ne,2)=0
-c               endif
                endif
                if(ne.ge.nedge) return
                if(ne.gt.k*n) return
-c            endif
  15      continue
          goto 7
  90      continue
-c         write(*,*) jj,ek
  100  continue
 C
       return
