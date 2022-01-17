@@ -147,7 +147,7 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 		}
 	}
 	if(length(res)==n){
-		if(xinr){stpv[1,1]<-0}
+	if(xinr){stpv[1,1]<-0}
 	}
 	list(pv,res,stpv)
 }

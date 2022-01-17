@@ -4,7 +4,9 @@
 \alias{f2st}
 \title{Repeated stepwise selection of covariates}
 \usage{
-f2st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=F,qq=0)}
+f2st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,
+
+sub=T,inr=T,xinr=F,qq=0)}
 \arguments{
 \item{y}{Dependent variable}
 

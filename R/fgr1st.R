@@ -21,13 +21,13 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	li<-length(ind)
 	p0<-p0/li
 	x<-matrix(x,nrow=n)
-	xx<-x
 	if(inr){tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		k<-k+1
 		xinr<-T
 		inr<-F
 	}
+	xx<-x
 	if(kmx==0){kmx<-min(n,k)}
 	tmp<-.Fortran(
 		"graphst",

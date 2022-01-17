@@ -888,8 +888,6 @@ C
 C
       qq=0
       ne=0
-      kk=k
-      if(xinr) kk=k-1
       do 6 il=1,lin
          jj=iind(il)
          do 4 j1=1,k
