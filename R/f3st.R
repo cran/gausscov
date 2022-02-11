@@ -2,6 +2,7 @@
 #'
 #' @param y Dependent variable.
 #' @param x Covariates.
+#' @param x Covariates.
 #' @param m The number of iterations
 #' @param kexmx The maximum number of excluded covariates
 #' @param p0 The cut-off P-value.
@@ -17,13 +18,12 @@
 #' @return covch The sum of squared residuals and the selected covariates ordered in increasing size of sum of squared residuals.
 #' @return lai The length of covch
 #' @examples 
-#' data(leukemia_y)
-#' data(leukemia_x)
-#' a<-f3st(ly.original,lx.original,m=2,kexmx=5,kmn=5,sub=TRUE)
+#' data(leukemia)
+#' a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kexmx=5,kmn=5,sub=TRUE)
 f3st<-function(y,x,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){	
 	covch<-double(kexmx)
 	covch<-matrix(covch,nrow=1,ncol=kexmx)
-	a<-f1st(y,x,p0=p0,kmn=kmn,sub=T)
+	a<-f1st(y,x,p0=p0,nu=nu,kmn=kmn,kmx=kmx,mx=mx,kex=kex,sub=sub,inr=inr,xinr=xinr,qq=qq)
 	if(a[[1]][1,1]>0){
 		ali<-length(a[[1]][,1])-1
 		if(ali>0){

@@ -125,18 +125,21 @@ C
          goto 600
          return
       endif
-c      if(pval.gt.alpha.and.kmn.gt.0) then
-c        if(icount.lt.kmn)  goto 70
-c      endif
+      if(pval.gt.alpha.and.kmn.gt.0) then
+        if(icount.ge.kmn) then
+           kmx=icount
+           goto 600
+        endif
+      endif
       icount=icount+1
       pp(icount,1)=dble(ic)
       pp(icount,2)=pval
       minss(icount)=amss1
       ss01(icount)=amss1/ss0
-      if(kmn.gt.0.and.icount.ge.kmn)  then
-         kmx=kmn
-         goto 600
-      endif
+c      if(kmn.gt.0.and.icount.ge.kmn)  then
+c         kmx=kmn
+c         goto 600
+c      endif
       if(kmx.gt.0.and.icount.ge.kmx)  then
          kmx=icount
          goto 600

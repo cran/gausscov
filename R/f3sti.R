@@ -19,13 +19,12 @@
 #' @return ind1 The excluded covariates
 #' @return covch The sum of squared residuals and the selected covariates ordered in increasing size of sum of squared residuals.
 #' @examples 
-#' data(leukemia_y)
-#' data(leukemia_x)
+#' data(leukemia)
 #' covch=c(2.023725,1182,1219,2888,0)
 #' ind<-c(1182,1219,2888,0,0,0,0,0,0)
 #' ind<-matrix(ind,ncol=3)
 #' m<-3
-#' a<-f3sti(ly.original,lx.original,covch,ind,m)
+#' a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m)
 f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){
 	ind<-matrix(ind,ncol=m)
 	ni<-length(ind[,1])
@@ -36,7 +35,7 @@ f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,s
 		kex<-ind[i,kexi]
 		lkex<-length(kex)
 		covch0<-double(kexmx)
-		a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex)
+		a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex,inr=inr,xinr=xinr)
 		if(a[[1]][1,1]>0){
 			la<-length(a[[1]][,1])-1
 			if(la>0){

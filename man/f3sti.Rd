@@ -48,11 +48,10 @@ covch The sum of squared residuals and the selected covariates ordered in increa
 Selection of covariates with given excluded covariates
 }
 \examples{
-data(leukemia_y)
-data(leukemia_x)
+data(leukemia)
 covch=c(2.023725,1182,1219,2888,0)
 ind<-c(1182,1219,2888,0,0,0,0,0,0)
 ind<-matrix(ind,ncol=3)
 m<-3
-a<-f3sti(ly.original,lx.original,covch,ind,m)
+a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m)
 }

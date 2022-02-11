@@ -37,15 +37,14 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		}
 	}
 	else{
+		if(xinr){ind<-c(ind,k)}
 		x<-x[,ind]
-		if(!xinr){
-			if(inr){
-				tmpx<-double(n)+1
-				x<-cbind(x,tmpx)
-				x<-matrix(x,nrow=n)
-				xinr<-TRUE
-				inr<-FALSE
-			}
+		if(inr){
+			tmpx<-double(n)+1
+			x<-cbind(x,tmpx)
+			x<-matrix(x,nrow=n)
+			xinr<-TRUE
+			inr<-FALSE
 		}
 	}
 	k<-length(x)/n

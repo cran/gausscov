@@ -84,7 +84,7 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 		res<-0
 		stpv<-0
 	}
-	else{
+	else{  
 		ss01<-1-tmp[[15]][1:kmax]
 		stpv<-tmp[[10]]
 		stpv<-matrix(stpv,ncol=2)
@@ -100,20 +100,28 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 			ind[kmax]<-ints
 		}
 		if(qq==0){
+
 			pv<-fpval(y,x,ind,q=q,nu=nu,inr=inr,xinr=xinr)
 		}
-		else{
+		else{	
 			pv<-fpval(y,x,ind,q=qq,nu=nu,inr=inr,xinr=xinr)
 		}
 		res<-pv[[2]]
 		pv<-pv[[1]]
+		li<-length(pv[,1])
+		if(xinr){
+			ind<-pv[1:(li-1),1]
+		}
+		else{	
+			ind<-pv[1:li,1]
+		}
 		li<-length(ind)
-		if(xinr){pv[li,1]<-0}
 		ssb<--1
-		if((kmax>mx)&(sub==TRUE)){sub<-FALSE
+		if((li>mx)&(sub==TRUE)){sub<-FALSE
 			warning("kmax too large (> mx) for all subset search")
 		}
-		if(sub&(kmax>=2)){
+
+		if(sub&(li>=2)){
 			if(qq==0){
 				sbsts<-fasb(y,x,p0=p0,q=q,ind=ind,inr=inr,xinr=xinr,)[[1]]
 			}
@@ -122,7 +130,6 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 			}
 			sbsts<-matrix(sbsts,nrow=3)
 			kmm<-length(ind)
-			if(xinr){kmm<-kmm-1}
 			if(sbsts[1,1]>0){
 				nss<-sbsts[1,1]
 				tmv<-decode(nss,kmm)[[1]]

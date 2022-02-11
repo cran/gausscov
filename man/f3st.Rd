@@ -42,7 +42,6 @@ lai  The length of covch
 Stepwise selection of covariates
 }
 \examples{
-data(leukemia_y)
-data(leukemia_x)
-a<-f3st(ly.original,lx.original,m=2,kexmx=5,kmn=5,sub=TRUE)
+data(leukemia)
+a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kexmx=5,kmn=5,sub=TRUE)
 }
