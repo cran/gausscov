@@ -22,7 +22,8 @@
 f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){
 	if(xinr&(kmn==1)){stop("only intersect left")}
 	n<-length(y)
-	x<-matrix(x,nrow=n)
+	k<-length(x)/n
+	x<-matrix(x,nrow=n,ncol=k)
 	y<-matrix(y,ncol=1)
 	kex<-matrix(kex,nrow=1)
 	lkx<-length(kex)
@@ -30,7 +31,7 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 		if(inr){
 			tmpx<-double(n)+1
 			x<-cbind(x,tmpx)
-			x<-matrix(x,nrow=n)
+			x<-matrix(x,nrow=n,ncol=k+1)
 			xinr<-TRUE
 			inr<-FALSE
 		}
