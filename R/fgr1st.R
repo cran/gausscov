@@ -6,6 +6,7 @@
 #' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param kmn The minimum number of selected covariates for each node irrespective of cut-off P-value.
 #' @param kmx The maximum number of selected covariates for each node irrespective of cut-off P-value.
+#' @param mx Maximum nunber of selected covariates for each node for all subset search. 
 #' @param nedge The maximum number of edges.
 #' @param inr Logical if TRUE include an intercept.
 #' @param xinr Logical if TRUE intercept already included.
@@ -13,7 +14,7 @@
 #' @return edg List of edges together with P-values for each  edge and proportional reduction of sum of squared residuals
 #' data(boston)
 #' a<-fgr1st(boston[,1:13],ind=3:6) 
-fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
+fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	ind<-matrix(ind,nrow=1)
@@ -21,6 +22,7 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	li<-length(ind)
 	p0<-p0/li
 	x<-matrix(x,nrow=n)
+	inrr<-inr
 	if(inr){tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		k<-k+1
@@ -62,6 +64,7 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
         		edg<-matrix(edg,ncol=2)
 		p<-double(2*ned)
 		p<-matrix(p,ncol=2)
+		eedg<-double(4)
 		for(i in 1:k){
 			tmpi<-(1:ned)[edg[,1]==i]
 			ind<-edg[tmpi,2]
@@ -69,17 +72,32 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 			if(li>0){
 				qq<-k-li
 				if(xinr){qq<-qq-1}
-				a<-fpval(x[,i],x,ind,q=qq,inr=F,xinr=xinr)
+				ind1<-ind
+				lind<-length(ind)
+				if((lind>1)&(lind<mx)){
+					tmp<-fasb(x[,i],x[,ind],p0=p0,q=qq,inr=inrr,xinr=F)[[1]]		
+					ind1<-decode(tmp[1,1],lind)[[1]]
+					ind1<-ind[ind1]
+				}
+				else{ind1<-ind}
+				a<-fpval(x[,i],x,ind1,q=qq,inr=inr,xinr=xinr)
 				ka<-length(a[[1]][,1])
 				ika<-(1:ka)[a[[1]][,1]>0]
-				p[tmpi,1]<-a[[1]][ika,3]
-				p[tmpi,2]<-a[[1]][ika,5]
+				ii<-integer(length(ika))+i
+				eedg0<-cbind(ii,ind1[ika],a[[1]][ika,3],a[[1]][ika,5])
+				eedg<-rbind(eedg,eedg0)
 			}
 		}
-		edg<-cbind(edg,p)
-    	}
-    	else{
-       		edg<-NaN
+		edg<-eedg
+		le<-length(edg[,1])
+		edg<-edg[2:le,]
+		ned<-le-1
+		edg<-matrix(edg,ncol=4)
 	}
+    	else{
+       		edg<-integer(4)
+		edg<-matrix(edg,nrow=1,ncol=4)
+	}
+
 	list(ned,edg)
 }

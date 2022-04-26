@@ -1,5 +1,5 @@
 #' Stepwise exclusion and selection of covariates 
-#'
+#'a<-cv.glmnet(x,yy))a<-cv.glmnet(x,yy))g
 #' @param y Dependent variable.
 #' @param x Covariates.
 #' @param m The number of iterations
@@ -48,6 +48,7 @@ f3st<-function(y,x,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,lm=1000,kex=0,sub=
 				lm0<-a[[3]]
 				if(lm0==lm){j<-m}
 				j<-j+1
+				if(sum(a[[1]])==0){j<-m+1}
 			}
 			li<-length(covch)/kexmx
 			covch<-matrix(covch,nrow=li,ncol=kexmx)

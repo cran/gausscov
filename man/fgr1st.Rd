@@ -4,7 +4,7 @@
 \alias{fgr1st}
 \title{Calculates a dependence graph using Gaussian stepwise selection}
 \usage{
-fgr1st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
+fgr1st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 }
 \arguments{
 \item{x}{The matrix of covariates}
@@ -15,9 +15,11 @@ fgr1st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 
 \item{nu}{The order statistic of Gaussian covariates used for comparison.}
 
-\item{kmn,}{The minimum number selected variables for each node irrespective of cut-off P-value}
+\item{kmn}{The minimum number selected variables for each node irrespective of cut-off P-value}
 
 \item{kmx}{The maximum number selected variables for each node irrespective of cut-off P-value}
+
+\item{mx}{Maximum nunber of selected covariates for each node for all subset search}
 
 \item{nedge}{Maximum number of edges}
 

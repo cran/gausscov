@@ -11,7 +11,7 @@
 #' @param inr Logical If TRUE include intercept.
 #' @param xinr Logical If TRUE intercept already included.
 
-#' @return nvv Coded list of subsets with number of covariates and sum of squared residuals
+#' @return nvv Coded list of subsets with number of covariates and sum of squared residual
 #' @examples 
 #' data(redwine)
 #' a<-fasb(redwine[,12],redwine[,1:11])
@@ -48,6 +48,7 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		}
 	}
 	k<-length(x)/n
+	
 	kmxx<-2^k
 	if(xinr){kmxx<-2^(k-1)}
 	tmp<-.Fortran(
@@ -95,7 +96,8 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 #	select approximations 
 #
 		nvv<-cbind(nv1,nv2,ss)
-		nvv<-matrix(nvv,ncol=3)
+		nr<-length(nvv)/3
+		nvv<-matrix(nvv,ncol=3,nrow=nr)
 		if(sel&(llv>1)){
 			ind2<-rank(-nv2,ties.method="first")	
 			inv<-1:llv		
@@ -114,10 +116,12 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 			}
 		}
 		if(llv==1){nvv<-cbind(nv1[1],nv2[1],ss[1])
-			nvv<-matrix(nvv,nrow=1)
+			nvv<-matrix(nvv,ncol=3,nrow=1)
 		}
 	}
-	else{nvv<-matrix(c(0,0,0),nrow=1)}
+	else{nvv<-matrix(c(0,0,0),ncol=3,nrow=1)}
+	nr<-length(nvv)/3
+	nvv<-matrix(nvv,ncol=3,nrow=nr)
 	list(nvv)
 }
 

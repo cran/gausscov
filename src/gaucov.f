@@ -88,7 +88,7 @@ C
 C
  2    continue
       if(ks.eq.k) goto 600
-C
+
 C
 C
       ks=ks+1
@@ -123,7 +123,6 @@ C
       if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          goto 600
-         return
       endif
       if(pval.gt.alpha.and.kmn.gt.0) then
         if(icount.ge.kmn) then
@@ -885,7 +884,7 @@ C
       logical xinr
       double precision alpha,nu
 C
-      integer qq,kmx1,jj
+      integer qq,kmx1,jj,i1
 
 C
 C
@@ -903,11 +902,15 @@ C
  10      continue
          kmx1=kmx
          kexc(1)=jj
+c         write(*,*) jj
          call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
      $        ,xinr,nu,minss,ss01,qq,kmn)
+c         write(*,*) (pp(ij,1),ij=1,kmx1)
          if(kmx1.eq.0) goto 6
          if(kmx1.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
-         do 15, ij=2,kmx1
+         i1=1
+         if(xinr) i1=2
+         do 15, ij=i1,kmx1
            if(idnint(pp(ij,1)).ge.1) then
               ne=ne+1
               grph(ne,1)=jj
@@ -1393,6 +1396,7 @@ C
       integer id,ks,ns,np,ni,qks
       logical inv
 C
+c      intercept=.false.
       inv=.false.
       id=1
       mn=0d0
@@ -1420,7 +1424,7 @@ C
          else
            call decode(iv,k,ia)
         endif
-         ss(iv+1)=0d0       
+        ss(iv+1)=0d0       
          ks=0
          do 20 i=1,k
             ks=ks+ia(i)
@@ -1459,7 +1463,7 @@ C
          k1=k
          if(intercept)  k1=k-1
 C
-        do 70 is=1,k1
+         do 70 is=1,k1
              if(ia(is).eq.1) then
                ia(is)=0
                ns=0
@@ -1563,17 +1567,19 @@ C
 C
       subroutine decode(j,k,set)
       integer j,k
-      integer set(k),jj
-
-      jj=j
+      integer set(k)
+      integer jj
+c
+c
       do 10 i=1,k
          set(i)=0
  10   continue
-      if(j.eq.0) return
-      do 20 i =k-1,0,-1
-         if(jj.ge.2**i) then
-            set(i+1)=1
-            jj=jj-2**i
+      jj=j
+      do 20 i =k,1,-1
+c         write(*,*) jj,2**i
+         if(jj.ge.2**(i-1))  then
+            set(i)=1
+            jj=jj-2**(i-1)
          endif
  20   continue
       return

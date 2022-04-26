@@ -53,7 +53,7 @@ f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,lm=1000
 		if((rp>0)&lm0<lm){
 			lkex<-length(kex)
 			covch0<-double(kexmx)
-			tt<-system.time(a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex,inr=inr,xinr=xinr))[[1]]
+			a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex,inr=inr,xinr=xinr,qq=qq)
 			if(a[[1]][1,1]>0){
 				la<-length(a[[1]][,1])-1
 				cont<-TRUE

@@ -43,5 +43,5 @@ Repeated stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f2st(boston[,14],bostint,lm=3,sub=TRUE)
+a<-f2st(boston[,14],bostint,lm=3,sub=FALSE)
 }

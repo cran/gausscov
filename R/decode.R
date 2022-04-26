@@ -8,7 +8,6 @@
 #' @examples 
 #' decode(19,8)
 decode<-function(ns,k){
-	set<-integer(k)
 	tmp<-.Fortran(
 		"decode",
 		as.integer(ns),

@@ -106,7 +106,10 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 		}
 		else{	
 			pv<-fpval(y,x,ind,q=qq,nu=nu,inr=inr,xinr=xinr)
+
 		}
+		p00<-max(pv[[1]][,3])
+		if(p00<p0){sub<-FALSE}
 		res<-pv[[2]]
 		pv<-pv[[1]]
 		li<-length(pv[,1])
@@ -124,10 +127,10 @@ f1st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 
 		if(sub&(li>=2)){
 			if(qq==0){
-				sbsts<-fasb(y,x,p0=p0,q=q,ind=ind,inr=inr,xinr=xinr,)[[1]]
+				sbsts<-fasb(y,x,p0=p0,q=q,ind=ind,inr=F,xinr=T)[[1]]
 			}
 			else{
-				sbsts<-fasb(y,x,p0=p0,q=qq,ind=ind,inr=inr,xinr=xinr,)[[1]]
+				sbsts<-fasb(y,x,p0=p0,q=qq,ind=ind,inr=inr,xinr=xinr)[[1]]
 			}
 			sbsts<-matrix(sbsts,nrow=3)
 			kmm<-length(ind)
