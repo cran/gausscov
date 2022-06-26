@@ -18,12 +18,15 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 	n<-length(x[,1])
 	k<-length(x)/n
 	ind<-matrix(ind,nrow=1)
-	if(ind[1]==0){ind<-1:k}
+	if(ind[1]==0){
+		if(xinr){ind<-1:(k-1)}
+		else{ind<-1:k}
+	}
 	li<-length(ind)
 	p0<-p0/li
 	x<-matrix(x,nrow=n)
 	inrr<-inr
-	if(inr){tmpx<-double(n)+1
+	if((!xinr)&(inr)){tmpx<-double(n)+1
 		x<-cbind(x,tmpx)
 		k<-k+1
 		xinr<-T
@@ -65,7 +68,9 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 		p<-double(2*ned)
 		p<-matrix(p,ncol=2)
 		eedg<-double(4)
-		for(i in 1:k){
+		kk<-k
+		if(xinr){kk<-k-1}
+		for(i in 1:kk){
 			tmpi<-(1:ned)[edg[,1]==i]
 			ind<-edg[tmpi,2]
 			li<-length(ind)
@@ -75,7 +80,7 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 				ind1<-ind
 				lind<-length(ind)
 				if((lind>1)&(lind<mx)){
-					tmp<-fasb(x[,i],x[,ind],p0=p0,q=qq,inr=inrr,xinr=F)[[1]]		
+					tmp<-fasb(x[,i],x[,ind],p0=p0,q=qq,inr=inr,xinr=xinr)[[1]]		
 					ind1<-decode(tmp[1,1],lind)[[1]]
 					ind1<-ind[ind1]
 				}

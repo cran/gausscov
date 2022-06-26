@@ -4,7 +4,7 @@
 \alias{fgeninter}
 \title{Generation of interactions}
 \usage{
-fgeninter(x,ord,inr=T,idv=0)
+fgeninter(x,ord,inr=TRUE,idv=0)
 }
 \arguments{
 \item{x}{Covariates}
@@ -23,5 +23,5 @@ Generates all interactions of degree at most ord excluding powers of 0-1 covaria
 }
 \examples{
 data(boston)
-bostinter<-fgeninter(boston[,1:13],2)[[1]]
+bostint<-fgeninter(boston[,1:13],2,inr=TRUE,idv=4)[[1]]
 }

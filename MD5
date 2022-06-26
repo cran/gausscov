@@ -1,4 +1,4 @@
-c149d8d8522112995e4d7af392469a80 *DESCRIPTION
+af5ef9cb15db5168b5b0aceb01b723aa *DESCRIPTION
 14112ebe5c10c048ea77fbd2c8866210 *NAMESPACE
 b62a205ed28cceb1191c9284861c718e *R/decode.R
 811c28144d66480379fa5e419ccac288 *R/decomp.R
@@ -7,15 +7,16 @@ a74ca2cdae8e951fe6141282e392c846 *R/f2st.R
 0e28528d90df28af6d95bcd84870f396 *R/f3st.R
 48094267605b321e00ed2599a2d908c4 *R/f3sti.R
 49638e757c7564bf144a0e64b30f08e3 *R/fasb.R
-ca56d111cfc77e79c76e7bc396a6d343 *R/fgeninter.R
+271f88d08dab4d203549fedc70d0c6e0 *R/fcluster.R
+8b15093ebf69c14a426e5dc6337942c4 *R/fgeninter.R
 d4290993297d56deeb1b40882764fbc9 *R/fgentrig.R
-7526eb29c6b091cd336726d8fb4f3440 *R/fgr1st.R
+2617c183d4a0dafa2534b48793b90f78 *R/fgr1st.R
 8c907560541262e76a7bc9ede997ae7d *R/fgr2st.R
 d0fd941c68b403f40b6a0ef23f7763de *R/fgrall.R
 64c3e1170d8702564de20b9601cf5b8e *R/flag.R
 db12acb7af398f602e1da1e7ba0ad70c *R/fnfp.R
 67609b540941a4a6a08acfeac9a906c3 *R/fpsired.R
-9bb3c6906cb8d2be6356ab72837f65b6 *R/fpval.R
+8b7ae4b36ecbdba19a7942bc8c150054 *R/fpval.R
 50e8b421ee3dd7c2f9c9e7fd81de6e41 *R/fr1st.R
 250f37f746a4ed7cceac488d86eddfb0 *R/frasb.R
 3a8c5a310f3753acf3a7e1b3d2b7ceaf *R/frpval.R
@@ -38,7 +39,8 @@ f706ae94c5e9421b815ed100e51eb923 *man/f2st.Rd
 19621875bc2890fcc6a724e2c6d78c59 *man/f3st.Rd
 103c24aa9cdc243ec7ce95eaf8935817 *man/f3sti.Rd
 6d2ba2e9e1963643c2f40ae17cbcf236 *man/fasb.Rd
-5b9e2385907d9102c6d84d18835515ed *man/fgeninter.Rd
+b41139e8167df5c70cad07f4ee46cb4b *man/fcluster.Rd
+ddd6c36f8607cce4e7db0a4a4ec179e5 *man/fgeninter.Rd
 bda14aa0d2e749ce9632f2d7f877d154 *man/fgentrig.Rd
 fc3804b028eb3400af13ec0ddc69af1e *man/fgr1st.Rd
 18b6b1796279654f1b8fcce124a8a5a5 *man/fgr2st.Rd
@@ -58,4 +60,4 @@ afcb8028f3b57436b49c0cdb87a4a8cb *man/fselect.Rd
 04d5ecb1f856f709d27c2421d46d0a0b *man/nufp.Rd
 cce45597a5623c840572fe612725de1a *man/redwine.Rd
 740c98e8c2175264f19da9cf1846d0f2 *man/snspt.Rd
-6e3ec57e1c61dddaffc8ea7584db837b *src/gaucov.f
+846b4b9f59558211e6f59f3603c1949e *src/gaucov.f

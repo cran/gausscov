@@ -38,7 +38,7 @@ fpval<-function(y,x,ind,q=-1,nu=1,inr=T,xinr=F){
 	result<-summary(b)[[4]]
 	kii<-length(result[,1])
 	apv<-double(2*kii)
-	dim(apv)<-c(kii,2)
+	apv<-matrix(apv,nrow=kii,ncol=2)
 	tvl<-matrix(result[1:kii,3],ncol=1)
     	apv[,2]<-matrix(result[1:kii,4],ncol=1)
  	tvl<-1-1/(1+tvl^2/(n-kii))

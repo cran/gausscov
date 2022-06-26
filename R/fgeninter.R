@@ -9,12 +9,10 @@
 #' @examples 
 #' data(boston)
 #' bosint<-fgeninter(boston[,1:13],3,idv=4)
-fgeninter<-function(x,ord,inr=T,idv=0){
+fgeninter<-function(x,ord,inr=TRUE,idv=0){
 	n<-length(x[,1])
-	if(inr){
-		tmpx<-double(n)+1
-		x<-cbind(tmpx,x)
-	}
+	tmpx<-double(n)+1
+	x<-cbind(tmpx,x)
 	k<-length(x[1,])
 	kk<-choose(k-1+ord,k-1)
 	dv<-integer(k)+0
@@ -48,9 +46,11 @@ fgeninter<-function(x,ord,inr=T,idv=0){
 		tmpi[kex]<-1
 		tmpi<-(1:kk)[tmpi==0]
 		xx<-xx[,tmpi]
+		kk<-length(tmpi)
 		inc<-tmpi
 	}
 	else{inc<-0}
+	if(!inr){xx<-xx[,1:(kk-1)]}
 	list(xx,inc)
 }
 

@@ -88,7 +88,7 @@ C
 C
  2    continue
       if(ks.eq.k) goto 600
-
+C
 C
 C
       ks=ks+1
@@ -116,29 +116,34 @@ C
          endif
  40   continue
       ks=icount+1
-      util1=amss1/ss0
-      util2=dble(n-icount-1)/2d0   
-      pval1=betai(util1,util2,0.5d0)
-      pval=betai(pval1,nu,dble(kr+2-icount)-nu)
+      if(amss1.lt.1d-10) then
+         pval=0d0
+         icount=icount+1
+         pp(icount,1)=dble(ic)
+         pp(icount,2)=0d0
+         minss(icount)=0d0
+         ss01(icount)=0d0
+         kmx=icount
+         return
+      else
+         util1=amss1/ss0
+         util2=dble(n-icount-1)/2d0   
+         pval1=betai(util1,util2,0.5d0)
+         pval=betai(pval1,nu,dble(kr+2-icount)-nu)
+      endif
       if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          goto 600
-      endif
-      if(pval.gt.alpha.and.kmn.gt.0) then
-        if(icount.ge.kmn) then
-           kmx=icount
-           goto 600
-        endif
       endif
       icount=icount+1
       pp(icount,1)=dble(ic)
       pp(icount,2)=pval
       minss(icount)=amss1
       ss01(icount)=amss1/ss0
-c      if(kmn.gt.0.and.icount.ge.kmn)  then
-c         kmx=kmn
-c         goto 600
-c      endif
+      if(kmn.gt.0.and.icount.ge.kmn)  then
+         kmx=kmn
+         goto 600
+      endif
       if(kmx.gt.0.and.icount.ge.kmx)  then
          kmx=icount
          goto 600
@@ -884,12 +889,14 @@ C
       logical xinr
       double precision alpha,nu
 C
-      integer qq,kmx1,jj,i1
+      integer qq,kmx1,jj
 
 C
 C
       qq=0
       ne=0
+      kk=k
+      if(xinr) kk=k-1
       do 6 il=1,lin
          jj=iind(il)
          do 4 j1=1,k
@@ -902,15 +909,11 @@ C
  10      continue
          kmx1=kmx
          kexc(1)=jj
-c         write(*,*) jj
          call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
      $        ,xinr,nu,minss,ss01,qq,kmn)
-c         write(*,*) (pp(ij,1),ij=1,kmx1)
          if(kmx1.eq.0) goto 6
          if(kmx1.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
-         i1=1
-         if(xinr) i1=2
-         do 15, ij=i1,kmx1
+         do 15, ij=2,kmx1
            if(idnint(pp(ij,1)).ge.1) then
               ne=ne+1
               grph(ne,1)=jj
@@ -1396,7 +1399,6 @@ C
       integer id,ks,ns,np,ni,qks
       logical inv
 C
-c      intercept=.false.
       inv=.false.
       id=1
       mn=0d0
@@ -1424,7 +1426,7 @@ C
          else
            call decode(iv,k,ia)
         endif
-        ss(iv+1)=0d0       
+         ss(iv+1)=0d0       
          ks=0
          do 20 i=1,k
             ks=ks+ia(i)
@@ -1463,7 +1465,7 @@ C
          k1=k
          if(intercept)  k1=k-1
 C
-         do 70 is=1,k1
+        do 70 is=1,k1
              if(ia(is).eq.1) then
                ia(is)=0
                ns=0
@@ -1567,19 +1569,17 @@ C
 C
       subroutine decode(j,k,set)
       integer j,k
-      integer set(k)
-      integer jj
-c
-c
+      integer set(k),jj
+
+      jj=j
       do 10 i=1,k
          set(i)=0
  10   continue
-      jj=j
-      do 20 i =k,1,-1
-c         write(*,*) jj,2**i
-         if(jj.ge.2**(i-1))  then
-            set(i)=1
-            jj=jj-2**(i-1)
+      if(j.eq.0) return
+      do 20 i =k-1,0,-1
+         if(jj.ge.2**i) then
+            set(i+1)=1
+            jj=jj-2**i
          endif
  20   continue
       return
@@ -1687,7 +1687,7 @@ C
  35      continue
          do 36 jj=1,ord
             ia(ind(jj))=ia(ind(jj))+dv(ind(jj))
-            if(ia(ind(jj)).ge.2) then
+            if(ia(ind(jj)).ge.1) then
                 kex(j)=1
                goto 37
             endif
