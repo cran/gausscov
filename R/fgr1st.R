@@ -3,7 +3,6 @@
 #' @param x Matrix of covariates.
 #' @param p0  Cut-off P-value. 
 #' @param ind Restricts the dependent nodes to this subset
-#' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param kmn The minimum number of selected covariates for each node irrespective of cut-off P-value.
 #' @param kmx The maximum number of selected covariates for each node irrespective of cut-off P-value.
 #' @param mx Maximum nunber of selected covariates for each node for all subset search. 
@@ -14,7 +13,7 @@
 #' @return edg List of edges together with P-values for each  edge and proportional reduction of sum of squared residuals
 #' data(boston)
 #' a<-fgr1st(boston[,1:13],ind=3:6) 
-fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F){
+fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	n<-length(x[,1])
 	k<-length(x)/n
 	ind<-matrix(ind,nrow=1)
@@ -23,7 +22,7 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 		else{ind<-1:k}
 	}
 	li<-length(ind)
-	p0<-p0/li
+	p0<-p0/k
 	x<-matrix(x,nrow=n)
 	inrr<-inr
 	if((!xinr)&(inr)){tmpx<-double(n)+1
@@ -51,23 +50,24 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 		integer(1),
 		integer(k),
 		as.logical(xinr),
-		as.double(nu),	
 		double(k),
 		as.integer(nedge),
 		double(k),
 		as.integer(kmn),
 		as.integer(li),
-		as.integer(ind)
+		as.integer(ind),
+		double(nedge)
 		)
 	ned<-tmp[[13]]
+	print(ned)
 	if(ned>0){
         		edg<-tmp[[12]]
-        		edg<-matrix(edg,ncol=2)
+		edg<-matrix(edg,nrow=nedge,ncol=2)
+		edgp<-tmp[[22]]
+		edg<-cbind(edg,edgp)
         		edg<-edg[1:ned,]
-        		edg<-matrix(edg,ncol=2)
-		p<-double(2*ned)
-		p<-matrix(p,ncol=2)
-		eedg<-double(4)
+		edg<-matrix(edg,nrow=ned,ncol=3)
+		eedg<-c(0,0,0)
 		kk<-k
 		if(xinr){kk<-k-1}
 		for(i in 1:kk){
@@ -78,31 +78,22 @@ fgr1st<-function(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F)
 				qq<-k-li
 				if(xinr){qq<-qq-1}
 				ind1<-ind
-				lind<-length(ind)
-				if((lind>1)&(lind<mx)){
-					tmp<-fasb(x[,i],x[,ind],p0=p0,q=qq,inr=inr,xinr=xinr)[[1]]		
-					ind1<-decode(tmp[1,1],lind)[[1]]
-					ind1<-ind[ind1]
-				}
-				else{ind1<-ind}
-				a<-fpval(x[,i],x,ind1,q=qq,inr=inr,xinr=xinr)
-				ka<-length(a[[1]][,1])
-				ika<-(1:ka)[a[[1]][,1]>0]
-				ii<-integer(length(ika))+i
-				eedg0<-cbind(ii,ind1[ika],a[[1]][ika,3],a[[1]][ika,5])
-				eedg<-rbind(eedg,eedg0)
+				a<-fpval(x[,i],x,ind1,inr=inr,xinr=xinr)
+				la<-length(a[[1]][,1])
+				ind<-(1:la)[a[[1]][,1]>0]
+				ind<-(a[[1]][ind,1])
+				li<-length(ind)
+				for(ii in 1:li){
+					eedg0<-cbind(i,ind[ii],a[[1]][ii,3])
+					eedg<-rbind(eedg,eedg0)
+				}	
 			}
 		}
-		edg<-eedg
-		le<-length(edg[,1])
-		edg<-edg[2:le,]
-		ned<-le-1
-		edg<-matrix(edg,ncol=4)
 	}
     	else{
-       		edg<-integer(4)
-		edg<-matrix(edg,nrow=1,ncol=4)
+       		edg<-integer(3)
+		eedg<-matrix(edg,nrow=1,ncol=3)
 	}
-
+	edg<-eedg[2:(ned+1),]
 	list(ned,edg)
 }

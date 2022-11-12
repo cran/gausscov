@@ -3,9 +3,9 @@
 \alias{snspt}
 \title{Sunspot data}
 \description{
-  The average number of sunspots each month from January 1749 to January 2020: variable 1 year; variable 2, month; variable 3 number of sunspots.
+  The average number of sunspots each month from January 1749 to January 2020
 }
 \usage{snspt}
-\format{A matrix of size  3253 x 7}
+\format{A vector of size  3253}
 \source{WDC-SILSO, Royal Observatory of Belgium, Brussels}
 \keyword{datasets}

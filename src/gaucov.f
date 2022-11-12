@@ -2,13 +2,13 @@ C
 C
 C
       subroutine fstepwise(y,x,n,k,x2,res,ia,alpha,kmx,pp,kex
-     $     ,intercept,nu,minss,ss01,qq,kmn)
+     $     ,intercept,minss,ss01,qq,kmn)
       integer n,k,kmn,qq,kmx
       double precision y(n),x(n,k),x2(n),res(n) ,pp(k+1,2),minss(k),
      $     ss01(k)
       integer ia(k),kex(k)
       logical intercept
-      double precision alpha,nu
+      double precision alpha
 C
       integer icount,ks,ic,ik,kr,nex
       double precision ss0,ss1,amss1,pval,util1,util2,nx1,b,cf,pval1,mi
@@ -87,6 +87,7 @@ C
       endif
 C
  2    continue
+
       if(ks.eq.k) goto 600
 C
 C
@@ -129,21 +130,17 @@ C
          util1=amss1/ss0
          util2=dble(n-icount-1)/2d0   
          pval1=betai(util1,util2,0.5d0)
-         pval=betai(pval1,nu,dble(kr+2-icount)-nu)
+         pval=betai(pval1,1d0,dble(kr+2-icount)-1d0)
       endif
-      if(pval.gt.alpha.and.kmn.eq.0) then
-         kmx=icount
-         goto 600
-      endif
+      if(kmx.gt.0.and.icount.ge.kmx) goto 600
+      if(icount.lt.kmn) goto 49
+      if(pval.gt.alpha.and.icount.ge.kmn) goto 600
+ 49   continue
       icount=icount+1
       pp(icount,1)=dble(ic)
       pp(icount,2)=pval
       minss(icount)=amss1
       ss01(icount)=amss1/ss0
-      if(kmn.gt.0.and.icount.ge.kmn)  then
-         kmx=kmn
-         goto 600
-      endif
       if(kmx.gt.0.and.icount.ge.kmx)  then
          kmx=icount
          goto 600
@@ -185,24 +182,25 @@ C
  60   continue
       goto 2
  600  continue
+      kmx=icount
       return
       end
 C
 C
-C      
+C    
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       
 C
 C
       subroutine robstepwise(y,x,n,k,xx,x1,x2,beta,ia,alpha,kmax,pp
-     $     ,beta0,cn,cpp,sig,res,res1,yy,kmax1,kexc,offset,nu,ssg,red,
+     $     ,beta0,cn,cpp,sig,res,res1,yy,kmax1,kexc,offset,ssg,red,
      $     cnr,kmx)
       integer n,k,kmax,kmax1,kmx
       double precision y(n),x(n,k),xx(n,kmax1),x1(n),x2(n) ,beta(kmax1)
      $     ,pp(kmax1,2) ,beta0(kmax1),res(n),res1(n),yy(n),ssg(kmax1),
      $     cnr(3)
       integer ia(k+1),kexc(k+1)
-      double precision alpha,cn,sig,cpp,nu
+      double precision alpha,cn,sig,cpp
       logical offset,red
 C
       integer icount,ks,ic,nex,id
@@ -321,7 +319,7 @@ c         sig=ssg(kk+1)
  40   continue
       util1=2d0*sd20*(ss0-amss1)/sd10
       pval=betai(util1/(4d2+util1),0.5d0,2d2)
-      pval=1d0-betai(pval,dble(kr+2-icount)-nu,nu)
+      pval=1d0-betai(pval,dble(kr+2-icount)-1d0,1d0)
       if(pval.gt.alpha.and.kmx.eq.0) then
          kmax=icount
          return
@@ -548,6 +546,7 @@ C
          goto 100
       endif
  200  continue
+      sig=sig+rpsih(res(i)/sig0,cnr)**2
       ssrho(1)=0d0
       ssrho(2)=0d0
       ssrho(3)=0d0
@@ -881,19 +880,19 @@ C
 C
 C
       subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmx,pp,grph
-     $     ,ne,kexc,xinr,nu,minss,nedge,ss01,kmn,lin,iind)
+     $     ,ne,kexc,xinr,minss,nedge,ss01,kmn,lin,iind,grphp)
       integer n,k,kmn,ne,nedge,kmx,lin
       double precision xxx(n,k),x(n,k),y(n),x2(n),res(n),pp(k+1,2)
-     $     ,minss(k),ss01(k)
-      integer ia(k),grph(nedge,2),kexc(k),iind(lin)
+     $     ,minss(k),ss01(k),grphp(nedge)
+      integer ia(k),grph(nedge,3),kexc(k),iind(lin)
       logical xinr
-      double precision alpha,nu
+      double precision alpha
 C
       integer qq,kmx1,jj
 
 C
 C
-      qq=0
+      qq=k
       ne=0
       kk=k
       if(xinr) kk=k-1
@@ -909,8 +908,8 @@ C
  10      continue
          kmx1=kmx
          kexc(1)=jj
-         call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
-     $        ,xinr,nu,minss,ss01,qq,kmn)
+         call fstepwise(y,x,n,k,x2,res,ia,alph a,kmx1,pp,kexc
+     $        ,xinr,minss,ss01,qq,kmn)
          if(kmx1.eq.0) goto 6
          if(kmx1.eq.1.and.idnint(pp(1,1)).eq.0) goto 6
          do 15, ij=2,kmx1
@@ -918,6 +917,7 @@ C
               ne=ne+1
               grph(ne,1)=jj
              grph(ne,2)=idnint(pp(ij,1))
+             grphp(ne)=pp(ij,2)
                if(ne.ge.nedge) return
             endif
  15      continue
@@ -929,12 +929,12 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
       subroutine graphstst(xxx,x,n,k,y,x2,res,ia,alpha,kmx,pp,grph,
-     $     ne,kexc,xinr,nu,minss,nedge,ss01,rgrph,kmn,lin,iind)
+     $     ne,kexc,xinr,minss,nedge,ss01,rgrph,kmn,lin,iind)
       integer n,k,kmn,ne,nedge,kmx,lin
       double precision xxx(n,k),x(n,k),y(n),x2(n),res(n),pp(k+1,2)
      $     ,minss(k),ss01(k),rgrph(nedge)
       integer ia(k),grph(nedge,3),kexc(k),iind(lin)
-      double precision alpha,nu
+      double precision alpha
 C
       logical xinr
       integer ij,kmx1,qq,ek,iq,la,ij0
@@ -973,7 +973,7 @@ C
  5       continue
          kmx1=kmx
           call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
-     $        ,xinr,nu,minss,ss01,qq,kmn)
+     $        ,xinr,minss,ss01,qq,kmn)
          if(kmx1.le.0) goto 100
          if(kmx1.eq.1.and.xinr) goto 90
          la=la+1
@@ -1665,33 +1665,32 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
 C
-      subroutine genint(x,xx,n,k,kk,kex,ord,dv,ind,ia)
-      integer n,k,kk,ord
-      integer kex(kk),dv(k),ind(ord),ia(k)
+      subroutine genint(x,xx,n,k,kk,kex,ord,ind,ji)
+      integer n,k,kk,ord,ji
+      integer kex(kk,ord),ind(ord)
       double precision x(n,k),xx(n,kk)
 C
 C
       do 10 i=1,ord
          ind(i)=1
  10   continue
-C
+C        
+      ji=0
       do 40 j=1,kk
+C
          do 30 i=1,n
             xx(i,j)=1d0
             do 20 jj=1,ord
                xx(i,j)=xx(i,j)*x(i,ind(jj))
  20         continue
  30      continue
-         do 35 jj=1,ord
-            ia(ind(jj))=0
- 35      continue
-         do 36 jj=1,ord
-            ia(ind(jj))=ia(ind(jj))+dv(ind(jj))
-            if(ia(ind(jj)).ge.1) then
-                kex(j)=1
-               goto 37
+         ji=ji+1
+         do 37 io=1,ord
+            if(ind(io).eq.k) then
+               kex(ji,io)=0
+            else
+               kex(ji,io)=ind(io)
             endif
- 36      continue
  37      continue
          call inact(ind,k,ord)
  40   continue
@@ -2077,13 +2076,13 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C
 C
-      subroutine lagg(x,n,k,lag,xl,y)
-      integer n,k,lag
+      subroutine lagg(x,n,k,lag,xl,y,jj)
+      integer n,k,lag,jj
       double precision x(n,k),xl(n-lag,k*lag),y(n-lag)
 C
 C
       do 10 i=1,n-lag
-         y(i)=x(lag+i,1)
+         y(i)=x(lag+i,jj)
  10   continue
 C
       do 40 j=1,k
@@ -2099,252 +2098,7 @@ C
 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
-C
-C
-      subroutine simords(n,k,x,y,xx,nu,nsim,res,idum,ia,kmx,knu,
-     $     pval,mn,p0)
-      integer n,k,kmx,knu,nsim,idum
-      double precision y(n),xx(n),x(n,k),res(knu,kmx),nu(knu),
-     $ pval(kmx),mn(knu)
-      double precision p0
-      integer ia(k)
-C
-      double precision mnx,rho,rss,rss0,rssmn,ssy,ssx,syx,util1,util2,
-     $     pval1,ssj0
-      integer j0,jj
-C
-      double precision betai
-C
-      do 100 isim=1,nsim
-         do 1 i=3,n
-            y(i)=0d0
- 1       continue
-         y(1)=1d0
-         y(2)=-1d0
-         do 40 j=1,k
-           call gaussrnd(xx,n,idum)
-c           call gaussrnd2(xx,n,idum)
-            mnx=0d0
-            do 10 i=1,n
-               mnx=mnx+xx(i)
- 10         continue
-            mnx=mnx/dble(n)
-            do 20 i=1,n
-               x(i,j)=xx(i)-mnx
- 20         continue
-c            do 30 i=1,n
-c               x(i,j)=x(i,j)/dsqrt(ss(j))
-c 30         continue
- 40      continue
-c         return
-C
-C
-         rss0=2d0
-         jj=0
-         j0=0
-         do 2 i=1,k
-            ia(i)=0
- 2       continue
-         do 90 kj=1,kmx
-            rssmn=1d20
-            do 60 j=1,k
-               if(ia(j).eq.1) goto 60
-               if(kj.gt.1) then
-                  rho=0d0
-                  ssj0=0d0
-                  do 41 i=1,n
-                     rho=rho+x(i,j)*x(i,j0)
-                     ssj0=ssj0+x(i,j0)**2
- 41               continue
-                  rho=rho/ssj0
-                  do 42 i=1,n
-                     x(i,j)=x(i,j)-rho*x(i,j0)
- 42               continue
-               endif
-               rho=0d0
-               ssx=0d0
-               do 50 i=1,n
-                  rho=rho+y(i)*x(i,j)
-                  ssx=ssx+x(i,j)**2
- 50            continue
-               rho=rho/ssx
-               rss=0d0
-               do 51 i=1,n
-                  rss=rss+(y(i)-rho*x(i,j))**2
- 51            continue
-               if(rss.lt.rssmn) then
-                  rssmn=rss
-                  jj=j
-               endif
- 60         continue
-            j0=jj
-            ia(jj)=1
-            syx=0d0
-            ssx=0d0
-            do 70 i=1,n
-               syx=syx+y(i)*x(i,jj)
-               ssx=ssx+x(i,jj)**2
- 70         continue
-            ssj0=ssx
-            syx=syx/ssx
-            ssy=0d0
-            do 80 i=1,n
-               y(i)=y(i)-syx*x(i,jj)
-               ssy=ssy+y(i)**2
- 80         continue
-            util1=rssmn/rss0
-            util2=dble(n-kj-1)/2d0   
-            util2=dble(n-1)/2d0   
-            pval(kj)=betai(util1,util2,0.5d0)
-            rss0=rssmn
- 90      continue
-C
-         do 96 in=1,knu
-            do 95 im=1,kmx
-                pval1=betai(pval(im),nu(in),dble(k+3-im)-nu(in))
-               if(pval1.lt.p0)  mn(in)=mn(in)+1d0
-               if(pval1.gt.p0) then
-                  res(in,im)=res(in,im)+1d0
-                 goto 96
-               endif
- 95         continue
- 96      continue
- 100  continue
-C
-C
-      return
-      end
-C
-C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C
-C
-      subroutine simords1(n,k,x,y,xx,nu,nsim,res,idum,ia,kmx,knu,
-     $     pval,mn)
-      integer n,k,kmx,knu,nsim,idum
-      double precision y(n),xx(n),x(n,k),res(4*knu,kmx),nu(knu),
-     $ pval(kmx),mn(4*knu)
-      integer ia(k)
-C
-      double precision mnx,rho,rss,rss0,rssmn,ssy,ssx,syx,util1,util2,
-     $     pval1,ssj0,p1
-      integer j0,jj,inn
-C
-      double precision betai
-C
-      do 100 isim=1,nsim
-         do 1 i=3,n
-            y(i)=0d0
- 1       continue
-         y(1)=1d0
-         y(2)=-1d0
-         do 40 j=1,k
-           call gaussrnd(xx,n,idum)
-c           call gaussrnd2(xx,n,idum)
-            mnx=0d0
-            do 10 i=1,n
-               mnx=mnx+xx(i)
- 10         continue
-            mnx=mnx/dble(n)
-            do 20 i=1,n
-               x(i,j)=xx(i)-mnx
- 20         continue
- 40      continue
-c         return
-C
-C
-         rss0=2d0
-         do 2 i=1,k
-            ia(i)=0
- 2       continue
-         jj=0
-         j0=0
-         do 90 kj=1,kmx
-            rssmn=1d20
-            do 60 j=1,k
-               if(ia(j).eq.1) goto 60
-               if(kj.gt.1) then
-                  rho=0d0
-                  ssj0=0d0
-                  do 41 i=1,n
-                     rho=rho+x(i,j)*x(i,j0)
-                     ssj0=ssj0+x(i,j0)**2
- 41               continue
-                  rho=rho/ssj0
-                  do 42 i=1,n
-                     x(i,j)=x(i,j)-rho*x(i,j0)
- 42               continue
-               endif
-               rho=0d0
-               ssx=0d0
-               do 50 i=1,n
-                  rho=rho+y(i)*x(i,j)
-                  ssx=ssx+x(i,j)**2
- 50            continue
-               rho=rho/ssx
-               rss=0d0
-               do 51 i=1,n
-                  rss=rss+(y(i)-rho*x(i,j))**2
- 51            continue
-               if(rss.lt.rssmn) then
-                  rssmn=rss
-                  jj=j
-               endif
- 60         continue
-            j0=jj
-            ia(jj)=1
-            syx=0d0
-            ssx=0d0
-            do 70 i=1,n
-               syx=syx+y(i)*x(i,jj)
-               ssx=ssx+x(i,jj)**2
- 70         continue
-            ssj0=ssx
-            syx=syx/ssx
-            ssy=0d0
-            do 80 i=1,n
-               y(i)=y(i)-syx*x(i,jj)
-               ssy=ssy+y(i)**2
- 80         continue
-            util1=rssmn/rss0
-            util2=dble(n-kj-1)/2d0   
-            util2=dble(n-1)/2d0   
-            pval(kj)=betai(util1,util2,0.5d0)
-            rss0=rssmn
- 90      continue
-c         return
-C
-C
-         do 96 in=1,4*knu
-            if(in.le.knu) then
-               p1=1d-2
-               inn=in
-            elseif(in.le.2*knu) then
-               p1=1d-2/dble(k)
-               inn=in-knu
-            elseif(in.le.3*knu) then
-               p1=5d-2
-               inn=in-2*knu
-            else
-               p1=5d-2/dble(k)
-               inn=in-3*knu
-            endif
-            do 95 im=1,kmx
-                pval1=betai(pval(im),nu(inn),dble(k+3-im)-nu(inn))
-               if(pval1.lt.p1)  mn(in)=mn(in)+1d0
-               if(pval1.gt.p1) then
-                  res(in,im)=res(in,im)+1d0
-                 goto 96
-               endif
- 95         continue
- 96      continue
- 100  continue
-C
-C
-      return
-      end
-C
-C
+
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
 C

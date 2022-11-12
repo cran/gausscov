@@ -1,15 +1,15 @@
 #' Calculation of lagged covariates 
 #' 
-#' @param x The covariates.
-#' @param n The sample size.
+#' @param x The matrix of covariates.
+#' @praam n The sample size
 #' @param lag The maximum lag.
 #' @return  y The first covariate of x  without a lag, the dependent covariate.
 #' @return xl The lagged covariates with lags of order 1:lag starting with the first covariate.
 #' @examples 
 #' data(abcq)
-#' abcql<-flag(abcq,240,16)
+#' abcql<-flag(abcq,240,1,16)
 #' a<-f1st(abcql[[1]],abcql[[2]])
-flag<-function(x,n,lag){
+flag<-function(x,n,i,lag){
 	k<-length(x)/n
 	x<-matrix(x,nrow=n,ncol=k)
 	tmp<-.Fortran(
@@ -19,10 +19,11 @@ flag<-function(x,n,lag){
 		as.integer(k),
 		as.integer(lag),
 		double((n-lag)*k*lag),
-		double(n-lag)
+		double(n-lag),
+		as.integer(i)
 		)
+	y<-tmp[[6]]
 	xl<-tmp[[5]]
 	xl<-matrix(xl,nrow=n-lag,ncol=k*lag)
-	y<-tmp[[6]]
 	list(y,xl)
 }

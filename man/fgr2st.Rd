@@ -4,7 +4,7 @@
 \alias{fgr2st}
 \title{Calculates an independence graph using  repeated stepwise selection}
 \usage{
-fgr2st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
+fgr2st(x,p0=0.01,ind=0,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 }
 \arguments{
 \item{x}{Matrix of covariates}
@@ -12,8 +12,6 @@ fgr2st(x,p0=0.01,ind=0,nu=1,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F)
 \item{p0}{Cut-off P-value}
 
 \item{ind}{Restricts the dependent nodes to this subset}
-
-\item{nu}{The order statistic of Gaussian covariates used for comparison.}
 
 \item{kmn}{The minimum  number of selected variables for each node irrespective of cut-off P-value}
 
@@ -35,6 +33,7 @@ edg  List of edges giving nodes (covariates), the approximations for each node, 
 Calculates a dependency graph using  repeated Gaussian stepwise selection
 }
 \examples{
+
 data(redwine)
 a<-fgr2st(redwine[,1:11],ind=4:8) 
 }

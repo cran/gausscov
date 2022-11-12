@@ -3,7 +3,6 @@
 #' @param y Dependent variable.
 #' @param x Covariates.
 #' @param p0  The cut-off P-value.
-#' @param nu The order statistic of Gaussian covariates used for comparison.
 #' @param kmn The minimum number of included covariates irrespective of cut-off P-value.
 #' @param kmx The maximum number of included covariates irrespective of cut-off P-value.
 #' @param kex The excluded covariates.
@@ -18,7 +17,7 @@
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
 #' a<-f2st(boston[,14],bostint,lm=3,sub=FALSE)
-f2st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=F,qq=0){
+f2st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=F,qq=0){
 	kxx<-kex
 	kmmx<-kmx
 	kmnn<-kmn
@@ -36,7 +35,7 @@ f2st<-function(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=
 	qqq<-qq
 	pvv<- matrix(c(0,0,0,0,0),nrow=1)
 	while(kv>0.5){
-		tmp<-f1st(y,x,p0=p0,nu=nu,kmn=kmnn,kmx=kmmx,kex=kxx,mx=mx,sub=sub,inr=inr,xinr=xinr,qq=qq)[[1]]
+		tmp<-f1st(y,x,p0=p0,kmn=kmnn,kmx=kmmx,kex=kxx,mx=mx,sub=sub,inr=inr,xinr=xinr,qq=qq)[[1]]
 		if(tmp[1,1]<=0){kv<-0}
 		if(kv>0.5){
 			lv<-length(tmp[,1])

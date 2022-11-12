@@ -2,7 +2,7 @@
 \alias{f3sti}
 \title{Selection of covariates with given excluded covariates}
 \usage{
-f3sti(y,x,covch,ind,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,
+f3sti(y,x,covch,ind,m,kexmx=100,p0=0.01,kmn=0,kmx=0,
 
  mx=21,lm=1000,kex=0,sub=T,inr=T,xinr=F,qq=0,lm0=0)
 }
@@ -20,8 +20,6 @@ f3sti(y,x,covch,ind,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,
 \item{kexmx}{The maximum number of covariates in an approximation.}
 
 \item{p0}{The P-value cut-off}
-
-\item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
 
@@ -61,5 +59,5 @@ covch<-matrix(covch,nrow=1,ncol=5)
 ind<-c(1182,1219,2888)
 ind<-matrix(ind,nrow=3,ncol=1)
 m<-1
-a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m)
+a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,kexmx=5)
 }

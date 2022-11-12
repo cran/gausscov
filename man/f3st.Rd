@@ -2,7 +2,7 @@
 \alias{f3st}
 \title{Stepwise selection of covariates}
 \usage{
-f3st(y,x,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,lm=1000,kex=0,sub=T,inr=T,xinr=F,qq=0)
+f3st(y,x,m,kmn=10,p0=0.01,kmx=0,mx=21,lm=100,kex=0,sub=T,inr=T,xinr=F,qq=0,kexmx=100)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -14,8 +14,6 @@ f3st(y,x,m,kexmx=100,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,lm=1000,kex=0,sub=T,inr=T,xi
 \item{kexmx}{The maximum number of covariates in an approximation}
 
 \item{p0}{The P-value cut-off}
-
-\item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
 
@@ -45,5 +43,5 @@ Stepwise selection of covariates
 }
 \examples{
 data(leukemia)
-a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kexmx=5,kmn=5,sub=TRUE)
+a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kmn=5,sub=TRUE,kexmx=5)
 }

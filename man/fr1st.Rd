@@ -4,7 +4,7 @@
 \alias{fr1st}
 \title{Robust stepwise selection of covariates}
 \usage{
-fr1st(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,nu=1,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,red=F)
+fr1st(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,red=F)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -18,8 +18,6 @@ fr1st(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,nu=1,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr
 \item{p0}{The P-value cut-off}
 
 \item{sg}{ Scale value of residuals}
-
-\item{nu}{The order for calculating the P-value}
 
 \item{kmx}{The maximum number of included covariates}
 

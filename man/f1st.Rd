@@ -4,7 +4,7 @@
 \alias{f1st}
 \title{Stepwise selection of covariates}
 \usage{
-f1st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
+f1st(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -12,8 +12,6 @@ f1st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 \item{x}{Covariates}
 
 \item{p0}{The P-value cut-off}
-
-\item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
 

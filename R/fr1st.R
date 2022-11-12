@@ -6,7 +6,6 @@
 #' @param cnr      The constants for Hampel's three part redescending psi function.
 #' @param p0       The P-value cut-off.
 #' @param sg       Scale value of residuals.
-#' @param nu       The order for calculating the P-value.
 #' @param kmx     Specified number of included covariates.
 #' @param mx      The maximum number of included covariates if the option sub=TRUE is used.
 #' @param kex     The excluded covariates.
@@ -20,7 +19,7 @@
 #' @examples 
 #' data(boston)
 #' a<-fr1st(boston[,14],boston[,1:13],kex=7:8)
-fr1st<-function(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,nu=1,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,red=F){
+fr1st<-function(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,red=F){
 	if(mad(y)==0){stop("MAD=0")}
 	cnn<-cn
 	if(red){cnn<-cnr[3]
@@ -95,7 +94,6 @@ fr1st<-function(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,nu=1,kmx=0,mx=21,kex=0,sub=T,
 		as.integer(km1),
 		as.integer(kex),
 		as.logical(xinr),
-		as.double(nu),
 		double(km1),
 		as.logical(red),
 		as.double(cnr),
@@ -113,7 +111,7 @@ fr1st<-function(y,x,cn=1,cnr=c(1,3,5),p0=0.01,sg=0,nu=1,kmx=0,mx=21,kex=0,sub=T,
 		stpv<-0
 	}
 	else{
-		ss01<-tmp[[24]][1:kmax]
+		ss01<-tmp[[23]][1:kmax]
 		stpv<-tmp[[12]]
 		stpv<-matrix(stpv,ncol=2)
 		stpv<-stpv[1:kmax,]

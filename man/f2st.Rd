@@ -4,7 +4,7 @@
 \alias{f2st}
 \title{Repeated stepwise selection of covariates}
 \usage{
-f2st(y,x,p0=0.01,nu=1,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,
+f2st(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,
 
 sub=T,inr=T,xinr=F,qq=0)}
 \arguments{
@@ -13,8 +13,6 @@ sub=T,inr=T,xinr=F,qq=0)}
 \item{x}{Covariates}
 
 \item{p0}{The P-value cut-off}
-
-\item{nu}{The order statistic of Gaussian covariates used for comparison}
 
 \item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
 
@@ -43,5 +41,5 @@ Repeated stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f2st(boston[,14],bostint,lm=3,sub=FALSE)
+a<-f2st(boston[,14],bostint,lm=3)
 }
