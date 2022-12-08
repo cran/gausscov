@@ -16,7 +16,7 @@ fselect<-function(nv,k){
 	rmv<-integer(n)
 	for(i in 1:(n-1)){
 		ii<-ind[i]
-		tmpi<-decode(nv[ii,1],k)[[2]]
+		tmpi<-fdecode(nv[ii,1],k)[[2]]
 		ii2<-nv[ii,2]
 		j<-i+1
 		while(j<=n){
@@ -24,7 +24,7 @@ fselect<-function(nv,k){
 			if(rmv[jj]==0){
 				jj2<-nv[jj,2]
 				if(jj2<ii2){
-					tmpj<-decode(nv[jj,1],k)[[2]]
+					tmpj<-fdecode(nv[jj,1],k)[[2]]
 					ik<-1
 					sbst<-1
 					while(ik<=k){

@@ -1,10 +1,10 @@
 Package: gausscov
-Version: 0.1.9
-Date: 2022-10-26
+Version: 1.0.0
+Date: 2022-11-30
 Title: The Gaussian Covariate Method for Variable Selection
-Authors@R: person("Laurie", "Davies", role = c("aut","cre"),email ="laurie.davies@uni-due.de")
+Authors@R: person("Laurie", "Davies", role = c("aut","cre"),email ="pldavies44@cantab.net")
 Author: Laurie Davies [aut, cre]
-Maintainer: Laurie Davies <laurie.davies@uni-due.de>
+Maintainer: Laurie Davies <pldavies44@cantab.net>
 Description: Given the standard linear model the traditional way of deciding whether to include the jth covariate is to apply the F-test to decide whether the corresponding beta coefficient is  zero. The Gaussian covariate method is completely different. The question as to whether the beta coefficient is or is not zero is replaced by the question as to whether the covariate is better or worse than i.i.d. Gaussian noise. The P-value for the covariate is the probability that Gaussian noise is better. Surprisingly this can be given exactly and it is the same a the P-value for the classical model based on the F-distribution. The Gaussian covariate P-value is model free, it is the same for any data set. Using the idea it is possible to do covariate selection for a small number of covariates 25 by considering all subsets.  Post selection inference causes no problems as the P-values hold whatever the data. The idea extends to stepwise regression again with exact probabilities. In the simplest version the only parameter is a specified cut-off P-value which can be interpreted as the probability of a false positive being included in the final selection. For more information see the web site below and the accompanying papers: L. Davies and L. Duembgen, "Covariate Selection Based on a Model-free Approach to Linear Regression with Exact Probabilities", 2022, <arxiv:2202.01553>. L. Davies, "Linear Regression, Covariate Selection and the Failure of Modelling", 2022, <arXiv:2112.08738>.
 LazyData: true
 License: GPL-3
@@ -12,6 +12,6 @@ Depends: R (>= 3.5.0), stats
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2022-11-12 16:08:23 UTC; laurie
+Packaged: 2022-12-01 13:57:28 UTC; laurie
 Repository: CRAN
-Date/Publication: 2022-11-12 16:40:02 UTC
+Date/Publication: 2022-12-08 10:10:06 UTC

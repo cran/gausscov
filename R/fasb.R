@@ -1,4 +1,4 @@
-#' Calculates all possible subsets where each included covariate is significant. Decode with decode.
+#' Calculates all possible subsets where each included covariate is significant. Decode with fdecode.
 #'
 #' 
 #'

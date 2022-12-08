@@ -6,8 +6,8 @@
 #' @return ind The list of covariates.
 #' @return set A binary vector giving the covariates.
 #' @examples 
-#' decode(19,8)
-decode<-function(ns,k){
+#' fdecode(19,8)
+fdecode<-function(ns,k){
 	tmp<-.Fortran(
 		"decode",
 		as.integer(ns),

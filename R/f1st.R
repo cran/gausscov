@@ -127,7 +127,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){
 			kmm<-length(ind)
 			if(sbsts[1,1]>0){
 				nss<-sbsts[1,1]
-				tmv<-decode(nss,kmm)[[1]]
+				tmv<-fdecode(nss,kmm)[[1]]
 				ind<-ind[tmv]
 				if(xinr){if(max(ind)<k){ind<-c(ind,k)}}
 				if(qq==0){

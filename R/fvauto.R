@@ -28,6 +28,7 @@ fvauto<-function(x,n,omx,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=TRUE){
 		a<-f1st(xl[[1]],xl[[2]],p0=p0,kmn=kmn,kmx=kmx,mx=mx,kex=kex,sub=sub,inr=inr)
 		if(a[[1]][1,1]>0){
 			b<-a[[2]]
+			res4<-c(res4,list(b))
 			ss1<-sum(b^2)
 			a<-a[[1]]
 			la<-length(a[,1])
@@ -40,8 +41,14 @@ fvauto<-function(x,n,omx,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=TRUE){
 			ss<-double(4)
 			ss[1]<-ss1
 			a<-rbind(a,ss)
+
 			res2<-c(res2,list(a))
-			res4<-c(res4,list(b))
+#			res4<-c(res4,list(b))
+		}
+		else{
+			res<-rbind(res,res0)
+			res2<-c(res2,list(res0))
+			res4<-c(res4,list(res0))
 		}
 	}
 	nr<-length(res)/((k+1)*5)
