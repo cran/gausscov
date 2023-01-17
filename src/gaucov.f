@@ -6,8 +6,7 @@ C
       integer n,k,kmn,qq,kmx
       double precision y(n),x(n,k),x2(n),res(n) ,pp(k+1,2),minss(k),
      $     ss01(k)
-      integer ia(k),kex(k)
-      logical intercept
+      integer ia(k),kex(k),intercept
       double precision alpha
 C
       integer icount,ks,ic,ik,kr,nex
@@ -15,7 +14,7 @@ C
      $     ,ssy,ssx
       double precision betai
 C
-      if(intercept)  kmx=kmx+1
+      if(intercept.eq.1)  kmx=kmx+1
       ic=0 
       do 1 j=1,k
          ia(j)=0
@@ -33,7 +32,7 @@ C
       do 3 i=1,n
          ssy=ssy+y(i)**2
  3    continue
-       if(intercept) then
+       if(intercept.eq.1) then
          ia(k)=1
          b=0d0
          do 5 i=1,n
@@ -196,9 +195,8 @@ C     are returned in beta and their variances in d. Requires
 C                              QR.f
 C
       subroutine lsqqr(x,y,n,k,d,r,beta,x2inv,inv)
-      integer n,k
+      integer n,k,inv
       double precision x(n,k),y(n),d(k),r(k),beta(k),x2inv(k,k)
-      logical inv
 C
       double precision delta,sum
 C
@@ -214,7 +212,7 @@ C
  30   continue
 C
       call qrsolv(x,y,n,k,d,beta)
-      if(.not.inv) return
+      if(inv.eq.0) return
       do 60 j=1,k
          do 40 i=1,k
             y(i)=0d0
@@ -242,19 +240,19 @@ C
       subroutine qrdecom(x,m,n,d,r,sing)
       integer m,n
       double precision x(m,n),d(n),r(n)
-      logical sing
+      integer sing
 C
       double precision beta,scl,sigma,sum
 C
 C
-      sing=.false.
+      sing=0
       do 80 j=1,n
          scl=0d0
          do 10 i=j,m
             scl=dmax1(scl,dabs(x(i,j)))
  10      continue
          if(scl.eq.0d0) then
-            sing=.true.
+            sing=1
             return
          endif
          do 20 i=j,m
@@ -501,11 +499,10 @@ C
 C
       subroutine graphst(xxx,x,n,k,y,x2,res,ia,alpha,kmx,pp,grph
      $     ,ne,kexc,xinr,minss,nedge,ss01,kmn,lin,iind,grphp)
-      integer n,k,kmn,ne,nedge,kmx,lin
+      integer n,k,kmn,ne,nedge,kmx,lin,xinr
       double precision xxx(n,k),x(n,k),y(n),x2(n),res(n),pp(k+1,2)
      $     ,minss(k),ss01(k),grphp(nedge)
       integer ia(k),grph(nedge,3),kexc(k),iind(lin)
-      logical xinr
       double precision alpha
 C
       integer qq,kmx1,jj
@@ -515,7 +512,7 @@ C
       qq=k
       ne=0
       kk=k
-      if(xinr) kk=k-1
+      if(xinr.eq.1) kk=k-1
       do 6 il=1,lin
          jj=iind(il)
          do 4 j1=1,k
@@ -556,7 +553,7 @@ C
       integer ia(k),grph(nedge,3),kexc(k),iind(lin)
       double precision alpha
 C
-      logical xinr
+      integer xinr
       integer ij,kmx1,qq,ek,iq,la,ij0
 
 C
@@ -564,7 +561,7 @@ C
       ne=0
       ek=0
       kk=k
-      if(xinr) then
+      if(xinr.eq.1) then
          kk=k-1
       endif
       do 100 il=1,lin
@@ -595,12 +592,12 @@ C
           call fstepwise(y,x,n,k,x2,res,ia,alpha,kmx1,pp,kexc
      $        ,xinr,minss,ss01,qq,kmn)
          if(kmx1.le.0) goto 100
-         if(kmx1.eq.1.and.xinr) goto 90
+         if(kmx1.eq.1.and.xinr.eq.1) goto 90
          la=la+1
          ij0=1
-         if(xinr) ij0=2
+         if(xinr.eq.1) ij0=2
          do 15, ij=ij0,kmx1
-            if(xinr.and.idnint(pp(ij,1)).eq.k) goto 15
+            if(xinr.eq.1.and.idnint(pp(ij,1)).eq.k) goto 15
             if(idnint(pp(ij,1)).ge.1) then
                ne=ne+1
                ek=ek+1
@@ -787,35 +784,34 @@ C
      $     ,r(k),beta(k),xinv(k**2),ss(2**k+2),ssr(2**k+2)
       double precision alpha
       integer ia(k),nv(2**k,2)
-      logical intercept
+      integer intercept
 C
       double precision ss0,ss1,pval,util1,util2,pv1,pval1
-      double precision betai,mn
-      integer id,ks,ns,np,ni,qks
-      logical inv
+      double precision betai,amn
+      integer id,ks,ns,np,ni,qks,inv
 C
-      inv=.false.
+      inv=0
       id=1
-      mn=0d0
+      amn=0d0
       ss(1)=0d0
       do 300 i=1,n
          ss(1)=ss(1)+y(i)**2
-         mn=mn+y(i)
+         amn=amn+y(i)
  300  continue
-      mn=mn/dble(n)
-      if(intercept) ss(1)=ss(1)-dble(n)*mn**2
+      amn=amn/dble(n)
+      if(intercept.eq.1) ss(1)=ss(1)-dble(n)*amn**2
 C
-      if(intercept) then
+      if(intercept.eq.1) then
          kk=2**(k-1)
       else
          kk=2**k
       endif
       ni=0
-      if(intercept) ia(k)=1
+      if(intercept.eq.1) ia(k)=1
 C
       ni=0
       do 40 iv=1,kk-1
-         if(intercept) then
+         if(intercept.eq.1) then
             call decode(iv,k-1,ia)
             ia(k)=1
          else
@@ -836,7 +832,7 @@ C
       do 80 iv=1,kk-1
          ns=0
          np=0
-         if(intercept) then
+         if(intercept.eq.1) then
             call decode(iv,k-1,ia)
              do 500 iu=1,k-1
                ns=ns+ia(iu)*2**(iu-1)
@@ -858,7 +854,7 @@ C
  45      continue
 C
          k1=k
-         if(intercept)  k1=k-1
+         if(intercept.eq.1)  k1=k-1
 C
         do 70 is=1,k1
              if(ia(is).eq.1) then
@@ -922,7 +918,7 @@ C
       integer n,k
       double precision x(n,k),y(n),xx(n,k),yy(n),d(k),r(k),beta(k)
      $     ,x2inv(k,k),res(n)
-      logical inv
+      integer inv
 C
       double precision b
 C
@@ -934,7 +930,7 @@ C
  20   continue
 C
       call qrdecom(xx,n,k,d,r,inv)
-      if(inv) return
+      if(inv.eq.1) return
       call  lsqqr(xx,yy,n,k,d,r,beta,x2inv,inv)
 C
       do 40 i=1,n
@@ -1102,8 +1098,9 @@ C
       double precision tr(n,2*m)
 C
       double precision pi
+      integer jj
 C
-      pi=4*datan(1d0)
+      pi=4d0*datan(1d0)
 C
       do 10 i=1,n
         tr(i,1)=dsin(pi*dble(i)/dble(n))

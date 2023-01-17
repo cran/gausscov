@@ -5,6 +5,7 @@
 #' @param i The chosen covariate
 #' @param nsim The number of simulations
 #' @param plt   Logical if TRUE plot Gaussian P-values
+#' @return pgv  Th P-value of the ith covariates and the relative frequency with which the Gaussian covariates are better. 
 #' @examples 
 #' data(snspt)
 #' a<-flag(snspt,3253,12)
@@ -15,7 +16,6 @@ simgpval<-function(y,x,i,nsim,plt=TRUE){
 	a<-lm(y~x) 		# regress y on x
 	
 	ssx<-sum(a$res^2)              # sum of squared residuals
-	print(ssx)
 	px<-summary(a)[[4]][(i+1),4]    # standard F P-value of ith covariate of x
 	res<-double(nsim)               # P-values of the Gaussian covariates
 	xi<-x[,-i]                      # x without the ith covariate x_i

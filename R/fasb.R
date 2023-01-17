@@ -51,6 +51,8 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 	
 	kmxx<-2^k
 	if(xinr){kmxx<-2^(k-1)}
+	xinrr<-0
+	if(xinr){xinrr<-1}
 	tmp<-.Fortran(
 		"lmmdch",
 		as.double(y),
@@ -66,7 +68,7 @@ fasb<-function(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F){
 		double(k),
 		double(k**2),
 		integer(k),
-		as.logical(xinr),
+		as.integer(xinrr),
 		double(2**k+2),
 		integer(2**(k+1)),
 		double(2**k+2),

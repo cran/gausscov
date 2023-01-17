@@ -41,7 +41,6 @@ fvauto<-function(x,n,omx,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=TRUE){
 			ss<-double(4)
 			ss[1]<-ss1
 			a<-rbind(a,ss)
-
 			res2<-c(res2,list(a))
 #			res4<-c(res4,list(b))
 		}

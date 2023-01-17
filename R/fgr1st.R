@@ -33,6 +33,8 @@ fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 	}
 	xx<-x
 	if(kmx==0){kmx<-min(n,k)}
+	xinrr<-0
+	if(xinr){xinrr<-1}
 	tmp<-.Fortran(
 		"graphst",
 		as.double(xx),
@@ -49,7 +51,7 @@ fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		integer(nedge*2),
 		integer(1),
 		integer(k),
-		as.logical(xinr),
+		as.integer(xinrr),
 		double(k),
 		as.integer(nedge),
 		double(k),
@@ -59,7 +61,6 @@ fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,nedge=10^5,inr=T,xinr=F){
 		double(nedge)
 		)
 	ned<-tmp[[13]]
-	print(ned)
 	if(ned>0){
         		edg<-tmp[[12]]
 		edg<-matrix(edg,nrow=nedge,ncol=2)
