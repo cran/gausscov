@@ -42,17 +42,20 @@ f3st<-function(y,x,m,kmn=10,p0=0.01,kmx=0,mx=21,lm=100,kex=0,sub=T,inr=T,xinr=F,
 		lai<-1
 		if(m>0){
 			a<-f3sti(y,x,covch,ind,m,kexmx=kexmx,p0=p0,kmn=kmn,kmx=kmx,mx=mx,lm=lm,kex=kex,sub=sub,inr=inr,xinr=xinr,qq=qq,lm0=lm0)
-		covch<-a[[1]]
-		lai<-length(covch[,1])
+			covch<-a[[1]]
+			lai<-length(covch[,1])
+		}
+		if(lai>0){
+			tmp<-apply(covch,2,max)
+			len<-length(tmp)
+			ind<-(1:len)[tmp>0]
+			covch<-covch[,ind]
 		}
 	}
-	else{lai<-0
+	else{
 		covch<-0
+		lai<-0
 	}
-	tmp<-apply(covch,2,max)
-	len<-length(tmp)
-	ind<-(1:len)[tmp>0]
-	covch<-covch[,ind]
 	list(covch,lai)
 }
 

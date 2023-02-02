@@ -48,7 +48,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){
 	}
 	if((kmn>0)&xinr){kmn=kmn+1}
 	if(kmx==0){kmx<-min(n,k)}
-	xinnr<-0
+	xinrr<-0
 	if(xinr){xinrr<-1}
 	tmp<-.Fortran(
 		"fstepwise",
