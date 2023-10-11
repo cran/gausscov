@@ -59,5 +59,5 @@ covch<-matrix(covch,nrow=1,ncol=5)
 ind<-c(1182,1219,2888)
 ind<-matrix(ind,nrow=3,ncol=1)
 m<-1
-a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,kexmx=5)
+a<-f3sti(leukemia[,3572],leukemia[,1:3571],covch,ind,m,kexmx=5)
 }

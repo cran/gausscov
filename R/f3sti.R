@@ -27,11 +27,12 @@
 #' ind<-c(1182,1219,2888)
 #' ind<-matrix(ind,nrow=3,ncol=1)
 #' m<-1
-#' a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,kexmx=5)
+#' a<-f3sti(leukemia[,3572],leukemia[,1:3571],covch,ind,m,kexmx=5)
 f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,kmn=0,kmx=0,mx=21,lm=1000,kex=0,sub=T,inr=T,xinr=F,qq=0,lm0=0){
 	kexx<-integer(m)
 	kexx<-matrix(ind,ncol=1)
-	for(mm in 1:m){
+	mm<-1
+	while(mm <= m){
 			ind<-kexx
 			ind<-matrix(ind,ncol=mm)
 			ni<-length(ind[,1])
@@ -55,19 +56,31 @@ f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,kmn=0,kmx=0,mx=21,lm=1000,kex=
 			
 				}	
 			}
-			ik<-length(kex0[,1])
-			kexx<-kex0[2:ik,]
+			if(max(kex0)==0){mm<-m+1}
+			else{mm<-mm+1
+				ik<-length(kex0[,1])
+				kexx<-kex0[2:ik,]
+			}
 		}
 		tmp<-apply(covch,2,max)
 		ind<-(1:kexmx)[tmp>0]
+		li<-length(ind)
+
 		covch<-covch[,ind]
 		covch<-unique(covch)
-		lco<-length(covch[,1])
+		nc<-li
+		nr<-length(covch)/li	
+		covch<-matrix(covch,ncol=li,nrow=nr)
+
+		lro<-length(covch[,1])
 		covch<-as.double(covch)
-		covch<-matrix(covch,nrow=lco)
-		rnk<-rank(covch[,1])
-		lco<-1:lco
-		lco[rnk]<-lco
-		covch<-covch[lco,]
+		lco<-length(covch)/lro
+		covch<-matrix(covch,nrow=lro,ncol=lco)
+		if(lro>=2){
+			rnk<-rank(covch[,1])
+			lro<-1:lro
+			lro[rnk]<-lro
+			covch<-covch[lro,]
+		}		
 		list(covch)
 }

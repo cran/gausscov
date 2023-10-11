@@ -18,7 +18,7 @@
 #' @return lai The number of rows of covch
 #' @examples 
 #' data(leukemia)
-#' a<-f3st(leukemia[[1]],leukemia[[2]],m=1,kmn=5,kexmx=5)
+#' a<-f3st(leukemia[,3572],leukemia[,1:3571],m=1,kmn=5,kexmx=5)
 f3st<-function(y,x,m,kmn=10,p0=0.01,kmx=0,mx=21,lm=100,kex=0,sub=T,inr=T,xinr=F,qq=0,kexmx=100){
 	kex0<-0
 	if(sum(kex)>0){kex0<-sort(kex)

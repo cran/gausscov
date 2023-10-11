@@ -43,5 +43,5 @@ Stepwise selection of covariates
 }
 \examples{
 data(leukemia)
-a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kmn=5,sub=TRUE,kexmx=5)
+a<-f3st(leukemia[,3572],leukemia[,1:3571],m=2,kmn=5,sub=TRUE,kexmx=5)
 }
