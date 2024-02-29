@@ -5,21 +5,17 @@
 #' @param covch Sum of squared residuals and selected covariates
 #' @param ind The excluded covariates
 #' @param m Number of iterations
-#' @param kexmx The maximum number of covariates in an approximation.
 #' @param p0 The cut-off P-value.
 #' @param kmn The minimum number of included covariates irrespective of cut-off P-value.
 #' @param kmx The maximum number of included covariates irrespective of cut-off P-value.
-#' @param mx  The maximum number covariates for an all subset search.
-#' @param lm  The maximum number of approximations.
 #' @param kex The excluded covariates.
+#' @param mx  The maximum number covariates for an all subset search.
 #' @param sub Logical, if TRUE best subset selected.
 #' @param inr Logical, if TRUE include intercept if not present.
 #' @param xinr Logical, if TRUE intercept already included 
-#' @qq   The number of covariates to choose from. If qq=0 the number of covariates of x is used.
-#' @lm0 The current number of approximations.
-#' @return ind1 The excluded covariates
+#' @qq   The number of covariates to choose from. If qq=-1 the number of covariates of x is used.
+#' @param kexmx The maximum number of covariates in an approximation
 #' @return covch The sum of squared residuals and the selected covariates ordered in increasing size of sum of squared residuals.
-#' @returm lm0 The current number of approximations.
 #' @examples 
 #' data(leukemia)
 #' covch<-c(2.023725,1182,1219,2888,0)
@@ -27,10 +23,14 @@
 #' ind<-c(1182,1219,2888)
 #' ind<-matrix(ind,nrow=3,ncol=1)
 #' m<-1
-#' a<-f3sti(leukemia[,3572],leukemia[,1:3571],covch,ind,m,kexmx=5)
-f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,kmn=0,kmx=0,mx=21,lm=1000,kex=0,sub=T,inr=T,xinr=F,qq=0,lm0=0){
+#' a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,kexmx=5)
+f3sti<-function(y,x,covch,ind,m,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=F,xinr=F,qq=-1,kexmx=100){
 	kexx<-integer(m)
 	kexx<-matrix(ind,ncol=1)
+	if(max(kexx)>0){
+		lkex<-length(kex)
+		kexx[1:lkex]<-kex
+	}
 	mm<-1
 	while(mm <= m){
 			ind<-kexx
@@ -39,7 +39,7 @@ f3sti<-function(y,x,covch,ind,m,kexmx=100,p0=0.01,kmn=0,kmx=0,mx=21,lm=1000,kex=
 			kex0<-integer(mm+1)
 			for(i in 1:ni){
 				kex<-ind[i,]
-				a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex,inr=inr,xinr=xinr,qq=qq)
+				a<-f1st(y,x,p0=p0,kmn=kmn,sub=sub,kex=kex,inr=inr,xinr=xinr,qq=-1)
 				if(a[[1]][1,1]>0){
 					li<-length(a[[1]][,1])
 					ind1<-(1:li)[a[[1]][,1]>0]

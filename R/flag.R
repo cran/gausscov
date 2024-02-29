@@ -2,14 +2,17 @@
 #' 
 #' @param x The matrix of covariates.
 #' @praam n The sample size
+#' @praam i The selected covariate
 #' @param lag The maximum lag.
-#' @return  y The first covariate of x  without a lag, the dependent covariate.
+#' @param inr If true intecept included.
+
+#' @return  y The ith  covariate of x  without a lag, the dependent covariate.
 #' @return xl The lagged covariates with lags of order 1:lag starting with the first covariate.
 #' @examples 
 #' data(abcq)
-#' abcql<-flag(abcq,240,1,16)
+#' abcql<-flag(abcq,240,1,16,TRUE)
 #' a<-f1st(abcql[[1]],abcql[[2]])
-flag<-function(x,n,i,lag){
+flag<-function(x,n,i,lag,inr=F){
 	k<-length(x)/n
 	x<-matrix(x,nrow=n,ncol=k)
 	tmp<-.Fortran(
@@ -17,13 +20,17 @@ flag<-function(x,n,i,lag){
 		as.double(x),
 		as.integer(n),
 		as.integer(k),
+		as.integer(i),
 		as.integer(lag),
 		double((n-lag)*k*lag),
-		double(n-lag),
-		as.integer(i)
+		double(n-lag)
 		)
-	y<-tmp[[6]]
-	xl<-tmp[[5]]
+	y<-tmp[[7]]
+	xl<-tmp[[6]]
+
 	xl<-matrix(xl,nrow=n-lag,ncol=k*lag)
+	if(inr){tmpx<-double(n-lag)+1
+		xl<-cbind(xl,tmpx)
+	}
 	list(y,xl)
 }

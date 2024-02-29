@@ -4,9 +4,7 @@
 \alias{f2st}
 \title{Repeated stepwise selection of covariates}
 \usage{
-f2st(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,
-
-sub=T,inr=T,xinr=F,qq=0)}
+f2st(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,lm=9^9,sub=T,inr=T,xinr=F,qq=-1)}
 \arguments{
 \item{y}{Dependent variable}
 
@@ -17,7 +15,6 @@ sub=T,inr=T,xinr=F,qq=0)}
 \item{kmn}{The minimum number of included covariates irrespective of cut-off P-value}
 
 \item{kmx}{The maximum number of included covariates irrespective of cut-off P-value.}
-
 \item{kex}{The excluded covariates}
 
 \item{mx}{The maximum number of covariates for an all subset search}
@@ -30,10 +27,10 @@ sub=T,inr=T,xinr=F,qq=0)}
 
 \item{xinr}{Logical if TRUE intercept already included}
 
-\item{qq}{The number of covariates to choose from. If qq=0 the number of covariates of x is used.}
+\item{qq}{The number of covariates to choose from. If qq=-1 the number of covariates of x is used.}
 }
 \value{
-pv   In order the linear approximation,  the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values  and the proportional reduction in the sum of squared residuals due to this covariate.
+pv   In order the linear approximation, the included covariates, the Gaussian P-values.
 }
 \description{
 Repeated stepwise selection of covariates
@@ -41,5 +38,5 @@ Repeated stepwise selection of covariates
 \examples{
 data(boston)
 bostint<-fgeninter(boston[,1:13],2)[[1]]
-a<-f2st(boston[,14],bostint,lm=3)
+a<-f2st(boston[,14],bostint,lm=3,sub=FALSE)
 }

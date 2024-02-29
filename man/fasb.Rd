@@ -5,7 +5,7 @@
 \title{Calculates all subsets  where each included covariate is significant.}
 
 \usage{
-fasb(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
+fasb(y,x,p0=0.01,ind=0,inr=T,xinr=F,qq=-1)
 }
 \arguments{
 \item{y}{The dependent variable}
@@ -14,21 +14,20 @@ fasb(y,x,p0=0.01,q=-1,ind=0,sel=T,inr=T,xinr=F)
 
 \item{p0}{Cut-off p-value for significance}
 
-\item{q}{The number of covariates from which to choose. Equals number of covariates minus length of ind if q=-1.}
-
 \item{ind}{The indices of a subset of covariates for which all subsets are to be considered}
-
-\item{sel}{If TRUE calls fselect.R to removes all subsets of chosen sets}
 
 \item{inr}{If TRUE to include intercept}
 
 \item{xinr}{If TRUE intercept already included}
+
+\item{qq}{The number of covariates from which to choose. Equals number of covariates minus length of ind if qq=-1.}
+
 }
 \value{
 nv Coded List of subsets with number of covariates and sum of squared residuals
 }
 \description{
-It sel =TRUE it calls fselect.R and  removes all such subsets which are a subset of some other selected subset. The remaining ones are ordered according to the sum of squared residuals. Subsets can be decoded with decode.R.
+The subset are ordered according to the sum of squared residuals. Subsets can be decoded with decode.R.
 }
 \examples{
 data(redwine)

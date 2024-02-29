@@ -1,16 +1,16 @@
-#' Stepwise selection of covariates 
-#'
+ #Stepwise selection of covariates based on Gaussian P-values
+#'S
 #' @param y Dependent variable.
 #' @param x Covariates.
 #' @param p0 The cut-off P-value.
 #' @param kmn The minimum number of included covariates irrespective of cut-off P-value.
 #' @param kmx The maximum number of included covariates irrespective of cut-off P-value.
-#' @param mx  The maximum number covariates for an all subset search.
 #' @param kex The excluded covariates.
+#' @param mx  The maximum number covariates for an all subset search.
 #' @param sub Logical, if TRUE best subset selected.
 #' @param inr Logical, if TRUE include intercept if not present.
 #' @param xinr Logical, if TRUE intercept already included 
-#' @param qq   The number of covariates to choose from. If qq=0 the number of covariates of x is used.
+#' @param qq   The number of covariates to choose from. If qq=-1 the number of covariates of x is used.
 #' @return pv In order the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values. If pv(1)=-1, no subset returned.
 #' @return res The residuals.
 #' @return stpv The in order stepwise P-values, sum of squared residuals and the proportional  reduction in the sum of squared residuals due to this covariate.
@@ -18,141 +18,128 @@
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
 #' a<-f1st(boston[,14],bostint,kmn=10,sub=TRUE)
-f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0){
-	if(xinr&(kmn==1)){stop("only intersect left")}
-	n<-length(y)
-	k<-length(x)/n
-	x<-matrix(x,nrow=n,ncol=k)
-	y<-matrix(y,ncol=1)
-	if(!xinr){
-		if(inr){
-			tmpx<-double(n)+1
-			x<-cbind(x,tmpx)
-			x<-matrix(x,nrow=n,ncol=k+1)
-			xinr<-TRUE
-			inr<-FALSE
+f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
+        if(xinr&(kmn==1)){stop("only intersect left")}
+        dm<-dim(x)
+        n<-dm[1]
+        k<-dm[2]
+#        x<-matrix(x,nrow=n,ncol=k)
+#        y<-matrix(y,ncol=1)
+        lkx<-length(kex)
+        kex<-matrix(kex,nrow=1)
+        if(!xinr){
+                if(inr){
+                        tmpx<-double(n)+1
+                        x<-cbind(x,tmpx)
+                        k<-k+1
+                        x<-matrix(x,nrow=n,ncol=k)
+                        xinr<-TRUE
+                        inr<-FALSE
+                }
+        }
+        if(xinr){
+                if(lkx==1){
+                        if(min(kex)==0){kex[1]<-k}
+                }
+                kex<-c(kex,k)
+        }
+        if(xinr){
+                if(kmn>0){kmn<-kmn+1}
+                if(kmx>0){kmx<-kmx+1}
+        }
+	if(qq==-1){qq<-k}
+        lkx<-length(kex)
+        tmp<-.Fortran(
+                "fstepwise",
+                as.double(y),
+                as.double(x),
+                as.integer(n),
+                as.integer(k),
+                double(n),
+                double(n),
+                integer(k),
+                as.double(p0),
+                as.integer(kmx),
+                double(2*(k+1)),
+                as.integer(kex),
+                double(n),
+                double(k),
+                as.integer(qq),
+                as.integer(kmn),
+                as.integer(lkx)
+        )
+	li<-0
+	kmax<-tmp[[9]]
+        if(kmax==0){
+                pv<-matrix(c(-1,0,0,0),nrow=1)
+                res<-0
+                stpv<-0
+        }
+        if(kmax==1){
+		if(xinr){
+                	pv<-matrix(c(-1,0,0,0),nrow=1)
+                	res<-0
+                	stpv<-0
 		}
-	}
-	k<-length(x[1,])
-	kkex<-double(k)
-	kkex<-matrix(kkex,nrow=1,ncol=k)
-	lkx<-length(kex)
-	kkex[1:lkx]<-kex
-	if(xinr){
-		if(kkex[1,1]==0){q<-k-1}
-		else{q<-k-1-lkx}
 	}
 	else{
-		if(kkex[1,1]==0){q<-k}
-		else{q<-k-lkx}
-	}
-	if((kmn>0)&xinr){kmn=kmn+1}
-	if(kmx==0){kmx<-min(n,k)}
-	xinrr<-0
-	if(xinr){xinrr<-1}
-	tmp<-.Fortran(
-		"fstepwise",
-		as.double(y),
-		as.double(x),
-		as.integer(n),
-		as.integer(k),	
-		double(n),
-		double(n),
-		integer(k),
-		as.double(p0),
-		as.integer(kmx),
-		double(2*(k+1)),
-		as.integer(kkex),
-		as.integer(xinrr),
-		double(k),
-		double(k),
-		as.integer(qq),
-		as.integer(kmn)
-	)
-	kmax<-tmp[[9]]
-	if(kmax==0){
-		pv<-matrix(c(-1,0,0,0),nrow=1)
-		res<-0
-		stpv<-0
-	}
-	else if((kmax==1)&xinr){
-		pv<-matrix(c(-1,0,0,0),nrow=1)
-		res<-0
-		stpv<-0
-	}
-	else{  
-		ss01<-1-tmp[[14]][1:kmax]
 		stpv<-tmp[[10]]
-		stpv<-matrix(stpv,ncol=2)
-		stpv<-stpv[1:kmax,]
-		stpv<-matrix(stpv,ncol=2)
-		minss<-tmp[[13]]
-		minss<-minss[1:kmax]
-		stpv<-cbind(stpv,minss,ss01)
-		stpv<-matrix(stpv,ncol=4)
-		ind<-stpv[1:kmax,1]
-		if(xinr){ints<-ind[1]
-			ind[1:(kmax-1)]<-ind[2:kmax]
-			ind[kmax]<-ints
-		}
-		if(qq==0){q<- -1
-			pv<-fpval(y,x,ind,inr=inr,xinr=xinr)
-		}
-		else{
-			pv<-fpval(y,x,ind,q=qq,inr=inr,xinr=xinr)
-		}
-		p00<-max(pv[[1]][,3])
-		if(p00<p0){sub<-FALSE}
-		res<-pv[[2]]
-		pv<-pv[[1]]
-		li<-length(pv[,1])
-		if(xinr){
-			ind<-pv[1:(li-1),1]
-		}
-		else{	
-			ind<-pv[1:li,1]
-		}
-		li<-length(ind)
-		ssb<--1
-		if((li>mx)&(sub==TRUE)){sub<-FALSE
-			warning("kmax too large (> mx) for all subset search")
-		}
-		if(sub&(li>=2)){
-			if(qq==0){
-				sbsts<-fasb(y,x,p0=p0,q=q,ind=ind,inr=F,xinr=xinr)[[1]]
-			}
-			else{
-
-				sbsts<-fasb(y,x,p0=p0,q=qq,ind=ind,inr=inr,xinr=xinr)[[1]]
-			}
-			sbsts<-matrix(sbsts,nrow=3)
-			kmm<-length(ind)
-			if(sbsts[1,1]>0){
-				nss<-sbsts[1,1]
-				tmv<-fdecode(nss,kmm)[[1]]
-				ind<-ind[tmv]
-				if(xinr){if(max(ind)<k){ind<-c(ind,k)}}
-				if(qq==0){
-					a<-fpval(y,x,ind,q=q,inr=inr,xinr=xinr)
-				}
-				else{
-					a<-fpval(y,x,ind,q=qq,inr=inr,xinr=xinr)
-				}
-				li<-length(ind)
-				res<-a[[2]]
-				pv<-a[[1]]
-				if(xinr){pv[li,1]<-0}
-			}
-			else{
-				pv<-matrix(c(-1,0,0,0),nrow=1)
-				res<-0
-				stpv<-0
-			}
-		}
+               		stpv<-matrix(stpv,ncol=2)
+		i<-stpv[1,1]
+		b<-fpval(y,x,ind=i,inr=inr,xinr=xinr)
+		pv<-b[[1]]
+		res<-b[[2]]
 	}
-	if(length(res)==n){
-	if(xinr){stpv[1,1]<-0}
-	}
-	list(pv,res,stpv)
+        if(kmax>=2){
+                stpv<-tmp[[10]]
+                stpv<-matrix(stpv,ncol=2)
+                stpv<-stpv[1:(kmax+1),]
+                stpv<-matrix(stpv,ncol=2)
+                ind<-stpv[1:kmax,1]
+		ind<-sort(ind)
+               	li<-length(ind)
+		b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+		pv<-b[[1]]
+		res<-b[[2]]
+		k1<-length(b[[1]][,1])
+		if(xinr){k1<-k1-1
+			pmx<-max(b[[1]][1:k1,1])
+			if(pmx<p0){sub=FALSE}
+		}
+                if(sub==FALSE){
+                   	b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+                   	pv<-b[[1]]
+	   		res<-b[[2]]
+       	 	}
+                else{
+                	if((li>mx)&(sub==TRUE)){sub<-FALSE
+			b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+			pv<-b[[1]]
+			res<-b[[2]]
+                	}
+                	if(sub&(li>=2)){
+                                	sbsts<-fasb(y,x,p0=p0,qq=qq,ind=ind,inr=inr,xinr=xinr)[[1]]
+                        		if(sbsts[1,1]>0){
+                                		nss<-sbsts[1,1]
+                                		tmv<-decode(nss,li)[[1]]
+                                		ind<-ind[tmv]
+                                		if(xinr){if(max(ind)<k){ind<-c(ind,k)}}
+                                		a<-fpval(y,x,ind,inr=inr,xinr=xinr)
+                                		li<-length(ind)
+                                		res<-a[[2]]
+                                		pv<-a[[1]]
+                        		}
+                        		else{
+                                		pv<-matrix(c(-1,0,0,0),nrow=1)
+                                		res<-0
+                                		stpv<-0
+                        		}
+                	}
+        	}
+		if(length(res)==n){
+                	if(xinr){stpv[1,1]<-0}
+        	}
+        }
+        list(pv,res,stpv)
 }
 

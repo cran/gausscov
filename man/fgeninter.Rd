@@ -22,5 +22,5 @@ Generates all interactions of degree at most ord
 }
 \examples{
 data(boston)
-bostint<-fgeninter(boston[,1:13],2)
+bostint<-fgeninter(boston[,1:13],2)[[1]]
 }

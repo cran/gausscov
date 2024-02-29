@@ -4,7 +4,7 @@
 \alias{f1st}
 \title{Stepwise selection of covariates}
 \usage{
-f1st(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
+f1st(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -17,9 +17,9 @@ f1st(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 
 \item{kmx}{The maximum number of included covariates irrespective of cut-off P-value.}
 
-\item{mx}{The maximum number covariates for an all subset search}
-
 \item{kex}{The excluded covariates}
+
+\item{mx}{The maximum number covariates for an all subset search}
 
 \item{sub}{Logical if TRUE best subset selected}
 
@@ -27,11 +27,11 @@ f1st(y,x,p0=0.01,kmn=0,kmx=0,mx=21,kex=0,sub=T,inr=T,xinr=F,qq=0)
 
 \item{xinr}{Logical if TRUE intercept already present}
 
-\item{qq}{The number of covariates to choose from. If qq=0 the number of covariates of x is used.}
+\item{qq}{The number of covariates to choose from. If qq=-1 the number of covariates of x is used.}
 
 }
 \value{
-pv In order the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values  and the proportional reduction in the sum of squared residuals due to this covariate
+pv In order the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values.
 
 res The residuals
 
