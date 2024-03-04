@@ -13,22 +13,22 @@
 #' abcql<-flag(abcq,240,1,16,TRUE)
 #' a<-f1st(abcql[[1]],abcql[[2]])
 flag<-function(x,n,i,lag,inr=F){
-	k<-length(x)/n
-	x<-matrix(x,nrow=n,ncol=k)
+	m<-length(x)/n
+	x<-matrix(x,nrow=n,ncol=m)
 	tmp<-.Fortran(
 		"lagg",
 		as.double(x),
 		as.integer(n),
-		as.integer(k),
+		as.integer(m),
 		as.integer(i),
 		as.integer(lag),
-		double((n-lag)*k*lag),
+		double((n-lag)*m*lag),
 		double(n-lag)
 		)
 	y<-tmp[[7]]
 	xl<-tmp[[6]]
 
-	xl<-matrix(xl,nrow=n-lag,ncol=k*lag)
+	xl<-matrix(xl,nrow=n-lag,ncol=m*lag)
 	if(inr){tmpx<-double(n-lag)+1
 		xl<-cbind(xl,tmpx)
 	}

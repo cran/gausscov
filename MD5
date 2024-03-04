@@ -1,4 +1,4 @@
-eb40aa3e92ae8593f6ca42894587d883 *DESCRIPTION
+f944898c2b21c1442cbc8ad9c07a8ff3 *DESCRIPTION
 14112ebe5c10c048ea77fbd2c8866210 *NAMESPACE
 b62a205ed28cceb1191c9284861c718e *R/decode.R
 4a7b2a34ed15fb7b6e71b61bbb2d0bff *R/f1st.R
@@ -9,7 +9,7 @@ e99e6a03baf8cde63d33063306a38158 *R/fasb.R
 ea1cabf5c9b09857c6826462306f422f *R/fgeninter.R
 e483a979a42acfbe283c16053415266e *R/fgentrig.R
 711825e36cb9a86580a58bb6b1472b62 *R/fgr1st.R
-d67993f96f7e3a7eb3eafe3154aa28c2 *R/flag.R
+50cc457661c30f8db7b4150e12060da9 *R/flag.R
 e129e2acc475fc5033521dfaf2762bba *R/fpval.R
 68e10bfd07bd4ab557acc3822d97365a *R/fundr.R
 36137b78a05fd091563c1a52bcfc0f20 *R/simgpval.R
@@ -41,4 +41,4 @@ cce45597a5623c840572fe612725de1a *man/redwine.Rd
 86a9fbc0abbe19239be4dca248cf26b0 *man/snspt.Rd
 0c786fea7a03ba637379a2dbd4a97baa *man/vardata.Rd
 93121c94a63b4d74afa84045c70fc0ff *src/gaucov.f
-b2c0158c4fafd4f4dbdcab3cbfe73dd6 *src/init.c
+c0fb209ffab8584e46b76ba89dc663f1 *src/init.c
