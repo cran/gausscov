@@ -41,7 +41,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 if(lkx==1){
                         if(min(kex)==0){kex[1]<-k}
                 }
-                kex<-c(kex,k)
+                else{kex<-c(kex,k)}
         }
         if(xinr){
                 if(kmn>0){kmn<-kmn+1}
@@ -81,14 +81,14 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 	res<-0
                 	stpv<-0
 		}
-	}
-	else{
-		stpv<-tmp[[10]]
-               		stpv<-matrix(stpv,ncol=2)
-		i<-stpv[1,1]
-		b<-fpval(y,x,ind=i,inr=inr,xinr=xinr)
-		pv<-b[[1]]
-		res<-b[[2]]
+		else{
+			stpv<-tmp[[10]]
+               			stpv<-matrix(stpv,ncol=2)
+			i<-stpv[1,1]
+			b<-fpval(y,x,ind=i,inr=inr,xinr=xinr)
+			pv<-b[[1]]
+			res<-b[[2]]
+		}
 	}
         if(kmax>=2){
                 stpv<-tmp[[10]]
@@ -96,7 +96,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 stpv<-stpv[1:(kmax+1),]
                 stpv<-matrix(stpv,ncol=2)
                 ind<-stpv[1:kmax,1]
-		ind<-sort(ind)
+	ind<-sort(ind)
                	li<-length(ind)
 		b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
 		pv<-b[[1]]

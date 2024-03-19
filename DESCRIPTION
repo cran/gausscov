@@ -1,6 +1,6 @@
 Package: gausscov
-Version: 1.1.1
-Date: 2024-3-3
+Version: 1.1.2
+Date: 2024-3-8
 Title: The Gaussian Covariate Method for Variable Selection
 Authors@R: person("Laurie", "Davies", role = c("aut","cre"),email ="pldavies44@cantab.net")
 Author: Laurie Davies [aut, cre]
@@ -12,6 +12,6 @@ Depends: R (>= 3.5.0), stats
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2024-03-04 10:12:44 UTC; laurie
+Packaged: 2024-03-19 16:01:39 UTC; laurie
 Repository: CRAN
-Date/Publication: 2024-03-04 19:20:07 UTC
+Date/Publication: 2024-03-19 16:20:02 UTC

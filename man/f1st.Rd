@@ -35,7 +35,7 @@ pv In order the included covariates, the regression coefficient values, the Gaus
 
 res The residuals
 
-stpv The in order stepwise P-values, sum of squared residuals and the proportional  reduction in the sum of squared residuals due to this covariate.
+stpv The covariates in order of selection and Gaussian P-values.
 }
 \description{
 Stepwise selection of covariates

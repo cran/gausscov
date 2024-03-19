@@ -144,9 +144,11 @@ C
       pp(icount,2)=pval
       minss(icount)=amss1
       ss01(icount)=amss1/ss0
-      if(kmn.gt.0.and.icount.ge.kmn)  then
-         kmx=kmn
-         goto 600
+      if(pval.gt.alpha) then
+         if(kmn.gt.0.and.icount.ge.kmn)  then
+            kmx=kmn
+            goto 600
+         endif
       endif
       if(kmx.gt.0.and.icount.ge.kmx)  then
          kmx=icount

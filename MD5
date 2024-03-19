@@ -1,7 +1,7 @@
-f944898c2b21c1442cbc8ad9c07a8ff3 *DESCRIPTION
+8f4e780f9569a3d02f75aed8d35f4928 *DESCRIPTION
 14112ebe5c10c048ea77fbd2c8866210 *NAMESPACE
 b62a205ed28cceb1191c9284861c718e *R/decode.R
-4a7b2a34ed15fb7b6e71b61bbb2d0bff *R/f1st.R
+5104e1aa3d0e90e98a35b30d4aefa97a *R/f1st.R
 1855ce369d451577189fd12498438c6e *R/f2st.R
 ab8cbae21fea4a7010cb2f570428700d *R/f3st.R
 ede5511391d20e360e2f644f6c46035c *R/f3sti.R
@@ -23,7 +23,7 @@ e47f11a262c3cf07928c3961b5fba59a *data/vardata.rda
 b4b778d87289ef6f162b68b0fb74b913 *man/abcql.Rd
 900f1e5839f7dc71b8255b9ff59b5108 *man/boston.Rd
 73a7bad3bc0b9dda9df2ba2d74fe6d3c *man/decode.Rd
-a7ba7f703a1693d83c5ba931b2c26358 *man/f1st.Rd
+afe0287d2aa086dbdb14a21802c994b9 *man/f1st.Rd
 534fc7a3b38c756842adc9797af92504 *man/f2st.Rd
 68c88e70677519240c58e295730ae981 *man/f3st.Rd
 9651381ac6e5f9e0c1848dc87144a3e2 *man/f3sti.Rd
@@ -40,5 +40,5 @@ cce45597a5623c840572fe612725de1a *man/redwine.Rd
 40eafaec4b6317767848e447ff2f2b36 *man/simgpval.Rd
 86a9fbc0abbe19239be4dca248cf26b0 *man/snspt.Rd
 0c786fea7a03ba637379a2dbd4a97baa *man/vardata.Rd
-93121c94a63b4d74afa84045c70fc0ff *src/gaucov.f
+656bad9111c0537227beeb871b8deb5e *src/gaucov.f
 c0fb209ffab8584e46b76ba89dc663f1 *src/init.c
