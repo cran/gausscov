@@ -10,7 +10,7 @@
 #' @examples 
 #' data(snspt)
 #'snspt<-matrix(snspt,nrow==3253,ncol=1)
-#' a<-flag(snspt,3253,1,12,inr=FALSE)
+#' a<-flag(snspt,3253,1,12)
 #' simgpval(a[[1]],a[[2]],7,10,plt=FALSE)
 simgpval<-function(y,x,i,nsim,qq=-1,plt=TRUE){
         n<-length(y)      

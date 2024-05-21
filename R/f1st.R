@@ -23,8 +23,6 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
         dm<-dim(x)
         n<-dm[1]
         k<-dm[2]
-#        x<-matrix(x,nrow=n,ncol=k)
-#        y<-matrix(y,ncol=1)
         lkx<-length(kex)
         kex<-matrix(kex,nrow=1)
         if(!xinr){
@@ -38,9 +36,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 }
         }
         if(xinr){
-                if(lkx==1){
-                        if(min(kex)==0){kex[1]<-k}
-                }
+                if(min(kex)==0){kex[1]<-k}
                 else{kex<-c(kex,k)}
         }
         if(xinr){
@@ -84,8 +80,10 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		else{
 			stpv<-tmp[[10]]
                			stpv<-matrix(stpv,ncol=2)
+			stpv<-stpv[1,]
+			stpv<-matrix(stpv,ncol=2,nrow=1)
 			i<-stpv[1,1]
-			b<-fpval(y,x,ind=i,inr=inr,xinr=xinr)
+			b<-fpval(y,x,ind=i,inr=inr,xinr)
 			pv<-b[[1]]
 			res<-b[[2]]
 		}
@@ -140,6 +138,24 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 	if(xinr){stpv[1,1]<-0}
         	}
         }
+        if(max(stpv)>1){
+		ds<-dim(stpv)
+		ss<-double(ds[1])
+		if(stpv[1,1]==0){
+			ss[1]<-(n-1)*sd(y)^2
+			for(j in 2:ds[1]){
+		 		b<-lm(y~x[,stpv[2:j,1]])
+				ss[j]<-sum(b$res^2)
+			}
+		}
+		else{
+			for(j in 1:ds[1]){
+		 		b<-lm(y~0+x[,stpv[1:j,1]])
+				ss[j]<-sum(b$res^2)
+			}
+		}
+		stpv<-cbind(stpv,ss)
+	}
         list(pv,res,stpv)
 }
 

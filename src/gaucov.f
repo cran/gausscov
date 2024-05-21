@@ -131,7 +131,7 @@ C
          util1=amss1/ss0
          util2=dble(n-icount-1)/2d0   
          pval1=betai(util1,util2,0.5d0)
-         pval=betai(pval1,nu,dble(kr+2-icount)-nu)
+         pval=betai(pval1,nu,dble(kr+1-icount)-nu)
       endif
        if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
@@ -1403,7 +1403,7 @@ C
       integer ia(k),nv(2**k,2)
 C
       double precision ss0,ss1,pval,util1,util2,pv1,pval1
-      double precision betai,mn
+      double precision betai,mn,pvm
       integer id,ks,ns,np,ni,qks
       logical inv
 C
@@ -1473,13 +1473,13 @@ C
          k1=k
          if(intercept.eq.1)  k1=k-1
 C
+         pvm=0d0
         do 70 is=1,k1
              if(ia(is).eq.1) then
                ia(is)=0
                ns=0
                do 50 iu=1,k1
                   ns=ns+ia(iu)*2**(iu-1)
-                  np=np+ia(iu)
  50            continue
                ss0=ss(ns+1)
                ia(is)=1
@@ -1495,6 +1495,8 @@ C
                   pval1=betai(util1,util2,0.5d0)
                endif
                pval=betai(pval1,1d0,dble(qks)+1d0)
+
+               pvm=dmax1(pval1,pvm)
                if(pval.gt.alpha) goto 80
             endif
  70      continue
