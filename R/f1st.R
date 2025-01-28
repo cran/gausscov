@@ -20,6 +20,8 @@
 #' a<-f1st(boston[,14],bostint,kmn=10,sub=TRUE)
 f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
         if(xinr&(kmn==1)){stop("only intersect left")}
+	n<-length(y)
+	if(length(x)/n==1){x<-matrix(x,nrow=n,ncol=1)}
         dm<-dim(x)
         n<-dm[1]
         k<-dm[2]
@@ -36,14 +38,13 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 }
         }
         if(xinr){
-                if(min(kex)==0){kex[1]<-k}
-                else{kex<-c(kex,k)}
-        }
-        if(xinr){
                 if(kmn>0){kmn<-kmn+1}
                 if(kmx>0){kmx<-kmx+1}
         }
+	a<-integer(k)
+	if(xinr){a[k]<-1}
 	if(qq==-1){qq<-k}
+	if(min(kmx)==0){kmx<-k}
         lkx<-length(kex)
         tmp<-.Fortran(
                 "fstepwise",
@@ -53,7 +54,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 as.integer(k),
                 double(n),
                 double(n),
-                integer(k),
+                as.integer(a),
                 as.double(p0),
                 as.integer(kmx),
                 double(2*(k+1)),
@@ -79,11 +80,11 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		}
 		else{
 			stpv<-tmp[[10]]
-               			stpv<-matrix(stpv,ncol=2)
+      			stpv<-matrix(stpv,ncol=2)
 			stpv<-stpv[1,]
 			stpv<-matrix(stpv,ncol=2,nrow=1)
 			i<-stpv[1,1]
-			b<-fpval(y,x,ind=i,inr=inr,xinr)
+			b<-fpval(y,x,ind=i,inr=inr,xinr,qq=qq)
 			pv<-b[[1]]
 			res<-b[[2]]
 		}
@@ -94,9 +95,9 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 stpv<-stpv[1:(kmax+1),]
                 stpv<-matrix(stpv,ncol=2)
                 ind<-stpv[1:kmax,1]
-	ind<-sort(ind)
+		ind<-sort(ind)
                	li<-length(ind)
-		b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+		b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
 		pv<-b[[1]]
 		res<-b[[2]]
 		k1<-length(b[[1]][,1])
@@ -105,24 +106,24 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 			if(pmx<p0){sub=FALSE}
 		}
                 if(sub==FALSE){
-                   	b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+                   	b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
                    	pv<-b[[1]]
 	   		res<-b[[2]]
        	 	}
                 else{
                 	if((li>mx)&(sub==TRUE)){sub<-FALSE
-			b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr)
+			b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
 			pv<-b[[1]]
 			res<-b[[2]]
                 	}
                 	if(sub&(li>=2)){
-                                	sbsts<-fasb(y,x,p0=p0,qq=qq,ind=ind,inr=inr,xinr=xinr)[[1]]
+                                	sbsts<-fasb(y,x,p0=p0,ind=ind,inr=inr,xinr=xinr,qq=qq)[[1]]
                         		if(sbsts[1,1]>0){
                                 		nss<-sbsts[1,1]
                                 		tmv<-decode(nss,li)[[1]]
                                 		ind<-ind[tmv]
                                 		if(xinr){if(max(ind)<k){ind<-c(ind,k)}}
-                                		a<-fpval(y,x,ind,inr=inr,xinr=xinr)
+                                		a<-fpval(y,x,ind,inr=inr,xinr=xinr,qq=qq)
                                 		li<-length(ind)
                                 		res<-a[[2]]
                                 		pv<-a[[1]]
@@ -137,7 +138,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		if(length(res)==n){
                 	if(xinr){stpv[1,1]<-0}
         	}
-        }
+ 	}
         if(max(stpv)>1){
 		ds<-dim(stpv)
 		ss<-double(ds[1])

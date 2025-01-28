@@ -14,12 +14,10 @@ C
      $     ,ssy,ssx,nu
       double precision betai
 C
+      
 C
+
       nu=1d0
-      ic=0 
-      do 1 j=1,k
-         ia(j)=0
- 1    continue
 C
       nex=0
       do 11 ik=1,lkx
@@ -133,7 +131,7 @@ C
          pval1=betai(util1,util2,0.5d0)
          pval=betai(pval1,nu,dble(kr+1-icount)-nu)
       endif
-       if(pval.gt.alpha.and.kmn.eq.0) then
+      if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          pp(icount+1,1)=dble(ic)
          pp(icount+1,2)=pval
@@ -191,6 +189,7 @@ C
  60   continue
       goto 2
  600  continue
+      kmx=icount
       return
       end
 C

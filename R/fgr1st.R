@@ -17,13 +17,22 @@
 fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F,qq=-1){
         dx<-dim(x)
         n<-dx[[1]]
-        m<-dx[[2]]
+        k<-dx[[2]]
+	if(min(ind)==0){ind<-1:k}
+        if(!xinr){
+                if(inr){
+                        tmpx<-double(n)+1
+                        x<-cbind(x,tmpx)
+                        k<-k+1
+                        x<-matrix(x,nrow=n,ncol=k)
+                        xinr<-TRUE
+                        inr<-FALSE
+                }
+        }
         edg<-c(0,0,0)
-        if(min(ind)==0){ind<-1:m}
-        x<-x[,ind]
         li<-length(ind)
-        for(i in 1:li){
-                gr<-f1st(x[,i],x,p0=p0,kmn=kmn,kmx=kmx,kex=i,mx=mx,sub=T,inr=inr,xinr=xinr,qq=qq)
+        for(i in ind){
+                gr<-f1st(x[,i],x,p0=p0,kmn=kmn,kmx=kmx,kex=0,mx=mx,sub=T,inr=F,xinr=F,qq=qq)
                 if(gr[[1]][1,1] >=1){
                         lgr<-length(gr[[1]][,1])
                         il<-(1:lgr)[gr[[1]][,1] >0]
@@ -31,15 +40,12 @@ fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F,qq=-1
                         gr1<-gr[[1]][il,1]
                         pv1<-gr[[1]][il,3]
                         edg1<-cbind(knt,gr1,pv1)
+			print(edg1)
                         edg<-rbind(edg,edg1)
                 }
         }
         ne<-length(edg)/3
         edg<-edg[2:ne,]
         ne<-ne-1
-	for(i in 1:ne){
-		edg[i,1]<-ind[edg[i,1]]
-		edg[i,2]<-ind[edg[i,2]]
-	}
         list(ne,edg)
 }
