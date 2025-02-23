@@ -8,9 +8,9 @@
 #' @return  y The ith  covariate of x  without a lag, the dependent covariate.
 #' @return xl The lagged covariates with lags of order 1:lag starting with the first covariate.
 #' @examples 
-#' data(vardata)
-#' lvardata<-flag(vardata,256,1,16)
-#' a<-f1st(vardata[[1]],lvardata[[2]])
+#' data(abcq)
+#' abcql<-flag(abcq,240,1,16)
+#' a<-f1st(abcql[[1]],abcql[[2]])
 flag<-function(x,n,i,lag){
 	m<-length(x)/n
 	x<-matrix(x,nrow=n,ncol=m)

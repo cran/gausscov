@@ -19,7 +19,7 @@ xl The covariates with lags from 1 :lag starting with the first covariate.
 Calculation of lagged covariates
 }
 \examples{
-data(vardata)
-lvardata<-flag(vardata,256,1,182)
-a<-f1st(lvardata[[1]],lvardata[[2]])
+data(abcq)
+abcql<-flag(abcq,240,1,16)
+a<-f1st(abcql[[1]],abcql[[2]])
 }

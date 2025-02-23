@@ -32,15 +32,14 @@ fgr1st<-function(x,p0=0.01,ind=0,kmn=0,kmx=0,mx=21,nedge=10^5,inr=T,xinr=F,qq=-1
         edg<-c(0,0,0)
         li<-length(ind)
         for(i in ind){
-                gr<-f1st(x[,i],x,p0=p0,kmn=kmn,kmx=kmx,kex=0,mx=mx,sub=T,inr=F,xinr=F,qq=qq)
-                if(gr[[1]][1,1] >=1){
+                gr<-f1st(x[,i],x,p0=p0,kmn=kmn,kmx=kmx,kex=i,mx=mx,sub=T,inr=inr,xinr=xinr,qq=qq)
+		        if(gr[[1]][1,1] >=1){
                         lgr<-length(gr[[1]][,1])
                         il<-(1:lgr)[gr[[1]][,1] >0]
                         knt<-integer(length(il))+i
                         gr1<-gr[[1]][il,1]
                         pv1<-gr[[1]][il,3]
                         edg1<-cbind(knt,gr1,pv1)
-			print(edg1)
                         edg<-rbind(edg,edg1)
                 }
         }

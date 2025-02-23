@@ -70,17 +70,17 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
         if(kmax==0){
                 pv<-matrix(c(-1,0,0,0),nrow=1)
                 res<-0
-                stpv<-0
+                stpv<-double(2)
         }
         if(kmax==1){
 		if(xinr){
                 	pv<-matrix(c(-1,0,0,0),nrow=1)
                 	res<-0
-                	stpv<-0
+                	stpv<-double(2)
 		}
 		else{
 			stpv<-tmp[[10]]
-      			stpv<-matrix(stpv,ncol=2)
+               			stpv<-matrix(stpv,ncol=2)
 			stpv<-stpv[1,]
 			stpv<-matrix(stpv,ncol=2,nrow=1)
 			i<-stpv[1,1]
@@ -138,7 +138,7 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		if(length(res)==n){
                 	if(xinr){stpv[1,1]<-0}
         	}
- 	}
+        }
         if(max(stpv)>1){
 		ds<-dim(stpv)
 		ss<-double(ds[1])

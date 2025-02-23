@@ -2,15 +2,13 @@
 \alias{f3st}
 \title{Stepwise selection of covariates}
 \usage{
-f3st(y,x,m,mxa,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1,kexmx=100)}
+f3st(y,x,m,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1,kexmx=100)}
 \arguments{
 \item{y}{Dependent variable}
 
 \item{x}{Covariates}
 
 \item{m}{The number of iterations}
-
-\item{mxa}{The maximum number of approximations}
 
 \item{p0}{The P-value cut-off}
 
@@ -34,7 +32,7 @@ f3st(y,x,m,mxa,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1,kexmx=10
 
 }
 \value{
-covch The standard deviation of the residuals and the selected covariates ordered in increasing size of the stamdard deviations.
+covch The sum of squared residuals and the selected covariates ordered in increasing size of sum of squared residuals.
 
 lai  The number of rows of covch
 }
@@ -43,5 +41,5 @@ Stepwise selection of covariates
 }
 \examples{
 data(leukemia)
-a<-f3st(leukemia[[1]],leukemia[[2]],m=2,mxa=7,kmn=5,sub=TRUE,kexmx=10)
+a<-f3st(leukemia[[1]],leukemia[[2]],m=2,kmn=5,sub=TRUE,kexmx=10)
 }

@@ -16,7 +16,6 @@ C
 C
       
 C
-
       nu=1d0
 C
       nex=0
@@ -46,7 +45,9 @@ C
             ss1=ss1+res(i)**2
  6       continue
          util1=ss1/ss0
+         util1=dmin1(util1,1d-10)
          pval=betai(util1,0.5d0*dble(n-1),0.5d0)
+c         write(*,*) util1,pval,"strt"
          pp(1,1)=dble(k)
          pp(1,2)=pval
          minss(1)=ss1
@@ -78,6 +79,7 @@ C
       do 19 ik=1,k
          if(ia(ik).eq.1) kr=kr+1
  19    continue
+       if(ia(k).eq.1) kr=kr-1
       if(qq.eq.0) then
          kr=k-kr
       else
@@ -115,6 +117,7 @@ C
  35         continue
          endif
  40   continue
+ 
       ks=icount+1
       if(amss1.lt.1d-10) then
          pval=0d0
@@ -127,10 +130,11 @@ C
          return
       else
          util1=amss1/ss0
-         util2=dble(n-icount-1)/2d0   
+         util2=dble(n-icount-1)/2d0
          pval1=betai(util1,util2,0.5d0)
          pval=betai(pval1,nu,dble(kr+1-icount)-nu)
       endif
+
       if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          pp(icount+1,1)=dble(ic)
@@ -169,10 +173,7 @@ C
          x2(i)=cf*x2(i)
          nx1=nx1+x2(i)**2
  50   continue
-      if(icount+nex.eq.k) then
-         kmx=icount
-         return
-      endif
+      if(icount+nex.eq.k) goto 600
       do 60 kk=1,k
          if(ia(kk).eq.1) goto 60
          b=0d0

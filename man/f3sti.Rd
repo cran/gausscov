@@ -2,8 +2,7 @@
 \alias{f3sti}
 \title{Selection of covariates with given excluded covariates}
 \usage{
-f3sti(y,x,covch,ind,m,mxa,p0=0.01,kmn=0,kmx=0, kex=0,mx=21,sub=T,
-inr=F,xinr=F,qq=-1,kexmx=100)
+f3sti(y,x,covch,ind,m,p0=0.01,kmn=0,kmx=0, kex=0,mx=21,sub=T,inr=F,xinr=F,qq=-1,kexmx=100)
 }
 \arguments{
 \item{y}{Dependent variable}
@@ -16,7 +15,7 @@ inr=F,xinr=F,qq=-1,kexmx=100)
 
 \item{m}{Number of iterations}
 
-\item{mxa}{The maximum number of approximations}
+
 
 \item{p0}{The P-value cut-off}
 
@@ -41,7 +40,7 @@ inr=F,xinr=F,qq=-1,kexmx=100)
 \value{
 ind1 The excluded covariates
 
-covch The standard deviations of residuals and the selected covariates ordered in increasing size of the standard deviations
+covch The sum of squared residuals and the selected covariates ordered in increasing size of sum of squared residuals
 
 }
 \description{
@@ -54,6 +53,5 @@ covch<-matrix(covch,nrow=1,ncol=5)
 ind<-c(1182,1219,2888)
 ind<-matrix(ind,nrow=3,ncol=1)
 m<-1
-mxa<-3
-a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,mxa,kexmx=5)
+a<-f3sti(leukemia[[1]],leukemia[[2]],covch,ind,m,kexmx=5)
 }
