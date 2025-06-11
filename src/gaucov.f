@@ -1,6 +1,7 @@
 C
 C
 C
+   
       subroutine fstepwise(y,x,n,k,x2,res,ia,alpha,kmx,pp,kex
      $     ,minss,ss01,qq,kmn,lkx)
       integer n,k,kmn,qq,kmx,lkx
@@ -17,7 +18,6 @@ C
       
 C
       nu=1d0
-C
       nex=0
       do 11 ik=1,lkx
          if(kex(ik).gt.0) then
@@ -47,7 +47,6 @@ C
          util1=ss1/ss0
          util1=dmin1(util1,1d-10)
          pval=betai(util1,0.5d0*dble(n-1),0.5d0)
-c         write(*,*) util1,pval,"strt"
          pp(1,1)=dble(k)
          pp(1,2)=pval
          minss(1)=ss1
@@ -109,6 +108,7 @@ C
          do 16 i=1,n
             ss1=ss1+(res(i)-b*x(i,kk))**2
  16      continue
+
          if(ss1.lt.amss1) then
             ic=kk
             amss1=ss1
@@ -194,9 +194,157 @@ C
       return
       end
 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C
+C
+C     
+      subroutine fsplstepwise(y,n,k,x2,res,ia,alpha,kmx,pp,
+     $ ss01,qq,xspl,ind,lint,nx,x,tmpx)
+      integer n,k,qq,kmx,lkx,lint,nx
+      double precision y(n),x2(n),res(n),pp(k+1,2),ss01(k),
+     $ xspl(k,2),x(n,nx),tmpx(n)
+      integer ia(k),ind(lint,2)
+      double precision alpha
+C
+      integer icount,ks,ic,ik,kr,nex
+      double precision ss0,ss1,amss1,pval,util1,util2,nx1,b,cf,pval1,mi
+     $     ,ssy,ssx,nu
+      double precision betai
+C
+      nu=1d0
+      do 1 i=1,k
+         ia(i)=0
+ 1    continue
+      ss0=0d0
+      do 6 i=1,n
+         ss0=ss0+y(i)**2
+         res(i)=y(i)
+ 6    continue
+      amss1=ss0
+      icount=0
 C      
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+ 7    continue
+      icount=icount+1
+C      
+      do 40 kk=1,k
+         if(ia(kk).eq.1)  goto 40
+         call spl(kk,k,xspl,ind,lint,n,tmpx)
+         b=0d0
+         nx1=0d0
+         do 115 i=1,n
+               b=b+tmpx(i)*res(i)
+               nx1=nx1+tmpx(i)**2
+ 115     continue
+         b=b/nx1
+         ss1=0d0
+         do 116 i=1,n
+               ss1=ss1+(res(i)-b*tmpx(i))**2
+ 116     continue
+         if(ss1.lt.amss1) then
+               ic=kk
+               amss1=ss1
+               do 350 i=1,n
+                  x2(i)=tmpx(i)
+ 350           continue
+         endif
+ 40   continue
+      ks=icount+1
+      if(amss1.lt.1d-10) then
+         pval=0d0
+         icount=icount+1
+         pp(icount,1)=dble(ic)
+         pp(icount,2)=0d0
+         ss01(icount)=0d0
+         kmx=icount
+         return
+      else
+         util1=amss1/ss0
+         util2=dble(n-icount-1)/2d0
+         pval1=betai(util1,util2,0.5d0)
+         pval=betai(pval1,nu,dble(kr+1-icount)-nu)
+      endif
+
+      if(pval.gt.alpha) then
+         kmx=icount
+         pp(icount+1,1)=dble(ic)
+         pp(icount+1,2)=pval
+         goto 600
+      endif
+      icount=icount+1
+      pp(icount,1)=dble(ic)
+      pp(icount,2)=pval
+      ss01(icount)=amss1/ss0
+      ia(ic)=1
+      b=0d0
+      nx1=0d0
+      do 45 i=1,n
+         b=b+x2(i)*res(i)
+         nx1=nx1+x2(i)**2
+ 45   continue
+      b=b/nx1
+      ss0=0d0
+      cf=dsqrt(dble(n)/nx1)
+      nx1=0d0
+      do 50 i=1,n
+         res(i)=res(i)-b*x2(i)
+         ss0=ss0+res(i)**2
+         x2(i)=cf*x2(i)
+         nx1=nx1+x2(i)**2
+ 50   continue
+      if(icount+nex.eq.k) goto 600
+      do 60 kk=1,k
+         if(ia(kk).eq.1) goto 60
+         call spl(kk,k,xspl,ind,lint,n,tmpx)
+         b=0d0
+         do 61 i=1,n
+            b=b+tmpx(i)*x2(i)
+ 61      continue
+         b=b/dble(n)
+         ssx=0d0
+         do 62 i=1,n
+            tmpx(i)=tmpx(i)-b*x2(i)
+            ssx=ssx+tmpx(i)**2
+ 62      continue
+         if(ssx.lt.1d-10) ia(kk)=1
+ 60   continue
+      goto 7
+ 600  continue
+      kmx=icount
+      return
+      end
+C
+C
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C
+C
+      subroutine spl(i,k,xspl,ind,lint,n,tmpx)
+      integer i,n,k,lint
+      double precision xspl(k,2),tmpx(n)
+      integer ind(lint,2)
+C
+      integer len,n1,n2
+C
+      n1=ind(i,1)
+      n2=ind(i,2)
+      len=n2-n1+1
+C 
+      do 20 j=1,k
+         if(dabs(xspl(j,1)-len).gt.5d-1) goto 20
+         ik=0
+         do 10 jj=j,j+len-1
+            tmpx(n1+ik)=xspl(jj,2)
+            ik=ik+1
+ 10      continue
+         goto 30
+ 20   continue
+ 30   return
+      end
+C
+C
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C       
 C
 C
@@ -884,6 +1032,7 @@ C
       end
 C
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+C
 C
 C
 C

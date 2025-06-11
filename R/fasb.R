@@ -20,14 +20,14 @@ fasb<-function(y,x,p0=0.01,ind=0,inr=T,xinr=F,qq=-1){
           ind<-matrix(ind,nrow=1)
           if(ind[1]==0){ind<-1:k}
           if(!xinr){
-	if(inr){
-	     tmpx<-double(n)+1
-	     x<-cbind(x,tmpx)
-	     k<-k+1
-	     ind<-c(ind,k)
-	     inr<-F
-	     xinr<-T
-	}
+		if(inr){
+	     	tmpx<-double(n)+1
+	     	x<-cbind(x,tmpx)
+	     	k<-k+1
+	     	ind<-c(ind,k)
+	     	inr<-F
+	     	xinr<-T
+	     	}
           }
           if(qq==-1){qq<-k
 		if(xinr){qq<-qq-1}
@@ -35,7 +35,7 @@ fasb<-function(y,x,p0=0.01,ind=0,inr=T,xinr=F,qq=-1){
           x<-x[,ind]
           k<-length(x)/n
           kmxx<-2^k
-          if(xinr){kmxx<-2^(k-1)}
+#          if(xinr){kmxx<-2^(k-1)}
           xinrr<-0
           if(xinr){xinrr<-1}
           tmp<-.Fortran(

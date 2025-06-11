@@ -15,12 +15,12 @@ extern void F77_NAME(lmmdch)(double * y, double * x, int * n, int * k, double * 
 extern void F77_NAME(triggen)(int * n, int * m, double * tr);
 
 static const R_FortranMethodDef FortranEntries[] = {
-    {"decode",      (DL_FUNC) &F77_NAME(decode),       3},
-    {"fstepwise",   (DL_FUNC) &F77_NAME(fstepwise),   16},
-    {"genint",      (DL_FUNC) &F77_NAME(genint),       9},
-    {"lagg",        (DL_FUNC) &F77_NAME(lagg),         7},
-    {"lmmdch",      (DL_FUNC) &F77_NAME(lmmdch),      19},
-    {"triggen",     (DL_FUNC) &F77_NAME(triggen),      3},
+    {"decode",       (DL_FUNC) &F77_NAME(decode),        3}, 
+    {"fstepwise",    (DL_FUNC) &F77_NAME(fstepwise),    16},
+    {"genint",       (DL_FUNC) &F77_NAME(genint),        9},
+    {"lagg",         (DL_FUNC) &F77_NAME(lagg),          7},
+    {"lmmdch",       (DL_FUNC) &F77_NAME(lmmdch),       19},
+    {"triggen",      (DL_FUNC) &F77_NAME(triggen),       3},
     {NULL, NULL, 0}
 };
 

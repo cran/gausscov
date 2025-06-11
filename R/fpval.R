@@ -40,6 +40,8 @@ fpval<-function(y,x,ind,inr=T,xinr=F,qq=-1){
         apv<-double(4*kii)
         apv<-matrix(apv,nrow=kii,ncol=4)
 #       tvl<-matrix(result[1:kii,3],ncol=1)
+#	print(dim(apv))
+#	print(length(ind))
         apv[,1]<-ind
         apv[,2]<-matrix(result[1:kii,1],ncol=1)
         apv[,4]<-matrix(result[1:kii,4],ncol=1)

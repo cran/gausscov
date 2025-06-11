@@ -1,5 +1,5 @@
- #Stepwise selection of covariates based on Gaussian P-values
-#'S
+#Stepwise selection of covariates based on Gaussian P-values
+#'
 #' @param y Dependent variable.
 #' @param x Covariates.
 #' @param p0 The cut-off P-value.
@@ -13,7 +13,6 @@
 #' @param qq   The number of covariates to choose from. If qq=-1 the number of covariates of x is used.
 #' @return pv In order the included covariates, the regression coefficient values, the Gaussian P-values, the standard P-values. If pv(1)=-1, no subset returned.
 #' @return res The residuals.
-#' @return stpv The in order stepwise P-values, sum of squared residuals and the proportional  reduction in the sum of squared residuals due to this covariate.
 #' @examples 
 #' data(boston)
 #' bostint<-fgeninter(boston[,1:13],2)[[1]]
@@ -65,18 +64,17 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 as.integer(kmn),
                 as.integer(lkx)
         )
-	li<-0
 	kmax<-tmp[[9]]
         if(kmax==0){
                 pv<-matrix(c(-1,0,0,0),nrow=1)
                 res<-0
-                stpv<-double(2)
+                stpv<-0
         }
         if(kmax==1){
 		if(xinr){
                 	pv<-matrix(c(-1,0,0,0),nrow=1)
                 	res<-0
-                	stpv<-double(2)
+                	stpv<-0
 		}
 		else{
 			stpv<-tmp[[10]]
@@ -102,21 +100,17 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		res<-b[[2]]
 		k1<-length(b[[1]][,1])
 		if(xinr){k1<-k1-1
-			pmx<-max(b[[1]][1:k1,1])
+			pmx<-max(b[[1]][1:k1,3])
 			if(pmx<p0){sub=FALSE}
 		}
+		if((mx<k1)&(sub==TRUE)){sub<-FALSE}
                 if(sub==FALSE){
                    	b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
                    	pv<-b[[1]]
 	   		res<-b[[2]]
        	 	}
-                else{
-                	if((li>mx)&(sub==TRUE)){sub<-FALSE
-			b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
-			pv<-b[[1]]
-			res<-b[[2]]
-                	}
-                	if(sub&(li>=2)){
+                if(sub==TRUE){
+                 	if(sub&(li>=2)){
                                 	sbsts<-fasb(y,x,p0=p0,ind=ind,inr=inr,xinr=xinr,qq=qq)[[1]]
                         		if(sbsts[1,1]>0){
                                 		nss<-sbsts[1,1]
@@ -139,24 +133,6 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 	if(xinr){stpv[1,1]<-0}
         	}
         }
-        if(max(stpv)>1){
-		ds<-dim(stpv)
-		ss<-double(ds[1])
-		if(stpv[1,1]==0){
-			ss[1]<-(n-1)*sd(y)^2
-			for(j in 2:ds[1]){
-		 		b<-lm(y~x[,stpv[2:j,1]])
-				ss[j]<-sum(b$res^2)
-			}
-		}
-		else{
-			for(j in 1:ds[1]){
-		 		b<-lm(y~0+x[,stpv[1:j,1]])
-				ss[j]<-sum(b$res^2)
-			}
-		}
-		stpv<-cbind(stpv,ss)
-	}
-        list(pv,res,stpv)
+	 list(pv,res)
 }
 
