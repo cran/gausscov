@@ -1,8 +1,8 @@
-3a0b93fa315e3134155eb620089b4460 *DESCRIPTION
+d2c5b94c0ec698ca8c4e05116864c8c7 *DESCRIPTION
 14112ebe5c10c048ea77fbd2c8866210 *NAMESPACE
 b62a205ed28cceb1191c9284861c718e *R/decode.R
 eefa7a63561d16b46068e8cba4266220 *R/f1bsf.R
-7e67b2b51c343f6b2fa333ab4d459c4d *R/f1st.R
+39239f77909fe1c1d588038e33f91842 *R/f1st.R
 1855ce369d451577189fd12498438c6e *R/f2st.R
 467e390f677c77bbcdf2d62bce73a16e *R/f3st.R
 1c3f4e4b855ba247e5cf13cfd21de218 *R/f3sti.R
@@ -12,6 +12,7 @@ ea1cabf5c9b09857c6826462306f422f *R/fgeninter.R
 e483a979a42acfbe283c16053415266e *R/fgentrig.R
 8eddef5feb4389d08cbaf799cb25fee2 *R/fgr1st.R
 f51ab63792d4a762e2b334ffd7fe2119 *R/flag.R
+67609b540941a4a6a08acfeac9a906c3 *R/fpsired.R
 a3c7dc79da8b2b4610f3de4b04145928 *R/fpval.R
 68e10bfd07bd4ab557acc3822d97365a *R/fundr.R
 7f021492c103ef0860a8d67cdb115086 *data/abcq.rda
@@ -37,6 +38,7 @@ d1cd63163ca93674070f4c840cb40c11 *man/fgenbsf.Rd
 bda14aa0d2e749ce9632f2d7f877d154 *man/fgentrig.Rd
 5cfe1305288c2dc0f04bbaffffe10ea9 *man/fgr1st.Rd
 479d7dd6c16136aca236accdf23a7426 *man/flag.Rd
+5874cd9ed47e30ee1161e91fda4ada41 *man/fpsired.Rd
 aa6bf93bb23ca7ba4d065baa4e3471a8 *man/fpval.Rd
 873652730dc72626ce7254a2b32d0375 *man/fundr.Rd
 ccc1ebc92035a5b0c9dc70376c45c5a8 *man/leukemia.Rd
@@ -46,5 +48,5 @@ fb8fd16bb510ea206201ae93ca8dbf77 *man/m15005m.Rd
 cce45597a5623c840572fe612725de1a *man/redwine.Rd
 86a9fbc0abbe19239be4dca248cf26b0 *man/snspt.Rd
 0c786fea7a03ba637379a2dbd4a97baa *man/vardata.Rd
-31b5d93ed7dacfb415b35c7ba468d138 *src/gaucov.f
+affdfb33a96e82f3d4b65c175324266d *src/gaucov.f
 bf3db5c0917dbbf7fe2969c581151d1d *src/init.c

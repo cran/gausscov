@@ -99,10 +99,9 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
 		pv<-b[[1]]
 		res<-b[[2]]
 		k1<-length(b[[1]][,1])
-		if(xinr){k1<-k1-1
-			pmx<-max(b[[1]][1:k1,3])
-			if(pmx<p0){sub=FALSE}
-		}
+		if(xinr){k1<-k1-1}
+		pmx<-max(b[[1]][1:k1,3])
+		if(pmx<p0){sub=FALSE}
 		if((mx<k1)&(sub==TRUE)){sub<-FALSE}
                 if(sub==FALSE){
                    	b<-fpval(y,x,ind=ind,inr=inr,xinr=xinr,qq=qq)
@@ -112,16 +111,19 @@ f1st<-function(y,x,p0=0.01,kmn=0,kmx=0,kex=0,mx=21,sub=T,inr=T,xinr=F,qq=-1){
                 if(sub==TRUE){
                  	if(sub&(li>=2)){
                                 	sbsts<-fasb(y,x,p0=p0,ind=ind,inr=inr,xinr=xinr,qq=qq)[[1]]
+					
                         		if(sbsts[1,1]>0){
                                 		nss<-sbsts[1,1]
                                 		tmv<-decode(nss,li)[[1]]
-                                		ind<-ind[tmv]
+                                		ind1<-ind[tmv]
+						
                                 		if(xinr){if(max(ind)<k){ind<-c(ind,k)}}
-                                		a<-fpval(y,x,ind,inr=inr,xinr=xinr,qq=qq)
+						
+                                		a<-fpval(y,x,ind=ind1,inr=inr,xinr=xinr)
                                 		li<-length(ind)
                                 		res<-a[[2]]
                                 		pv<-a[[1]]
-                        		}
+						}
                         		else{
                                 		pv<-matrix(c(-1,0,0,0),nrow=1)
                                 		res<-0
