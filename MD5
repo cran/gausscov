@@ -1,4 +1,4 @@
-d2c5b94c0ec698ca8c4e05116864c8c7 *DESCRIPTION
+0ea12061122cc83c9a8a97319b4238d6 *DESCRIPTION
 14112ebe5c10c048ea77fbd2c8866210 *NAMESPACE
 b62a205ed28cceb1191c9284861c718e *R/decode.R
 eefa7a63561d16b46068e8cba4266220 *R/f1bsf.R
@@ -7,13 +7,14 @@ eefa7a63561d16b46068e8cba4266220 *R/f1bsf.R
 467e390f677c77bbcdf2d62bce73a16e *R/f3st.R
 1c3f4e4b855ba247e5cf13cfd21de218 *R/f3sti.R
 15149e5288d1f2fe5ea26ccc359cdbfa *R/fasb.R
+a99f14928a9630a3aeee36c5f213d47e *R/fdecode.R
 f5cfea719e52ead286beeb0af457a4dd *R/fgenbsf.R
 ea1cabf5c9b09857c6826462306f422f *R/fgeninter.R
 e483a979a42acfbe283c16053415266e *R/fgentrig.R
 8eddef5feb4389d08cbaf799cb25fee2 *R/fgr1st.R
 f51ab63792d4a762e2b334ffd7fe2119 *R/flag.R
-67609b540941a4a6a08acfeac9a906c3 *R/fpsired.R
 a3c7dc79da8b2b4610f3de4b04145928 *R/fpval.R
+e26824fba6738363e7da5dde62f8c201 *R/fselect.R
 68e10bfd07bd4ab557acc3822d97365a *R/fundr.R
 7f021492c103ef0860a8d67cdb115086 *data/abcq.rda
 5ba404d8625ab00df46dcdc0e39dbb56 *data/boston.rda
@@ -33,13 +34,14 @@ b4b778d87289ef6f162b68b0fb74b913 *man/abcql.Rd
 68c88e70677519240c58e295730ae981 *man/f3st.Rd
 9651381ac6e5f9e0c1848dc87144a3e2 *man/f3sti.Rd
 b3482d4b8d28497b75a9688f2f60b5da *man/fasb.Rd
+7674f1de77d4ae34588302b4a0ea4fd2 *man/fdecode.Rd
 d1cd63163ca93674070f4c840cb40c11 *man/fgenbsf.Rd
 3173c6d7139df5a81acd83a95fdfc892 *man/fgeninter.Rd
 bda14aa0d2e749ce9632f2d7f877d154 *man/fgentrig.Rd
 5cfe1305288c2dc0f04bbaffffe10ea9 *man/fgr1st.Rd
 479d7dd6c16136aca236accdf23a7426 *man/flag.Rd
-5874cd9ed47e30ee1161e91fda4ada41 *man/fpsired.Rd
 aa6bf93bb23ca7ba4d065baa4e3471a8 *man/fpval.Rd
+0dd4992f80672c9ce4c477f34762a6ff *man/fselect.Rd
 873652730dc72626ce7254a2b32d0375 *man/fundr.Rd
 ccc1ebc92035a5b0c9dc70376c45c5a8 *man/leukemia.Rd
 7fdd487a0d813db3e888a0fbb3bab7c7 *man/lymphoma.Rd
@@ -48,5 +50,5 @@ fb8fd16bb510ea206201ae93ca8dbf77 *man/m15005m.Rd
 cce45597a5623c840572fe612725de1a *man/redwine.Rd
 86a9fbc0abbe19239be4dca248cf26b0 *man/snspt.Rd
 0c786fea7a03ba637379a2dbd4a97baa *man/vardata.Rd
-affdfb33a96e82f3d4b65c175324266d *src/gaucov.f
+4cec1f359c0d9fddc185e9309e2a07b7 *src/gaucov.f
 bf3db5c0917dbbf7fe2969c581151d1d *src/init.c

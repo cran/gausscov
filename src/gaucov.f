@@ -1,6 +1,7 @@
+
 C
 C
-C
+   
       subroutine fstepwise(y,x,n,k,x2,res,ia,alpha,kmx,pp,kex
      $     ,minss,ss01,qq,kmn,lkx)
       integer n,k,kmn,qq,kmx,lkx
@@ -14,13 +15,9 @@ C
      $     ,ssy,ssx,nu
       double precision betai
 C
+      
 C
       nu=1d0
-      ic=0 
-      do 1 j=1,k
-         ia(j)=0
- 1    continue
-C
       nex=0
       do 11 ik=1,lkx
          if(kex(ik).gt.0) then
@@ -48,6 +45,7 @@ C
             ss1=ss1+res(i)**2
  6       continue
          util1=ss1/ss0
+         util1=dmin1(util1,1d-10)
          pval=betai(util1,0.5d0*dble(n-1),0.5d0)
          pp(1,1)=dble(k)
          pp(1,2)=pval
@@ -80,6 +78,7 @@ C
       do 19 ik=1,k
          if(ia(ik).eq.1) kr=kr+1
  19    continue
+       if(ia(k).eq.1) kr=kr-1
       if(qq.eq.0) then
          kr=k-kr
       else
@@ -109,6 +108,7 @@ C
          do 16 i=1,n
             ss1=ss1+(res(i)-b*x(i,kk))**2
  16      continue
+
          if(ss1.lt.amss1) then
             ic=kk
             amss1=ss1
@@ -117,6 +117,7 @@ C
  35         continue
          endif
  40   continue
+ 
       ks=icount+1
       if(amss1.lt.1d-10) then
          pval=0d0
@@ -129,11 +130,12 @@ C
          return
       else
          util1=amss1/ss0
-         util2=dble(n-icount-1)/2d0   
+         util2=dble(n-icount-1)/2d0
          pval1=betai(util1,util2,0.5d0)
          pval=betai(pval1,nu,dble(kr+1-icount)-nu)
       endif
-       if(pval.gt.alpha.and.kmn.eq.0) then
+
+      if(pval.gt.alpha.and.kmn.eq.0) then
          kmx=icount
          pp(icount+1,1)=dble(ic)
          pp(icount+1,2)=pval
@@ -171,10 +173,7 @@ C
          x2(i)=cf*x2(i)
          nx1=nx1+x2(i)**2
  50   continue
-      if(icount+nex.eq.k) then
-         kmx=icount
-         return
-      endif
+      if(icount+nex.eq.k) goto 600
       do 60 kk=1,k
          if(ia(kk).eq.1) goto 60
          b=0d0
@@ -191,8 +190,10 @@ C
  60   continue
       goto 2
  600  continue
+      kmx=icount
       return
       end
+C
 C
 C
 C      
